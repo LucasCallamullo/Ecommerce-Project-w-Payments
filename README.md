@@ -1,0 +1,1 @@
+# generic-ecommerce-project
