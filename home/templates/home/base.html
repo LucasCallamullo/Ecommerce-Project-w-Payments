@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    {% load static %}
+
+    <!-- Preconnect and Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Favicon tradicional de 16x16 píxeles -->
+    <link rel="icon" href="{% static 'img/ico/favicon.ico' %}" type="image/x-icon">
+    <!-- Favicon principal, tamaño recomendado de 32x32 píxeles -->
+    <link rel="icon" href="{% static 'img/ico/favicon-32x32.png' %}" sizes="32x32" type="image/png">
+    <!-- Icono para dispositivos Apple -->
+    <link rel="apple-touch-icon" href="{% static 'img/ico/apple-touch-icon.png' %}">
+    <!-- Iconos para Android y pantallas de alta resolución -->
+    <link rel="icon" sizes="192x192" href="{% static 'img/ico/android-chrome-192x192.png' %}">
+    <link rel="icon" sizes="512x512" href="{% static 'img/ico/android-chrome-512x512.png' %}">
+    <!-- Agregar el manifiesto de la PWA -->
+    <link rel="manifest" href="{% static 'img/ico/site.webmanifest' %}">
+
+    <!-- Fonts - Para mostrar algunos iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Optional: Your custom styles -->
+    <link href="{% static 'home/css/base.css' %}" rel="stylesheet"> 
+    
+    
+    <!-- For More CSS Modules -->
+    {% block extra_head %}
+        <title> Base Project HTML </title>
+        
+        <!-- Cargar CSS o meta tags específicos de la página aquí -->
+    {% endblock %}
+</head>
+
+
+<body>
+    <header>
+        <!-- Combined Navbar for Small Screens -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex d-lg-none">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand" href="{% url 'Home' %}">
+                    <img src="{% static 'img/ico/logo.jpg' %}" alt="Logo" style="max-height: 50px; width: auto;">
+                </a>
+                <!-- Toggler Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#combinedNavbar" aria-controls="combinedNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Navbar Content -->
+                <div class="collapse navbar-collapse" id="combinedNavbar">
+                    <form class="d-flex my-2">
+                        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="smallNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Services
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="smallNavbarDropdown">
+                                <li><a class="dropdown-item" href="#">Web Development</a></li>
+                                <li><a class="dropdown-item" href="#">SEO Optimization</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Consulting</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Optimized Top Navbar -->
+        <nav class="navbar d-none d-lg-flex my-container-page" id="TopNavBar">
+            <div class="container-fluid d-flex align-items-center justify-content-start">
+
+                <!-- Logo -->
+                <div class="col-3 col-md-3 offset-md-1"> 
+                    <a class="navbar-brand" href="{% url 'Home' %}">
+                        <img src="{% static 'img/ico/logo.jpg' %}" id="logo_home" alt="Logo" width="150">
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="col-5 col-md-5"> 
+                    <form class="my-search-top-bar">
+                        <input class="form-control" type="search" 
+                        placeholder="Search..." aria-label="Search">
+
+                        <button class="btn" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                
+
+                <!-- Social Media Icons -->
+                <div class="d-flex col-2 col-md-2">
+                    <button class="btn btn-header-icon" id="themeToggle" onclick="window.location.href='#';">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                    <button class="btn btn-header-icon" onclick="window.location.href='#';">
+                        <i class="fab fa-facebook"></i>
+                    </button>
+                    <button class="btn btn-header-icon" onclick="window.location.href='#';">
+                        <i class="fab fa-instagram"></i>
+                    </button>
+                    <button class="btn btn-header-icon" onclick="window.location.href='#';">
+                        <i class="fab fa-google"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Original Main Navbar -->
+        <nav class="navbar navbar-expand-lg my-container-page my-main-navbar-bg d-none d-lg-flex w-100">
+            <div class="container-fluid">
+                <!-- Toggler Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                data-bs-target="#MainNavBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+        
+                <!-- Navbar Links -->
+                <div class="collapse navbar-collapse" id="MainNavBar">
+                    <ul class="navbar-nav w-100 d-flex align-items-center justify-content-start">
+                        <!-- Dropdown de productos -->
+                        <li class="nav-item dropdown col-3 col-md-3 offset-md-1">
+                            <button class="nav-link justify-content-between" 
+                                    id="navbarDropdown" aria-expanded="false" 
+                                    aria-haspopup="true" aria-label="Cats Menu">
+                                <i class="fas fa-bars ms-3"></i>
+                                <span>Nuestros Productos</span>
+                                <i class="fas fa-chevron-down me-2 arrow"></i>
+                            </button>
+                        
+                            <ul class="dropdown-menu" id="categories-drop" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Web Development</a></li>
+                                <li><a class="dropdown-item" href="#">SEO Optimization</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Consulting</a></li>
+                            </ul>
+                        </li>
+                        
+                        
+                        
+
+                        <!-- Links principales -->
+                        <li class="nav-item col-6 col-md-6">
+                            <ul class="navbar-nav d-flex gap-2">
+                                <li class="nav-item nav-item-link-mainbar">
+                                    <a class="nav-link" href="#">Contacto</a>
+                                </li>
+                                <li class="nav-item nav-item-link-mainbar">
+                                    <a class="nav-link" href="#">Ofertas</a>
+                                </li>
+                                <li class="nav-item nav-item-link-mainbar">
+                                    <a class="nav-link" href="#">Mis Pedidos</a>
+                                </li>
+                                <li class="nav-item nav-item-link-mainbar">
+                                    <a class="nav-link" href="#">Arma tu PC</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Botones de carrito y usuario -->
+                        <li class="nav-item col-md-2 d-flex gap-3">
+                            
+                            <!-- Botón del carrito -->
+                            <button class="btn btn-header" id="cart-button" 
+                            aria-label="Cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <!-- Badge para mostrar el número de productos -->
+                                <span class="badge position-absolute top-0 start-100 translate-middle" 
+                                id="badge-cart-button">5</span>
+                            </button>
+
+                            <!-- Botón y dropdown del usuario -->
+                            <div class="dropdown h-100">
+                                <button class="btn btn-header" id="user-button" 
+                                aria-haspopup="true" aria-expanded="false" 
+                                aria-label="User Menu">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                                
+                                
+
+                                <!-- Contenido del dropdown -->
+                                <div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
+                                    <form>
+                                        <!-- Campo de Email -->
+                                        <div class="mb-3">
+                                            <label for="user-email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="user-email" placeholder="Enter email" required>
+                                        </div>
+
+                                        <!-- Campo de Password -->
+                                        <div class="mb-3">
+                                            <label for="user-password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="user-password" placeholder="Enter password" required>
+                                        </div>
+
+                                        <!-- Botón de Login -->
+                                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                                    </form>
+                                    <hr>
+                                    <!-- Botón de Registro -->
+                                    <button class="btn btn-secondary w-100 mt-2">Register</button>
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+
+                </div>
+        
+            </div>
+        </nav>
+        
+    
+    </header>
+    
+    <!-- Contenido Cambiante -->
+    <main>
+        {% block content %}
+            <!-- Contenido específico de la página -->
+        {% endblock %}
+    </main>
+
+
+    <!-- FOOTER -->       
+    <footer id="footer" class="my-navbar-bg">
+        <div class="d-flex margins-conts">
+            <!-- Primera columna: Logo + Texto de la compañía -->
+            <div class="col-4">
+                <a href="{% url 'Home' %}">
+                    <img src="{% static 'img/ico/logo.jpg' %}" alt="Company Logo" class="footer-logo">
+                </a>
+                <p>
+                    ¡Tu cueva Gamer en Córdoba! 🎮
+                </p>
+                <p>
+                    Somos la tienda de computación y videojuegos que hacía falta en Córdoba.
+                    Nacida con el propósito de satisfacer a todo jugador PC Gamer, Playstation, Nintendo y Xbox
+                </p>
+                <p>
+                    Grandes marcas nos acompañan como Asus, Corsair, Hyperx, Gigabyte, Logitech,
+                    Samsung o Redragon entre otras.
+                </p>
+            </div>
+
+            <!-- Segunda columna: Texto extra de información -->
+            <div class="col-4">
+
+                <h3><strong>Additional Information! </strong></h3>
+
+                <button class="btn-footer">
+                    <i class="fa fa-map-marker-alt"></i>
+                    <span>Sarmiento 1138, Córdoba, Argentina.</span>
+                </button>
+
+                <button class="btn-footer">
+                    <i class="fab fa-whatsapp icon"></i>
+                    <span>+54 9 351 543-7688</span>
+                </button>
+
+                <button class="btn-footer">
+                    <i class="fa fa-clock"></i>
+                    <span>Lunes a Viernes de 10hs a 14hs y de 15hs a 18:50hs.
+                        Sábado mediodía y el domingo dormimos todo el día.</span>
+                </button>
+
+                <button class="btn-footer">
+                    <i class="fa fa-envelope"></i>
+                    <span>ventas@dragonesgames.com</span>
+                </button>
+
+            </div>
+
+            <!-- Tercera columna: Vacía para personalización futura -->
+            <div class="col-4">
+
+                <h3><strong>&nbsp;&nbsp;Seguinos! </strong></h3>
+
+                <!-- Icon Container -->
+                <div class="icon-container-footer">
+                    <button class="btn">
+                        <i class="fab fa-whatsapp icon"></i>
+                    </button>
+                    <button class="btn">
+
+                        <i class="fab fa-facebook icon"></i>
+                    </button>
+                    <button class="btn">
+                        <i class="fab fa-instagram icon"></i>
+                    </button>
+                    <button class="btn">
+                        <i class="fab fa-google icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <p class="footer-text-final">
+            © 2024 Dragon Games Cba. All rights reserved.
+        </p>
+
+    </footer>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <!-- Optional: Your custom scripts -->
+    <script src="{% static 'home/js/base.js' %}"></script>
+
+
+    {% block extra_scripts %}
+        <!-- Cargas archivos .js propios de cada template/vista -->
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+
+
+
+<style>
+
+    /* =====================================================================================
+                            BARRA DROP CONTENT TIPO PRODUCTO todo
+/* ===================================================================================== */
+#MainNavBar {
+    width: 100% !important;
+    max-height: var(--main-nav-heigth);
+}
+
+#MainNavBar ul li a {
+    color: #fff;
+    font-size: var(--font-medium);
+}
+
+#MainNavBar ul li a:hover {
+    color: #ccc; 
+}
+
+/* Agregar la animación para el ícono de la flecha cuando el dropdown está abierto */
+#navbarDropdown[aria-expanded="true"] .arrow {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+/* El ícono de la flecha en su posición original cuando el dropdown está cerrado */
+#navbarDropdown[aria-expanded="false"] .arrow {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+/* Estilo para el botón del menú desplegable */
+#navbarDropdown {
+    display: flex;
+    align-items: center;
+    width: 100%; /* 260px */
+    font-size: var(--font-small) !important;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    position: relative; /* Necesario para alinear el menú con este elemento */
+    border: 3px solid var(--main-color); /* Bordes para el menú */
+    border-bottom: none !important;
+    border-radius: 0% !important;
+    box-shadow: none !important;
+}
+
+#navbarDropdown span {
+    margin-right: 20%;
+    margin-left: 7%;
+}
+
+ul.drop-categories li a {
+    color: var(--text-primary) !important;
+}
+
+/* Estilo para el menú desplegable */
+.drop-categories {
+    position: absolute;
+    top: 100%; /* Coloca el menú justo debajo del botón */
+    left: 0; /* Alinea el menú con el borde izquierdo del botón */
+    width: 100%; /* Hace que el menú tenga el mismo ancho que el botón */
+
+    background-color: var(--bg-primary);
+    border: 3px solid var(--main-color); /* Bordes para el menú */
+    border-top: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0% !important;
+
+    list-style: none;
+    z-index: 1000;
+    max-height: 0; /* Oculta el menú inicialmente */
+    overflow: hidden;
+    opacity: 0; /* Oculta el menú inicialmente */
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.drop-categories.show {
+    display: block;
+    max-height: 50%; /* Ajusta según el contenido máximo esperado */
+    opacity: 1; /* Hace el menú completamente visible */
+    /* overflow: visible;  Permite el desbordamiento durante la animación */
+    animation: slideDown 2.5s ease forwards; /* Aplica la animación */
+}
+
+/* Animación para el menú desplegable */
+@keyframes slideDown {
+    from {
+        max-height: 0;
+        opacity: 1;
+    }
+    to {
+        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 1;
+    }
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* para los nav items links */
+.nav-item-navBar {
+    min-width: 120px; /* Ancho mínimo */
+    background-color: var(--main-light-color);
+    margin-top: 0.2%;
+    margin-right: 1%;
+    height: var(--main-nav-heigth);
+
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.nav-item-navBar a {
+    font-size: var(--font-small) !important;
+    font-weight: bold;
+}
+
+
+/* 
+Icono de carrito y Register
+*/
+
+.btn-header {
+    position: relative;
+    background-color: transparent;
+    height: 35px;
+    width: 60px;
+    border: none;
+    outline: none; 
+}
+
+.btn-header i {
+    font-size: 24px; /* Tamaño de los íconos */
+    color: white; /* Color del ícono */
+    pointer-events: none; /* Asegura que el icono no bloquee los clics */
+    transition: color 0.3s ease; /* Añade una transición suave para el cambio de color */
+    border: none; /* Elimina cualquier borde que pueda crear relieve */
+    outline: none; /* Elimina el contorno al hacer clic */
+}
+
+.badge {
+    position: absolute; /* Posicionamiento absoluto para el badge */
+    top: -10px;
+    right: -6px;
+    background-color: var(--main-light-color);
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: var(--font-small);
+}
+
+.btn-header:hover {
+    background-color: var(--bg-primary);
+}
+
+.btn-header:hover i,
+.btn-header:focus i {
+    color: var(--text-primary);
+}
+
+.btn-header:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semitransparente cuando está enfocado */
+}
+
+/* Estilo del dropdown */
+#user-dropdown {
+    position: absolute;  /* Posicionamiento absoluto */
+    left: -310%;  /* No usar la propiedad 'right' */
+    top: 100%;  /* El menú se despliega justo debajo del botón */
+    width: max-content; /* Ajusta el ancho al contenido */
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    
+}
+
+/* Estilo personalizado para los botones */
+#user-dropdown button {
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#user-dropdown button:hover {
+    transform: scale(1.02);
+}
+
+/* Efecto en los inputs */
+#user-dropdown input:focus {
+    border-color: #5878FF;
+    box-shadow: 0 0 5px rgba(88, 120, 255, 0.5);
+}
+
+/* Estilo para el botón de usuario */
+#user-button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+#user-button:focus {
+    outline: none;
+    box-shadow: none;
+}
+</style>
+
+
+
+
+<nav class="navbar navbar-expand-lg my-navbar-bg d-none d-lg-flex">
+    <div class="container-fluid p-0 margins-conts">
+        <!-- Toggler Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Links -->
+        <div id="MainNavBar">
+            <ul class="navbar-nav">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="navbarDropdown" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                        <i class="fas fa-bars ms-1"></i>
+                        <span>Nuestros Productos</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </a>
+    
+                    <ul class="dropdown-menu drop-categories" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item mt-3" href="#">Web Development</a></li>
+                        <li><a class="dropdown-item" href="#">SEO Optimization</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Consulting</a></li>
+                    </ul>
+                    
+                </li>
+
+                <!-- Link lis items apps -->
+                <li class="nav-item nav-item-navBar ms-3">
+                    <a class="nav-link active" aria-current="page" href="#">Contacto</a>
+                </li>
+                <li class="nav-item nav-item-navBar">
+                    <a class="nav-link" href="#">Ofertas</a>
+                </li>
+                <li class="nav-item nav-item-navBar">
+                    <a class="nav-link" href="#">Mis Pedidos</a>
+                </li>
+                <li class="nav-item nav-item-navBar">
+                    <a class="nav-link" href="#">Arma tu PC</a>
+                </li>
+
+                <!-- button cart n register -->
+                <li class="nav-item ml-auto">
+                    <button class="btn btn-header" id="cart-button">
+                        <i class="fas fa-shopping-cart"></i>
+                        <!-- Badge para mostrar el número de productos -->
+                        <span class="badge" id="badge-cart-button">5</span>
+                    </button>
+                </li>
+
+                <li class="nav-item ml-auto dropdown">
+                    <button 
+                        class="btn btn-header" 
+                        id="user-button" 
+                        data-bs-toggle="dropdown" 
+                        aria-haspopup="true" 
+                        aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                    </button>
+
+                    <div class="dropdown-menu p-3" id="user-dropdown" 
+                    aria-labelledby="user-button">
+                        <form>
+                            <div class="mb-3">
+                                <label for="user-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="user-email" placeholder="Enter email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="user-password" placeholder="Enter password">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+                        <hr>
+                        <button class="btn btn-secondary w-100 mt-2">Register</button>
+                    </div>
+                </li>
+                
+
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+
+
+
+
+<!-- Botón y dropdown del usuario -->
+<div class="dropdown h-100">
+    <button class="btn btn-header" id="user-button" 
+        data-bs-toggle="dropdown" aria-haspopup="true" 
+        aria-expanded="false" aria-label="User Menu">
+        <i class="fas fa-user"></i>
+    </button>
+
+    <!-- Contenido del dropdown -->
+    <div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
+        <form>
+            <!-- Campo de Email -->
+            <div class="mb-3">
+                <label for="user-email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="user-email" placeholder="Enter email" required>
+            </div>
+
+            <!-- Campo de Password -->
+            <div class="mb-3">
+                <label for="user-password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="user-password" placeholder="Enter password" required>
+            </div>
+
+            <!-- Botón de Login -->
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <hr>
+        <!-- Botón de Registro -->
+        <button class="btn btn-secondary w-100 mt-2">Register</button>
+    </div>
+</div>
+
+/* Animaciones para el menú desplegable */
+@keyframes slideDown {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+    to {
+        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
+}
+
+/* Clases para aplicar las animaciones */
+.dropdown-menu {
+    display: none; /* Oculto por defecto */
+}
+
+.dropdown-menu.show {
+    display: block;
+    animation: slideDown 0.5s forwards; /* Ajusta la duración según lo deseado */
+}
+
+.dropdown-menu.hide {
+    display: block;
+    animation: slideUp 0.5s forwards; /* Ajusta la duración según lo deseado */
+}
+
+
+
+
+
+
+
+
+
+
+<button class="btn btn-header" id="user-button" 
+                                    data-bs-toggle="dropdown" aria-haspopup="true" 
+                                    aria-expanded="false" aria-label="User Menu">
+
+<script>
+    // Evita que el dropdown se cierre al hacer clic dentro de él
+    document.getElementById('user-dropdown').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+
+    // Cierra el dropdown al hacer clic fuera de él
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('user-dropdown');
+        var button = document.getElementById('user-button');
+
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Original Main Navbar -->
+<nav class="navbar d-none d-lg-flex my-navbar-bg" id="MainNavBar">
+    <div class="container-fluid p-0 margins-conts">
+            
+        <!-- Navbar Links -->
+        <div class="nav-item dropdown col-3">
+            <a class="nav-link" href="#" id="navbarDropdown" 
+                role="button" data-bs-toggle="dropdown" 
+                aria-expanded="false" aria-haspopup="true">
+
+                <i class="fas fa-bars ms-3"></i>
+                <span>Nuestros Productos</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </a>
+
+            <ul class="dropdown-menu drop-categories" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item mt-3" href="#">Web Development</a></li>
+                <li><a class="dropdown-item" href="#">SEO Optimization</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Consulting</a></li>
+            </ul>
+        </div>
+
+
+        <!-- Link lis items apps -->
+        <div class="d-flex ms-3 col-6">
+            <div class="nav-item nav-item-navBar">
+                <a class="nav-link" href="#">Contacto</a>
+            </div>
+            <div class="nav-item nav-item-navBar">
+                <a class="nav-link" href="#">Mis Pedidos</a>
+            </div>
+            <div class="nav-item nav-item-navBar">
+                <a class="nav-link" href="#">Arma tu PC</a>
+            </div>
+            <div class="nav-item nav-item-navBar">
+                <a class="nav-link" href="#">Ofertas</a>
+            </div>
+        </div>
+
+
+        <!-- button cart n register -->
+        <div class="d-flex px-5 col-2">
+            <div class="nav-item">
+                <button class="btn btn-header" id="cart-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    <!-- Badge para mostrar el número de productos -->
+                    <span class="badge" id="badge-cart-button">5</span>
+                </button>
+            </div>
+
+            <div class="nav-item dropdown">
+                <button 
+                    class="btn btn-header" 
+                    id="user-button" 
+                    data-bs-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                </button>
+
+                <div class="dropdown-menu p-3" id="user-dropdown" 
+                aria-labelledby="user-button">
+                    <form>
+                        <div class="mb-3">
+                            <label for="user-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="user-email" placeholder="Enter email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="user-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="user-password" placeholder="Enter password">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <hr>
+                    <button class="btn btn-secondary w-100 mt-2">Register</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</nav>

@@ -1,0 +1,517 @@
+
+:root {
+    /* main color de la empresa */
+    --main-color: #5e08e7;
+    --main-light-color: #9554ff;
+
+    /* Primary Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #d0d2d3;
+    --text-primary: #000000;
+    --text-secondary: #6c757d;
+
+    /* Gradients */
+    --gradient: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+    --gradient2: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+
+    /* Sizes */
+    --font-xl: 1.6rem;
+    --font-medium: 1.1rem;
+    --font-small: 0.9rem;
+
+    /* Fonts */
+    --font-main: 'Montserrat', sans-serif;
+    --font-slim: 'Montserrat', sans-serif;
+
+    /* heigths */
+    --main-nav-heigth: 60px;
+    --top-nav-height: 140px;
+}
+
+/* Modo oscuro */
+.dark-mode {
+    --bg-primary: #343a40;
+    --bg-secondary: #212529;
+    --text-primary: #ffffff;
+    --text-secondary: #6c757d;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+
+    color: var(--white);
+    font-family: var(--font-main);
+    background-color: var(--bg-primary);
+
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .2s ease-in-out;
+}
+
+main {
+    min-height: 100vh;
+    margin-top: 7%; /* Ajusta este valor según la altura de tu barra de navegación */
+}
+
+
+footer {
+    background-color: var(--main-color);
+}
+
+.my-container-page {
+    max-width: 1920px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: visible; /* Permite el scroll si el contenido interno excede el ancho */
+}
+
+
+/* =====================================================================================
+                            Top NavBar
+/* ===================================================================================== */
+#TopNavBar {
+    background-color: var(--main-color);
+    height: var(--top-nav-height);
+    max-height: var(--top-nav-height);
+    max-width: 1920px; /* Fija el ancho máximo */
+    margin: 0 auto; /* Centra el contenido horizontalmente */
+    overflow-x: visible; /* Permite el scroll si el contenido interno excede el ancho */
+}
+
+#logo_home {
+    width: 80%;
+    max-height: calc(var(--top-nav-height) * 0.8);
+}
+
+/* Estilos para la barra de búsqueda */
+.my-search-top-bar {
+    height: 40px; /* Altura consistente */
+    width: 90%;
+    display: flex;
+    
+    background-color: #fff; /* Color de fondo unificado */
+    color: var(--text-primary);
+    border-radius: 20px; /* Bordes redondeados */
+}
+
+/* Estilo del campo de entrada */
+.my-search-top-bar .form-control {
+    border: none;
+    outline: none; /* Elimina el contorno al enfocar */
+    background-color: transparent;
+    color: var(--text-primary);
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+.my-search-top-bar .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    color: #000000;
+}
+
+/* Estilo del botón */
+.my-search-top-bar .btn {
+    border: none;
+    background-color: transparent;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Ajusta el ícono */
+.my-search-top-bar .btn i {
+    font-size: var(--font-small); 
+}
+
+/* 
+            ICON HEAD CONTAINER STUFF 
+*/
+.btn-header-icon {
+    background-color: transparent;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    display: flex;  /* Centrar contenido dentro del botón */
+    justify-content: flex-end; /* Asegurar que el ícono esté centrado */
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-header-icon i {
+    font-size: var(--font-xl); 
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-header-icon:hover {
+    transform: scale(1.4); /* Expandir botón en su lugar */
+    background-color: var(--main-light-color)
+}
+
+.btn-header-icon:hover i {
+    color: #fff;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .btn-header-icon {
+        height: 50px; /* Reducir tamaño en pantallas más pequeñas */
+        width: 50px;
+    }
+
+    .btn-header-icon i {
+        font-size: 20px; /* Ajustar tamaño del ícono */
+    }
+}
+
+
+/* =====================================================================================
+                            BARRA DROP CONTENT TIPO PRODUCTO todo
+/* ===================================================================================== */
+.my-main-navbar-bg {
+    background-color: var(--main-color);
+    height: var(--main-nav-heigth);
+    max-height: var(--main-nav-heigth);
+}
+
+/* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
+#navbarDropdown[aria-expanded="true"] .arrow {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+#navbarDropdown[aria-expanded="false"] .arrow {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+/* Estilo para el botón del menú desplegable */
+#navbarDropdown {
+    display: flex;
+    align-items: center;
+    width: 80%; /* 260px */
+    /* height: var(--main-nav-heigth); */
+    height: 80%;
+    font-size: var(--font-small) !important;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    position: relative; /* Necesario para alinear el menú con este elemento */
+    border: 3px solid var(--main-color); /* Bordes para el menú */
+
+    border-bottom: none !important;
+    border-radius: 0% !important;
+    box-shadow: none !important;
+}
+
+#categories-drop li a {
+    color: var(--text-primary) !important;
+}
+
+/* Estilo para el menú desplegable */
+#categories-drop {
+    position: absolute;
+    top: 100%; 
+    left: 0; 
+    width: 80%;
+    background-color: var(--bg-primary);
+    border: 3px solid var(--main-color); /* Bordes para el menú */
+    border-top: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0% !important;
+    list-style: none;
+    z-index: 1000;
+    max-height: 0; /* Oculta el menú inicialmente */
+    overflow: hidden;
+    opacity: 0; /* Oculta el menú inicialmente */
+    display: none;
+    animation-duration: 0.7s;
+    animation-fill-mode: forwards;
+}
+
+/* Clases para aplicar las animaciones */
+#categories-drop.show {
+    display: block;
+    animation-name: slideDownCat;
+}
+
+#categories-drop.hide {
+    display: block;
+    animation-name: slideUpCat;
+}
+
+/* Animaciones para el menú desplegable */
+@keyframes slideDownCat {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+    to {
+        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpCat {
+    from {
+        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
+}
+
+/*
+#categories-drop.show {
+    display: block;
+    max-height: 50%;  Ajusta según el contenido máximo esperado */
+    /* opacity: 1;  Hace el menú completamente visible */
+    /* overflow: visible;  Permite el desbordamiento durante la animación 
+    animation: slideDownCat 2.5s ease forwards;
+} */
+
+/* Animación para el menú desplegable */
+/* 
+@keyframes slideDownCat {
+    from {
+        max-height: 0;
+        opacity: 1;
+    }
+    to {
+        max-height: 500px; 
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpCat {
+    from {
+        max-height: 500px; 
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 1;
+    }
+}
+*/
+.dropdown-item:hover {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* 
+para los nav items links 
+*/
+.nav-item-link-mainbar {
+    width: auto;
+    max-width: 25%;
+    background-color: var(--main-light-color);
+    height: 80%;
+
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.nav-item-link-mainbar:hover {
+    background-color: var(--main-light-color);
+    cursor: pointer;
+}
+
+.nav-item-link-mainbar a {
+    font-size: var(--font-small) !important;
+    font-weight: bold;
+    color: #fff !important;
+}
+/* 
+Icono de carrito y Register
+*/
+.btn-header {
+    position: relative;
+    background-color: transparent;
+    height: 80%;
+    width: 50px;
+    border: none;
+    outline: none; 
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-header i {
+    font-size: var(--font-xl); 
+    color: white;
+    pointer-events: none; /* Asegura que el icono no bloquee los clics */
+    transition: color 0.3s ease;
+    border: none; 
+    outline: none; /* Elimina el contorno al hacer clic */
+}
+
+.badge {
+    position: absolute;
+    background-color: var(--main-light-color);
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: var(--font-small);
+}
+
+.btn-header:hover {
+    background-color: var(--bg-primary);
+}
+
+.btn-header:hover i,
+.btn-header:focus i{
+    color: var(--text-primary);
+}
+
+.btn-header:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semitransparente cuando está enfocado */
+}
+
+/* Animaciones para el menú desplegable */
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+}
+
+
+#user-dropdown.show {
+    display: block;
+    animation-name: slideDown;
+}
+
+#user-dropdown.hide {
+    display: block;
+    animation-name: slideUp;
+}
+
+
+
+#user-dropdown {
+    position: absolute;
+    right: 0;  /* El menú se alinea al borde derecho del botón */
+    left: auto;  /* Asegura que 'left' no afecte */
+    top: 100%;  /* El menú se despliega justo debajo del botón */
+    width: max-content; /* Ajusta el ancho al contenido */
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
+    border: 3px solid var(--main-color);
+    border-radius: 8px;
+    padding: 10px;
+
+    display: none;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+/* Estilo de los inputs y el botón dentro del dropdown */
+#user-dropdown input[type="email"],
+#user-dropdown input[type="password"],
+#user-dropdown button {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#user-dropdown button {
+    background-color: var(--main-light-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#user-dropdown button:hover {
+    background-color: #444;
+}
+
+
+
+
+
+
+/* ================================================================================
+    PIE DE PAGINAAAAAAAAAAAAAAAAAAAAAAAAAAAAA todo  FOOTER
+/* ================================================================================ */
+
+
+/* Estilos para el logo */
+.footer-logo {
+    max-width: 250px; /* Tamaño máximo del logo */
+    margin-bottom: 10px;
+}
+
+/* Estilos para el texto */
+.footer-text {
+    font-size: 14px; /* Tamaño de fuente */
+    line-height: 1.5; /* Espaciado entre líneas */
+    margin: 0; /* Sin margen */
+}
+
+
+.footer-text-final {
+    text-align: center;
+    padding: 10px 10px;
+}
+
+.btn-footer {
+    font-size: 1.1em; /* Ajusta el tamaño del ícono y el texto */
+    background-color: #780178; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+
+    border: none; /* Quita el borde del botón */
+    padding: 10px; /* Espaciado interno del botón */
+    display: flex; /* Alinea el contenido del botón horizontalmente */
+    align-items: center; /* Centra verticalmente el contenido dentro del botón */
+    margin: 0; /* Elimina el margen predeterminado */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s, transform 0.2s; /* Transiciones suaves para el hover */
+    text-align: left; /* Alinea el texto a la izquierda */
+}
+
+.btn-footer i {
+    font-size: 1.8em; /* Tamaño del ícono dentro del botón */
+    margin-right: 10px; /* Espacio entre el ícono y el texto */
+}
+
+.btn-footer:hover {
+    background-color: #6c004a; /* Color de fondo más oscuro al pasar el mouse */
+    transform: scale(1.05); /* Leve zoom al pasar el mouse */
+}
+
+.btn-footer:focus {
+    outline: none; /* Quita el borde de enfoque */
+    box-shadow: none; /* Quita la sombra alrededor del botón */
+}
+
+.btn-footer:active {
+    background-color: #5a003e; /* Color de fondo más oscuro al hacer clic */
+    transform: scale(0.95); /* Efecto de presionar el botón */
+}
