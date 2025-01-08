@@ -180,17 +180,6 @@ footer {
     max-height: var(--main-nav-heigth);
 }
 
-/* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
-#navbarDropdown[aria-expanded="true"] .arrow {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
-}
-
-#navbarDropdown[aria-expanded="false"] .arrow {
-    transform: rotate(0deg);
-    transition: transform 0.3s ease;
-}
-
 /* Estilo para el botón del menú desplegable */
 #navbarDropdown {
     display: flex;
@@ -215,58 +204,73 @@ footer {
 
 /* Estilo para el menú desplegable */
 #categories-drop {
+    display: none;
     position: absolute;
+
     top: 100%; 
     left: 0; 
     width: 80%;
     background-color: var(--bg-primary);
-    border: 3px solid var(--main-color); /* Bordes para el menú */
+    border: 3px solid var(--main-color);
     border-top: none !important;
     box-shadow: none !important;
     margin: 0 !important;
     padding: 0 !important;
     border-radius: 0% !important;
+
     list-style: none;
     z-index: 1000;
-    max-height: 0; /* Oculta el menú inicialmente */
+    
     overflow: hidden;
-    opacity: 0; /* Oculta el menú inicialmente */
-    display: none;
-    animation-duration: 0.7s;
-    animation-fill-mode: forwards;
+    opacity: 0; 
+    max-height: 0;
+    opacity: 1;
+    /* Transición suave para max-height y opacidad */
+    transition: max-height 0.5s ease, opacity 0.5s ease; 
 }
 
 /* Clases para aplicar las animaciones */
 #categories-drop.show {
     display: block;
-    animation-name: slideDownCat;
+    max-height: 500px;
+    opacity: 1;
+    animation: slideDownCat 0.5s ease forwards;
 }
 
 #categories-drop.hide {
     display: block;
-    animation-name: slideUpCat;
+    overflow: hidden;
+    animation: slideUpCat 0.5s ease forwards;
+}
+
+/* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
+.arrow-drop {
+    transition: transform 0.3s ease;
+}
+.rotate { 
+    transform: rotate(180deg); 
 }
 
 /* Animaciones para el menú desplegable */
 @keyframes slideDownCat {
     from {
         max-height: 0;
-        opacity: 0;
+        opacity: 1;
     }
     to {
-        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        max-height: 500px;
         opacity: 1;
     }
 }
 
 @keyframes slideUpCat {
     from {
-        max-height: 500px; /* Ajusta según el contenido máximo esperado */
+        max-height: 500px;
         opacity: 1;
     }
     to {
         max-height: 0;
-        opacity: 0;
+        opacity: 1;
     }
 }
 

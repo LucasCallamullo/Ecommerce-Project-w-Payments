@@ -7,6 +7,7 @@
 // Evento de clic en el botón de usuario
 document.getElementById('navbarDropdown').addEventListener('click', function(event) {
     var dropdown_cat = document.getElementById('categories-drop');
+    var arrow_drop = document.querySelector('.arrow-drop');
 
     // Verifica si el dropdown está actualmente visible
     if (dropdown_cat.classList.contains('show')) {
@@ -19,6 +20,8 @@ document.getElementById('navbarDropdown').addEventListener('click', function(eve
         dropdown_cat.classList.add('show');
     }
 
+    arrow_drop.classList.toggle('rotate');
+
     // Evita que el evento se propague y cierre el dropdown al hacer clic dentro de él
     event.stopPropagation();
 });
@@ -27,6 +30,7 @@ document.getElementById('navbarDropdown').addEventListener('click', function(eve
 document.addEventListener('click', function(event) {
     var dropdown_cat = document.getElementById('categories-drop');
     var button_cat = document.getElementById('navbarDropdown');
+    var arrow_drop = document.querySelector('.arrow-drop');
 
     // Verifica si el clic no se hizo dentro del dropdown ni del botón
     if (!dropdown_cat.contains(event.target) && !button_cat.contains(event.target)) {
@@ -34,6 +38,7 @@ document.addEventListener('click', function(event) {
         if (dropdown_cat.classList.contains('show')) {
             dropdown_cat.classList.remove('show');
             dropdown_cat.classList.add('hide');
+            arrow_drop.classList.toggle('rotate');
         }
     }
 });
