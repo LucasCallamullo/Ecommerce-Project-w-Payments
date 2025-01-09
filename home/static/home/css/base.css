@@ -6,7 +6,7 @@
 
     /* Primary Colors */
     --bg-primary: #ffffff;
-    --bg-secondary: #d0d2d3;
+    --bg-secondary: #f8f9fa;
     --text-primary: #000000;
     --text-secondary: #6c757d;
 
@@ -17,6 +17,7 @@
     /* Sizes */
     --font-xl: 1.6rem;
     --font-medium: 1.1rem;
+    --font-normal: 1.0rem;
     --font-small: 0.9rem;
 
     /* Fonts */
@@ -38,11 +39,13 @@
 
 html, body {
     margin: 0;
+    padding: 0;
     width: 100%;
     min-height: 100vh;
     overflow-x: hidden;
 
-    color: var(--white);
+    color: var(--text-primary);
+    font-size: var(--font-normal);
     font-family: var(--font-main);
     background-color: var(--bg-primary);
 
@@ -64,9 +67,10 @@ footer {
 }
 
 .my-container-page {
-    max-width: 1920px;
+    max-width: 1200px;   /* ancho de gorila games */
     width: 100%;
     margin: 0 auto;
+    padding: 0;
     overflow-x: visible; /* Permite el scroll si el contenido interno excede el ancho */
 }
 
@@ -280,8 +284,8 @@ footer {
     top: 0;
     left: 100%; /* Ajusta para que el submenú aparezca a la derecha */
     width: 80%; /* Ajusta según tu diseño */
-    background-color: #000000; /* var(--bg-secondary); */
     border: 3px solid var(--main-color);
+    box-shadow: 4px 4px 10px 0px #000000; /* Sombreado negro */
     z-index: 2000;
     padding: 0;
     margin: 0;

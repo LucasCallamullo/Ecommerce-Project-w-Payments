@@ -1,0 +1,162 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+
+<!-- For More CSS Modules -->
+{% block extra_head %}
+    <title> Producto Categorias </title>
+    <link href="{% static 'productos/css/products_cats.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+<!-- Contenido principal de la pagina -->
+
+{% block content %}
+
+<div class="w-100 d-flex offset-1 mt-3 mb-4 gap-3">
+    <!-- Se utiliza para agregar mas botones en este container -->
+    <button class="btn-paralelogramo px-3"
+    onclick="window.location.href='{% url 'Home' %}'">
+        <span> Home </span>
+    </button>
+
+    <!-- Se utiliza para agregar mas botones en este container -->
+    {% if category %}
+        <button class="btn-paralelogramo px-3"
+        onclick="window.location.href='{% url 'pl_category' cat_slug=category.slug %}'">
+            <span> {{ category.name }} </span>
+        </button>
+    {% endif %}
+</div>
+
+<div class="w-100 d-flex">
+
+    <div class="col-3 col-md-3 offset-1 p-0">
+        
+        <!-- TOP 10 BUTTON SIDE -->
+        <button class="btn-top-10 d-flex mb-3">
+            <i class="fa fa-star px-2"></i>Top 10
+        </button>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2> Filtros </h2>
+
+            <hr>
+            <!-- Search Form Categories -->
+            <div class="sidebar-search">
+                <form id="search-form" class="form-group">
+                    <!-- Datos de las categorias para pasar y filtrar -->
+                    <input type="text" id="search-input" class="form-control"
+                           placeholder="Search..." onfocus="this.value=''"
+                           data-cat-id="{{category.id}}"
+                           >
+                </form>
+            </div>
+
+            <hr>
+            <!-- Categories will be inserted here -->
+            <div class="mt-3 sidebar-categories">
+                <!-- Top button on side bar -->
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'product_list' %}"><strong>Todas las Categorias</strong></a></li>
+            
+                    <!-- Cat = Category, sub_cats = Sub Category ; Se pasa del context Processor-->
+                    {% for cat, sub_cats in categories_dropmenu.items %}
+                    <li>
+                        <a href="{% url 'pl_category' cat_slug=cat.slug %}"><strong>{{ cat.name }}</strong></a>
+                        
+                        <!-- Submenú with SubCategories -->
+                        {% if sub_cats %}
+                        <ul class="list-unstyled">
+                            {% for sub_cat in sub_cats %}
+                                <li class="ms-4">
+                                    <a href="{% url 'pl_subcategory' cat_slug=cat.slug subcat_slug=sub_cat.slug %}">
+                                        {{ sub_cat.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- More content ? ¡ -->
+
+        </div>
+    </div>
+
+
+    <!-- SEPARADOR MAIN_CONTENT -->
+    <!-- Main Content -->
+    <div class="col-7 col-md-7 mt-3">
+
+        
+        <!-- Donde mostramos los resultados de AJAX Request -->
+        <div id="search-results" class="row">
+            {% for product in products %}
+                <div class="col-md-3 col-6 mb-4">
+                    <figure class="product-card">
+                        <!-- Imagen del Producto -->
+                        <div class="image-container">
+
+                            {% for image in product.images.all %}
+                                {% if image.main_image %}
+                                    <img src="{{ image.image_url }}" alt="{{ product.name }}">
+                                    <!-- Si es la imagen principal, la mostramos y salimos del bucle -->
+                                {% endif %}
+                            {% endfor %}
+
+                            <!-- Botón de la esquina -->
+                            <button class="corner-box" onclick="alert('Botón de la esquina clicado')">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                            </button>
+                        </div>
+        
+                        <!-- Información del Producto -->
+                        <figcaption class="product-info p-2">
+                            <a href="#">
+                                <p>{{ product.name }}</p>
+                            </a>
+
+                            <div class="text-start">
+                                {% if product.stock > 4 %}
+                                    <p class="m-0 p-0" style="color: green;">Disponible</p>
+                                {% elif product.stock > 0 and product.stock < 4 %}
+                                    <p class="m-0 p-0" style="color: orange;">Stock Bajo</p>
+                                {% else %}
+                                    <p class="m-0 p-0" style="color: red;">Sin Stock</p>
+                                {% endif %}
+
+                                <p>${{ product.price }}</p>
+                            </div>
+
+                            <button onclick="alert('producto id {{product.id}}')" class="add-button">
+                                Agregar
+                            </button>
+
+                        </figcaption>
+
+                    </figure>
+                </div>
+            {% endfor %}
+
+        </div>
+        
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+    <!-- JavaScript for Product Page -->
+{% endblock %}
+

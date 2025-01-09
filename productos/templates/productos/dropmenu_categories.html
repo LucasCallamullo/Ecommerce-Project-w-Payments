@@ -1,3 +1,6 @@
+<!-- Dato para el futuro, tiene un js asociado en el base.js sobre su comportamiento al clickear
+ por fuera y animaciones en su despliegue y arrow rotate -->
+
 <!-- Botón para desplegar el menú -->
 <button class="nav-link justify-content-between" 
         id="navbarDropdown" aria-expanded="false" 
@@ -13,7 +16,8 @@
 
     {% for category, subcategories in categories_dropmenu.items %}
         <li class="dropdown-item"">
-            <a class="d-flex justify-content-between align-content-center" href="#">
+            <a class="d-flex justify-content-between align-content-center" 
+            href="{% url 'pl_category' cat_slug=category.slug %}">
                 {{ category.name }}
                 {% if subcategories %}
                     <i class="fas fa-chevron-right mt-1"></i>
@@ -25,7 +29,7 @@
                 <ul class="sub-dropdown-content">
                     {% for subcategory in subcategories %}
                         <li class="dropdown-item">
-                            <a href="#">
+                            <a href="{% url 'pl_subcategory' cat_slug=category.slug subcat_slug=subcategory.slug %}">
                                 {{ subcategory.name }}
                             </a>
                         </li>

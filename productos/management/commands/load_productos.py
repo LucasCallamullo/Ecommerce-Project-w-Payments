@@ -9,10 +9,9 @@ from productos.models import Product, PCategory, PSubcategory, PBrand, ProductIm
 # command python manage.py load_productos
 
 class Command(BaseCommand):
-    help="XXDDD"
+    help = "Para cargar de forma generica los productos"
 
     def handle(self, *args, **kwargs):
-        
         # Ruta al archivo Excel
         file_path = 'productos/data/productos.xlsx'
         try:
@@ -23,9 +22,9 @@ class Command(BaseCommand):
         
         # Obtener datos del excel 
         for index, row in df.iterrows():
-        
             name = row.get("name")
             price = row.get("price")
+            stock = row.get("stock")
             
             available_str = row.get("available")
             available = True if available_str.lower() == "si" else False
@@ -41,7 +40,6 @@ class Command(BaseCommand):
             description = row.get("description")
             image_url = row.get("image_url")
             image_url2 = row.get("image_url2")
-            
 
             # Crear categorías, subcategorias, marcas si no existen
             category_obj, _ = PCategory.objects.get_or_create(name=category)
@@ -54,6 +52,7 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.SUCCESS(f'Subcategory "{subcategory}" created successfully.'))
             
+            # Recuperar o crear el producto
             product_obj, created = Product.objects.get_or_create(
                 name=name,
                 price=price,
@@ -62,13 +61,14 @@ class Command(BaseCommand):
                 category=category_obj,
                 subcategory=sub_category_obj,
                 brand=brand_obj,
-                description=description
+                description=description,
+                stock=stock
             )
-            
-            # created bool, return True si se creo, return False si ya existia
+
+            # Si el producto ya existe, actualizar el stock
             if not created:
-                # Si el producto ya existe, no volvemos a crear las imágenes, solo las asociamos si no existen
                 existing_images = product_obj.images.all()
+                self.stdout.write(self.style.SUCCESS(f'Producto "{product_obj.name}" update successfully.'))
                 
                 if not existing_images.filter(image_url=image_url).exists():
                     ProductImage.objects.create(
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                         main_image=False
                     )
             else:
-                # Si el producto es nuevo, creamos las imágenes
+                # Si el producto es nuevo, crear las imágenes
                 ProductImage.objects.create(
                     product=product_obj,
                     image_url=image_url,
@@ -95,13 +95,6 @@ class Command(BaseCommand):
                     image_url=image_url2,
                     main_image=False
                 )
-
-
-
-
-
-
-
 
 
 
