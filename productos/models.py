@@ -1,23 +1,31 @@
 from django.db import models
 
 # Create your models here.
+from django.db.models import UniqueConstraint
+
+
 class PCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     
     def __str__(self):
         return self.name
     
 
 class PSubcategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     category = models.ForeignKey('PCategory', on_delete=models.CASCADE, related_name='subcategories')
+    
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['name', 'category'], name='unique_name_per_category')
+        ]
     
     def __str__(self):
         return self.name
     
 
 class PBrand(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     
     def __str__(self):
         return self.name
@@ -40,10 +48,10 @@ class Product(models.Model):
     # atributos varios del producto
     name = models.CharField(max_length=255, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    available = models.BooleanField(default=True)
-    stock = models.IntegerField()
+    available = models.BooleanField(default=False)
+    stock = models.IntegerField(null=True, blank=True, default=0)
     discount = models.IntegerField(default=0)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     
     # relacion uno a uno, cada producto tiene una categoria, sub, pbrand
     category = models.ForeignKey('PCategory', on_delete=models.CASCADE)
