@@ -144,20 +144,9 @@
 
                         <!-- Dropdown de productos -->
                         <li class="nav-item dropdown col-3 col-md-3 offset-md-1">
-                            <button class="nav-link justify-content-between" 
-                                    id="navbarDropdown" aria-expanded="false" 
-                                    aria-haspopup="true" aria-label="Cats Menu">
-                                <i class="fas fa-bars ms-3"></i>
-                                <span>Nuestros Productos</span>
-                                <i class="fas fa-chevron-down me-2 arrow-drop"></i>
-                            </button>
-                        
-                            <ul class="dropdown-menu" id="categories-drop" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Web Development</a></li>
-                                <li><a class="dropdown-item" href="#">SEO Optimization</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Consulting</a></li>
-                            </ul>
+                            <div class="container-fluid w-100 p-0">
+                                {% include "productos/dropmenu_categories.html" %} 
+                            </div>
                         </li>
                         
                         <!-- Links principales -->

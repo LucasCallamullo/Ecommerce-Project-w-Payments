@@ -1,8 +1,7 @@
 
 
-
 // ========================================================================
-//                   Evento de clic en el botón de usuario
+//                   Evento de anmimaciones en drop menu categories
 // ========================================================================
 // Evento de clic en el botón de usuario
 document.getElementById('navbarDropdown').addEventListener('click', function(event) {

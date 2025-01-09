@@ -5,7 +5,7 @@ from django.db.models import UniqueConstraint
 
 
 class PCategory(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
     
     def __str__(self):
         return self.name
@@ -25,7 +25,7 @@ class PSubcategory(models.Model):
     
 
 class PBrand(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
     
     def __str__(self):
         return self.name

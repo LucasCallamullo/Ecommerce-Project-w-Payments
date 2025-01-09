@@ -1,0 +1,37 @@
+<!-- Botón para desplegar el menú -->
+<button class="nav-link justify-content-between" 
+        id="navbarDropdown" aria-expanded="false" 
+        aria-haspopup="true" aria-label="Cats Menu">
+    <i class="fas fa-bars ms-3"></i>
+    <span>Nuestros Productos</span>
+    <i class="fas fa-chevron-down me-2 arrow-drop"></i>
+</button>
+
+<!-- Lista de categorías -->
+<ul class="dropdown-menu" id="categories-drop" aria-labelledby="navbarDropdown">
+    <li class="dropdown-item"></li>
+
+    {% for category, subcategories in categories_dropmenu.items %}
+        <li class="dropdown-item"">
+            <a class="d-flex justify-content-between align-content-center" href="#">
+                {{ category.name }}
+                {% if subcategories %}
+                    <i class="fas fa-chevron-right mt-1"></i>
+                {% endif %}
+            </a>
+            
+            <!-- Submenú -->
+            {% if subcategories %}
+                <ul class="sub-dropdown-content">
+                    {% for subcategory in subcategories %}
+                        <li class="dropdown-item">
+                            <a href="#">
+                                {{ subcategory.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

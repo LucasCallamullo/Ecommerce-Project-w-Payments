@@ -63,7 +63,6 @@ footer {
     background-color: var(--bg-primary);
 }
 
-
 .my-container-page {
     max-width: 1920px;
     width: 100%;
@@ -71,7 +70,11 @@ footer {
     overflow-x: visible; /* Permite el scroll si el contenido interno excede el ancho */
 }
 
-
+.my-main-navbar-bg {
+    background-color: var(--main-color);
+    height: var(--main-nav-heigth);
+    max-height: var(--main-nav-heigth);
+} 
 /* =====================================================================================
                             Top NavBar
 /* ===================================================================================== */
@@ -173,60 +176,45 @@ footer {
 
 /* =====================================================================================
                             BARRA DROP CONTENT TIPO PRODUCTO todo
-/* ===================================================================================== */
-
-.my-main-navbar-bg {
-    background-color: var(--main-color);
-    height: var(--main-nav-heigth);
-    max-height: var(--main-nav-heigth);
-} 
-
+/* ===================================================================================== *
 /* Estilo para el botón del menú desplegable */
 #navbarDropdown {
     display: flex;
     align-items: center;
-    width: 80%; /* 260px */
-    /* height: var(--main-nav-heigth); */
+    position: relative;
+    width: 80%;
     height: 80%;
     font-size: var(--font-small) !important;
     background-color: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
-    position: relative; /* Necesario para alinear el menú con este elemento */
-    border: 3px solid var(--main-color); /* Bordes para el menú */
-
+    border: 3px solid var(--main-color);
     border-bottom: none !important;
     border-radius: 0% !important;
     box-shadow: none !important;
 }
 
-#categories-drop li a {
-    color: var(--text-primary) !important;
-}
-
 /* Estilo para el menú desplegable */
 #categories-drop {
     display: none;
-    position: absolute;
-
+    position: absolute; 
+    /*  position: relative; */
     top: 100%; 
     left: 0; 
-    width: 80%;
+    width: 80%; /* 80% */
+
     background-color: var(--bg-primary);
     border: 3px solid var(--main-color);
     border-top: none !important;
     box-shadow: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    border-radius: 0% !important;
+    border-radius: 0% !important; 
+    list-style: none !important;
 
-    list-style: none;
     z-index: 1000;
-    
-    overflow: hidden;
-    opacity: 0; 
+    /* overflow: hidden; */
     max-height: 0;
-    opacity: 1;
-    /* Transición suave para max-height y opacidad */
+    opacity: 1; /* opacity: 1;  Establece la opacidad inicial */
     transition: max-height 0.5s ease, opacity 0.5s ease; 
 }
 
@@ -242,14 +230,6 @@ footer {
     display: block;
     overflow: hidden;
     animation: slideUpCat 0.5s ease forwards;
-}
-
-/* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
-.arrow-drop {
-    transition: transform 0.3s ease;
-}
-.rotate { 
-    transform: rotate(180deg); 
 }
 
 /* Animaciones para el menú desplegable */
@@ -275,9 +255,51 @@ footer {
     }
 }
 
-.dropdown-item:hover {
+#categories-drop li, a {
+    color: var(--text-primary) !important;
+    text-decoration: none;
+}
+
+#categories-drop .dropdown-item {
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--main-color);
+    padding-top: 2%;
+    padding-bottom: 2%;
+    position: relative;
+}
+
+#categories-drop .dropdown-item:hover {
     background-color: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
+}
+
+/* Submenú */
+.sub-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%; /* Ajusta para que el submenú aparezca a la derecha */
+    width: 80%; /* Ajusta según tu diseño */
+    background-color: #000000; /* var(--bg-secondary); */
+    border: 3px solid var(--main-color);
+    z-index: 2000;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-item:hover .sub-dropdown-content {
+    display: block;
+}
+
+
+
+
+/* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
+.arrow-drop {
+    transition: transform 0.3s ease;
+}
+.rotate { 
+    transform: rotate(180deg); 
 }
 
 /* 
@@ -305,7 +327,7 @@ para los nav items links
     color: #fff !important;
 }
 /* 
-Icono de carrito y Register
+                Icono de carrito y Register
 */
 .btn-header {
     position: relative;
@@ -350,7 +372,7 @@ Icono de carrito y Register
     background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semitransparente cuando está enfocado */
 }
 
-/* Animaciones para el menú desplegable */
+/* Animaciones para el widget de registro */
 @keyframes slideDown {
     from {
         transform: translateY(-10px);
@@ -383,8 +405,6 @@ Icono de carrito y Register
     display: block;
     animation-name: slideUp;
 }
-
-
 
 #user-dropdown {
     position: absolute;
@@ -425,19 +445,17 @@ Icono de carrito y Register
 }
 
 
-
-
 /* ================================================================================
     PIE DE PAGINAAAAAAAAAAAAAAAAAAAAAAAAAAAAA todo  FOOTER
 /* ================================================================================ */
+/* 
+primera columna 
+*/
 .footer-logo {
     max-height: 160px;
     max-width: 100%;
 }
 
-/* 
-Segunda columna 
-*/
 footer p,
 footer strong {
     font-size: var(--font-medium);
@@ -456,12 +474,12 @@ footer strong {
     margin: 0;
     cursor: pointer;
     transition: transform 0.2s, background-color 0.3s ease-in-out;
-    text-align: left; /* Alinea el texto a la izquierda */
+    text-align: left;
 }
 
 .btn-footer i {
     font-size: var(--font-xl);
-    margin-right: 1rem; /* Espacio entre el icono y el texto */
+    margin-right: 1rem;
 }
 
 .btn-footer .text-container {
@@ -475,21 +493,21 @@ footer strong {
 }
 
 .btn-footer:hover {
-    background-color: var(--bg-secondary); /* Nuevo color para hover */
+    background-color: var(--bg-secondary);
     transform: scale(1.05);
 }
 
 .btn-footer:focus {
-    outline: 2px solid var(--primary-color); /* Mejora de accesibilidad */
+    outline: 2px solid var(--primary-color);
     box-shadow: 0 0 5px var(--primary-color);
 }
 
 .btn-footer:active {
     transform: scale(0.95);
-    background-color: var(--bg-secondary); /* O un color diferente */
+    background-color: var(--bg-secondary);
 }
 /* 
-Tercera Columna 
+    Segunda Columna 
 */
 .icon-container-footer {
     display: flex;
