@@ -67,6 +67,7 @@ document.getElementById('user-button').addEventListener('click', function(event)
         // Si no está visible, quita la clase 'hide' y añade 'show' para iniciar la animación de apertura
         dropdown.classList.remove('hide');
         dropdown.classList.add('show');
+        dropdown.style.display = 'block';
     }
 
     // Evita que el evento se propague y cierre el dropdown al hacer clic dentro de él
@@ -93,21 +94,44 @@ document.getElementById('user-dropdown').addEventListener('click', function(even
     event.stopPropagation();
 });
 
+document.getElementById('user-dropdown').addEventListener('animationend', function(event) {
+    var dropdown = document.getElementById('user-dropdown');
+    
+    // Verifica si la animación que terminó fue 'slideUp'
+    if (event.animationName === 'slideUp') {
+        dropdown.style.display = 'none'; // Oculta el dropdown después de la animación
+    }
+});
 
 
 // ========================================================================
 //                   Evento de Dark Mode
 // ========================================================================
-document.getElementById('themeToggle').addEventListener('click', function () {
-    document.body.classList.toggle('dark-mode');
-    // Guarda el estado en localStorage (opcional)
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-});
+const themeToggleButton = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('theme-icon');
 
-// Mantén el estado del tema al recargar la página
+// Función para alternar el modo oscuro y actualizar el ícono
+function toggleTheme() {
+    const isDarkMode = document.body.classList.toggle('dark-mode'); // Cambia el modo
+    themeIcon.classList.toggle('fa-moon', !isDarkMode); // Muestra el sol para modo luz
+    themeIcon.classList.toggle('fa-sun', isDarkMode); // Muestra la luna para modo oscuro
+
+    // Guarda el estado en localStorage
+    localStorage.setItem('darkMode', isDarkMode);
+}
+
+// Asigna el evento al botón
+themeToggleButton.addEventListener('click', toggleTheme);
+
+// Mantén el estado del tema y el ícono al recargar la página
 document.addEventListener('DOMContentLoaded', function () {
-    if (localStorage.getItem('darkMode') === 'true') {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
         document.body.classList.add('dark-mode');
+        themeIcon.classList.add('fa-sun');
+        themeIcon.classList.remove('fa-moon');
+    } else {
+        themeIcon.classList.add('fa-moon');
+        themeIcon.classList.remove('fa-sun');
     }
 });

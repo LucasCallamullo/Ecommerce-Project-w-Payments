@@ -1,0 +1,282 @@
+{% extends "home/base.html" %}
+
+{% load static %}
+{% load humanize %}
+
+<!-- For More CSS Modules -->
+{% block extra_head %}
+    <title> {{product.name}} </title>
+    <link href="{% static 'productos/css/products_detail.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+<!--  ========== SEPARADOR MAIN_CONTENT ========== -->
+{% block content %}
+
+<!-- Primera fila -->
+<div class="d-flex mt-3 mb-4 gap-3">
+    <div class="col-lg-12">
+        <button class="btn-paralelogramo px-lg-3"
+            onclick="window.location.href='{% url 'product_list' %}'">
+            <span> Todos Nuestros Productos </span>
+        </button>
+        
+        {% if product.category %}
+            <button class="btn-paralelogramo px-lg-3"
+            onclick="window.location.href='{% url 'pl_category' product.category.slug %}'">
+                <span> 
+                    {{ product.category.name }}
+                </span>
+            </button>
+        {% endif %}
+        
+
+        {% if product.subcategory %}
+            <button class="btn-paralelogramo px-lg-3"
+            onclick="window.location.href='{% url 'pl_subcategory' product.category.slug product.subcategory.slug %}'">
+                <span> 
+                    {{ product.subcategory.name }}
+                </span>
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-flex">
+
+    <!-- PRIMERA COLUMNA -->
+    <div class="col-lg-5">
+        <div id="prod-container">
+            <div class="prod-left-column">
+
+                {% with counter=1 %}
+
+                    {% for image in product.images.all %}
+                        <!-- Primera imagen de la columna izquierda que es la que se muestra como imagen principal -->
+                        {% if image.main_image %}
+                            <div class="prod-image-item prod-small-image" data-index="1"
+                                    data-image-url="{{ image.image_url }}" 
+                                    style="background-image: url('{{ image.image_url }}');">
+                            </div>
+                        {% else %}
+                            <!-- El resto de imágenes -->
+                            {% if image.image_url %}
+                                <div class="prod-image-item prod-small-image" data-index="{{ counter }}"
+                                        data-image-url="{{ image.image_url }}" 
+                                        style="background-image: url('{{ image.image_url }}');">
+                                </div>
+                            {% endif %}
+                               
+                        {% endif %}
+                            
+                        {% with counter=counter|add:1 %}
+                        {% endwith %}
+                    {% endfor %}
+                {% endwith %}
+            </div>
+            <div class="prod-right-column">
+                <div class="prod-image-preview prod-zoomed"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEGUNDA COLUMNA -->
+    <div class="col-lg-5">
+        <h3 class="mt-1 mb-2">{{ product.name }}</h3>
+
+        <!-- Cuadros de Stock Y Marca -->
+        <div class="product-info-container mt-2">
+            <div class="product-info col-md-2">
+                <span class="code-label">Cod:</span>
+                <span class="code-value">#471332</span>
+            </div>
+
+            <div class="product-info col-md-3">
+                <span class="code-label">Stock:</span>
+                {% if product.stock > 4 %}
+                    <span class="code-value" style="color: green;">DISPONIBLE</span>
+                {% elif product.stock == 0 %}
+                    <span class="code-value" style="color: red;">NO STOCK</span>
+                {% else %}
+                    <span class="code-value" style="color: orange;">STOCK BAJO</span>
+                {% endif %}
+            </div>
+
+            <div class="product-info col-md-4">
+                <span class="code-label">Marca:</span>
+                <span class="code-value">{{product.brand}}</span>
+            </div>
+        </div>
+
+        <!-- Cuadro de metodo de pago -->
+        <div class="payment-info-box mt-3">
+            <div class="payment-info-content">
+                <div class="payment-icon px-lg-4">
+                    <!-- Aquí puedes reemplazar el enlace del icono con el adecuado -->
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tarjeta-de-credito-bloqueada-12012016-9801418.png"
+                            alt="Icono de Tarjetas">
+                </div>
+                <div class="payment-text">
+                    <p>Medios de Pagos</p>
+                    <a href="#"><p>Ver medios de pago</p></a>
+                </div>
+            </div>
+            <div class="payment-logo">
+                <img src="https://www.shutterstock.com/image-vector/rivne-ukraine-may-25-2023-260nw-2308151527.jpg"
+                        alt="Logo de Medios de Pago">
+            </div>
+        </div>
+    </div>
+
+    <!-- TERCERA COLUMNA -->
+    <div class="col-lg-2">
+        <div class="price-box">
+            <p class="price-tag p-0"><strong>
+                ${{ product.price|floatformat:0|intcomma }}
+            </strong></p>
+            <span>
+                PRECIO ESPECIAL EFECTIVO O TRANSFERENCIA
+            </span>
+        </div>
+
+        <div class="price-box p-0">
+            <span> &nbsp;&nbsp;&nbsp; Promociones Bancarias </span>
+            <img src="https://firebasestorage.googleapis.com/v0/b/foxtienda-ee7dc.appspot.com/o/1058%2Flogos%2F73479-logos-promos-tarjetas-10.jpg?alt=media&token=983ec195-3d1f-4516-bafc-4ac19610a26d"
+                        alt="Logo de Medios de Pago">
+        </div>
+
+        <!-- Recuadro de botones -->
+        <div class="my-container-add-quant">
+            <div class="quantity-container" style="width: 35%;">
+                <button class="my-container-center btn-quantity-2" onclick="decrement(this)"
+                        id="btn-cart-less-{{product.id}}">
+                    -
+                </button>
+
+                <input type="text" class="form-control quantity-input-2"
+                        id="quant-cart-{{product.id}}" value="1" min="1" readonly>
+
+                <button class="my-container-center btn-quantity-2" onclick="increment(this)"
+                        id="btn-cart-plus-bottom-{{product.id}}">
+                    +
+                </button>
+            </div>
+            <button id="add-to-cart2-{{product.id}}" class="btn-add-item">
+                <span>Agregar</span>
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+<!-- SCRIPTS -->
+{% block extra_scripts %}
+<script>
+
+    
+    // Funcion simple de incremento y decremento
+    function increment(button) {
+        const input = button.parentElement.querySelector('.quantity-input-2');
+        let value = parseInt(input.value);
+        input.value = value + 1;
+        }
+    
+        function decrement(button) {
+            const input = button.parentElement.querySelector('.quantity-input-2');
+            let value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        }
+    
+        // Añade un evento de clic a cada botón que interactúe con la cantidad
+        $(document).on('click', '[id^="add-to-cart2-"]', function() {
+            const productoId = $(this).attr('id').split('-').pop(); // Captura el ID del producto desde el ID del botón
+            const quantity = document.getElementById(`quant-cart-${productoId}`).value; // Captura el valor actual de la cantidad
+            handleActions(productoId, 'add', quantity); // Llama a la función para manejar la acción
+        });
+    
+    
+        window.onload = () => {
+            const previewEl = document.querySelector('.prod-image-preview');
+            const previewWidth = previewEl.offsetWidth;
+            const previewHeight = previewEl.offsetHeight;
+    
+            // Set background images for thumbnails based on their data attributes
+            const thumbnails = document.querySelectorAll('.prod-small-image');
+            thumbnails.forEach(thumbnail => {
+                const imgUrl = thumbnail.dataset.imageUrl;
+                thumbnail.style.backgroundImage = `url(${imgUrl})`;
+            });
+    
+            // Set default active thumbnail and preview image
+            const defaultThumbnail = document.querySelector('.prod-small-image[data-index="1"]');
+            if (defaultThumbnail) {
+                defaultThumbnail.classList.add('active');
+                const defaultImageUrl = defaultThumbnail.dataset.imageUrl;
+                previewEl.style.backgroundImage = `url(${defaultImageUrl})`;
+            }
+    
+            // Update the preview image on thumbnail mouseover
+            document.querySelector('.prod-left-column').addEventListener('mouseover', e => {
+                if (e.target.classList.contains('prod-small-image')) {
+                    const imgUrl = e.target.dataset.imageUrl;
+                    previewEl.style.backgroundImage = `url(${imgUrl})`;
+                }
+            });
+    
+            // Change the active thumbnail and update the preview image on thumbnail click
+            document.querySelector('.prod-left-column').addEventListener('click', e => {
+                if (e.target.classList.contains('prod-small-image') && !e.target.classList.contains('active')) {
+                    document.querySelector('.prod-small-image.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    const imgUrl = e.target.dataset.imageUrl;
+                    previewEl.style.backgroundImage = `url(${imgUrl})`;
+                }
+            });
+    
+            // Handle zoom effect on mouse move when the preview is zoomed
+            previewEl.addEventListener('mousemove', e => {
+                if (previewEl.classList.contains('prod-zoomed')) {
+                    const offsetXPercent = Math.round(e.offsetX * 100 / previewWidth);
+                    const offsetYPercent = Math.round(e.offsetY * 100 / previewHeight);
+                    previewEl.style.backgroundPosition = `${offsetXPercent}% ${offsetYPercent}%`;
+                }
+            });
+    
+            // Reset background position when the mouse leaves the preview
+            previewEl.addEventListener('mouseleave', e => {
+                previewEl.style.removeProperty('background-position');
+            });
+    
+            // Toggle zoom mode on preview click
+            previewEl.addEventListener('click', () => {
+                if (previewEl.classList.contains('prod-zoomed')) {
+                    previewEl.classList.remove('prod-zoomed');
+                    previewEl.classList.add('prod-normal');
+                    previewEl.style.backgroundSize = 'cover';
+                    previewEl.classList.add('prod-zoom-in-cursor');
+                    previewEl.classList.remove('prod-zoom-out-cursor');
+                } else {
+                    previewEl.classList.add('prod-zoomed');
+                    previewEl.classList.remove('prod-normal');
+                    previewEl.style.backgroundSize = '220% auto';
+                    previewEl.classList.add('prod-zoom-out-cursor');
+                    previewEl.classList.remove('prod-zoom-in-cursor');
+                }
+            });
+    
+            // Set initial cursor style
+            previewEl.classList.add('prod-zoom-in-cursor');
+    
+            // Ensure that zoom is off initially
+            previewEl.classList.remove('prod-zoomed');
+            previewEl.classList.add('prod-normal');
+        };
+</script>
+{% endblock %}

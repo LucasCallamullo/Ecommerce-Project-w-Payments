@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     
     'home',
     'productos',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

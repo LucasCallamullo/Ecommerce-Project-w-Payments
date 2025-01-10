@@ -1,0 +1,247 @@
+
+:root {
+    /* main color de la empresa */
+    --main-color: #5e08e7;
+    --main-light-color: #9554ff;
+
+    /* Primary Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #000000;
+    --text-secondary: #6c757d;
+
+    /* Gradients */
+    --gradient: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+    --gradient2: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+
+    /* Sizes */
+    --font-xl: 1.6rem;
+    --font-medium: 1.2rem;
+    --font-normal: 1.0rem;
+    --font-small: 0.85rem;
+
+    /* Fonts */
+    --font-main: 'Montserrat', sans-serif;
+    --font-slim: 'Montserrat', sans-serif;
+
+    /* heigths */
+    --main-nav-heigth: 60px;
+    --top-nav-height: 140px;
+
+    /* width responsive */
+    --width-col-3: 90%
+}
+
+.btn-paralelogramo {
+    color: white;
+    font-family: var(--font-main);
+    font-size: var(--font-normal);
+    background-color: var(--main-color);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    transform: skew(-30deg);
+}
+
+.btn-paralelogramo span {
+    display: inline-block;
+    transform: skew(30deg);
+}
+
+/*
+primera columna , foto zoom
+*/
+
+.prod-image-item {
+    background-size: cover;
+    background-position: center;
+    border: 2px solid black;
+}
+
+#prod-container {
+    width: 100%;
+    height: 66vmin;
+    padding: 2%;
+    display: flex;
+    position: relative;
+}
+
+.prod-left-column {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.prod-left-column .prod-small-image {
+    width: 100%;
+    height: 25%;
+    margin-bottom: 5%;
+    cursor: pointer;
+    transition: all .2s linear;
+    background-size: cover;
+    background-position: center;
+    /* border: 1px solid transparent; */
+    border: 2px solid black;
+}
+
+.prod-left-column .prod-small-image:hover {
+    border-color: #666;
+    border: 3px solid;
+}
+
+.prod-right-column {
+    width: 80%;
+    height: 100%;
+    padding: 0 2%;
+    position: relative;
+}
+
+.prod-right-column .prod-image-preview {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid black;
+    cursor: zoom-in;
+    transition: all .1s linear;
+}
+
+.prod-right-column .prod-image-preview.prod-zoomed {
+    background-size: 200% auto; /* Adjusted size for zoomed view */
+}
+
+.prod-right-column .prod-image-preview.prod-normal {
+    background-size: cover;
+}
+
+.prod-right-column .prod-zoom-in-cursor {
+    cursor: url('https://img.icons8.com/ios-filled/50/000000/zoom-in.png'), auto;
+}
+
+.prod-right-column .prod-zoom-out-cursor {
+    cursor: url('https://img.icons8.com/ios-filled/50/000000/zoom-out.png'), auto;
+}
+/*
+        Product card info stuff
+*/
+.product-info-container {
+    display: flex; /* Utiliza flexbox para alinear los elementos horizontalmente */
+    gap: 3%; /* Espacio entre los contenedores (ajustable según preferencia) */
+}
+
+.product-info {
+    background-color: #f0f0f0; /* Fondo gris claro para el contenedor */
+    padding: 5px; /* Espaciado interno */
+}
+
+.code-label {
+    color: #6c757d; /* Color gris tipo text-muted para las etiquetas */
+    font-size: 12px; /* Tamaño de fuente */
+}
+
+.code-value {
+    color: black; /* Color negro para los valores */
+    margin: 0; /* Eliminar márgenes por defecto del <p> */
+    font-size: 13px; /* Tamaño de fuente */
+}
+/*
+
+*/
+.payment-info-box {
+    border: 1px solid #ddd; /* Borde gris claro alrededor del recuadro */
+    background-color: #f9f9f9; /* Fondo gris claro */
+    padding: 5px; /* Espaciado interno */
+    max-width: 90%; /* Ancho máximo del recuadro */
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+}
+
+.payment-info-content {
+    display: flex;
+    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+}
+
+.payment-icon img {
+    width: 50px; /* Ajusta el tamaño del icono */
+    height: auto;
+    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+}
+
+.payment-text p {
+    margin: 0;
+    font-size: 14px; /* Tamaño de fuente del texto */
+    font-weight: bold; /* Texto en negrita */
+}
+
+.payment-logo img {
+    max-width: 50%; /* Ajusta la imagen al ancho del contenedor */
+    height: auto;
+}
+/*
+ columnar precio
+*/
+.price-tag {
+    font-size: 24px; /* Tamaño de fuente del texto */
+}
+.price-box span {
+    font-size: 10px; /* Tamaño de fuente del texto */
+}
+.price-box {
+    border: 2px solid black; /* Borde del recuadro */
+    padding: 10px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Color de fondo */
+    margin: 20px auto; /* Centrando el recuadro en la página */
+}
+
+.price-box img{
+    max-width: 100%; /* Ajusta la imagen al ancho del contenedor */
+    height: auto;
+}
+
+.my-container-add-quant {
+    display: flex;
+    align-items: center; /* Alinea verticalmente */
+    justify-content: center; /* Alinea horizontalmente */
+    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+    gap: 8%;
+    width: 100%;
+}
+
+.quantity-input-2{
+    font-size: 12px; /* Tamaño de fuente del texto */
+    max-width: 50%;
+    z-index: 10;
+}
+
+.btn-quantity-2{
+    font-size: 20px; /* Tamaño de fuente del texto */
+    max-width: 25%;
+    border: none; /* Sin bordes */
+    background-color: transparent; /* Fondo transparente */
+    cursor: pointer; /* Cambia el cursor a pointer al pasar sobre el botón */
+}
+
+.btn-add-item {
+    color: #ffffff;
+    background-color: #780178;
+    width: 100%;
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    border: none; /* Elimina el borde */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    margin-right: 5%;
+    gap: 10%;
+}
+
+.btn-add-item:hover {
+    background-color: green; /* Cambia el color de fondo al pasar el ratón sobre el botón */
+}

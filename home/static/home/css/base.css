@@ -377,12 +377,12 @@ para los nav items links
 
 .btn-header:hover i,
 .btn-header:focus i{
-    color: var(--text-primary);
+    color: var(--main-color);
 }
 
 .btn-header:focus {
     outline: none;
-    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semitransparente cuando está enfocado */
+    background-color: var(--main-light-color); /* Fondo blanco semitransparente cuando está enfocado */
 }
 
 /* Animaciones para el widget de registro */
@@ -405,6 +405,7 @@ para los nav items links
     to {
         transform: translateY(-10px);
         opacity: 0;
+        display: block;
     }
 }
 
@@ -466,12 +467,13 @@ primera columna
 */
 .footer-logo {
     max-height: 160px;
+    width: 90%;
     max-width: 100%;
 }
 
 footer p,
 footer strong {
-    font-size: var(--font-medium);
+    font-size: var(--font-normal);
     color: var(--text-primary);
 }
 
@@ -503,6 +505,7 @@ footer strong {
 
 .btn-footer p {
     margin: 0;
+    font-size: var(--font-normal);
 }
 
 .btn-footer:hover {

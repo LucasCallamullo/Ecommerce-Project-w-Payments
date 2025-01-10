@@ -10,8 +10,15 @@ class PCategory(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug and self.name and self.name.strip().lower() != "nan":
-            self.slug = slugify(self.name)  # Genera el slug a partir del nombre
+        # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
+        if self.name: 
+            if not self.slug or self.slug == str(self.id):
+                self.slug = slugify(self.name)
+                # Asegurarse de que el slug sea único
+                while PCategory.objects.filter(slug=self.slug).exists():
+                    self.slug = slugify(self.name + str(self.id))
+        else:
+            self.slug = str(self.id)
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -24,8 +31,15 @@ class PSubcategory(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug and self.name and self.name.strip().lower() != "nan":
-            self.slug = slugify(self.name)  # Genera el slug a partir del nombre
+        # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
+        if self.name: 
+            if not self.slug or self.slug == str(self.id):
+                self.slug = slugify(self.name)
+                # Asegurarse de que el slug sea único
+                while PSubcategory.objects.filter(slug=self.slug).exists():
+                    self.slug = slugify(self.name + str(self.id))
+        else:
+            self.slug = str(self.id)
         super().save(*args, **kwargs)
     
     class Meta:
@@ -42,8 +56,15 @@ class PBrand(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug and self.name and self.name.strip().lower() != "nan":
-            self.slug = slugify(self.name)  # Genera el slug a partir del nombre
+        # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
+        if self.name: 
+            if not self.slug or self.slug == str(self.id):
+                self.slug = slugify(self.name)
+                # Asegurarse de que el slug sea único
+                while PBrand.objects.filter(slug=self.slug).exists():
+                    self.slug = slugify(self.name + str(self.id))
+        else:
+            self.slug = str(self.id)
         super().save(*args, **kwargs)
         
     def __str__(self):
@@ -54,8 +75,7 @@ class ProductImage(models.Model):
     # Tabla relacional adicional muchos a uno para almacenar varias imagenes para los productos
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='media/product_images/', null=True, blank=True)
-    image_url = models.URLField(default="https://i.pinimg.com/736x/74/fe/76/74fe76b1b09e521dd7bcdf8dd89ba026.jpg",
-                                null=True, blank=True)
+    image_url = models.URLField(null=True, blank=True)
     main_image = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -78,7 +98,7 @@ class Product(models.Model):
     # atributos varios del producto
     name = models.CharField(max_length=255, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    available = models.BooleanField(default=False)
+    available = models.BooleanField(default=False, null=True, blank=True)
     stock = models.IntegerField(null=True, blank=True, default=0)
     discount = models.IntegerField(default=0)
     description = models.TextField(null=True, blank=True)
@@ -104,7 +124,7 @@ class Product(models.Model):
     
     def save(self, *args, **kwargs):
         # Genera el slug a partir del nombre
-        if not self.slug and self.name and self.name.strip().lower() != "nan":
+        if not self.slug and self.name:
             self.slug = slugify(self.name)
         
         # Verificar que la subcategoría pertenece a la categoría seleccionada

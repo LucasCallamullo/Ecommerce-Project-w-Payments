@@ -63,6 +63,7 @@
                         <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
+
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="#">Home</a>
@@ -102,19 +103,23 @@
 
                 <!-- Search Bar -->
                 <div class="col-6 col-lg-6"> 
-                    <form class="my-search-top-bar">
-                        <input class="form-control" type="search" 
-                        placeholder="Search..." aria-label="Search">
-                        <button class="btn" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+                    <form class="my-search-top-bar" action="{% url 'product_top_search' %}" method="GET">
+                        
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Buscar..." 
+                            name="top_q" aria-label="Search">
+                               
+                            <button class="btn" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </form>
                 </div>
                 
                 <!-- Social Media Icons -->
                 <div class="d-flex col-3 col-lg-3 gap-2 justify-content-end">
-                    <a class="btn btn-header-icon" href="{{ecommerce.tt_url}}"  
-                        id="themeToggle" target="_blank"><i class="fab fa-whatsapp"></i>
+                    <a class="btn btn-header-icon" href="{{ecommerce.tt_url}}" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
                     </a>
                     <a class="btn btn-header-icon" href="{{ecommerce.fb_url}}" target="_blank">
                         <i class="fab fa-facebook"></i>
@@ -167,6 +172,12 @@
 
                         <!-- Botones de carrito y usuario -->
                         <li class="nav-item col-lg-3 d-flex gap-4 justify-content-end">
+
+                            <!-- boton dark - mode -->
+                            <button class="btn btn-header" id="themeToggle">
+                                <i id="theme-icon" class="fas fa-moon"></i>
+                            </button>
+                            
                             <!-- Botón del carrito -->
                             <button class="btn btn-header" id="cart-button" 
                             aria-label="Cart">
@@ -226,10 +237,10 @@
     <!-- FOOTER -->   
     <hr class="offset-1 col-10">    
     <footer>
-        <div class="container-fluid my-container-page">
+        <div class="container-fluid my-container-page px-5">
             <div class="row">
                 <!-- Primera columna: Logo + Texto de la compañía -->
-                <div class="mt-5 col-3 offset-md-1">
+                <div class="mt-5 col-4">
                     <a href="{% url 'Home' %}">
                         <img src="{% static 'img/ico/logo.jpg' %}" alt="Company Logo" 
                         class="footer-logo">
@@ -275,7 +286,7 @@
                 </div>
 
                 <!-- Tercera columna: Vacía para personalización futura -->
-                <div class="mt-5 col-2">
+                <div class="mt-5 col-3">
                     <h3 class="ms-3">Seguinos!</h3>
                     <!-- Icon Container -->
                     <div class="icon-container-footer">
