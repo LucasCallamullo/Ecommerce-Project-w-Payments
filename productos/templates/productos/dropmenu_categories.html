@@ -5,9 +5,12 @@
 <button class="nav-link justify-content-between" 
         id="navbarDropdown" aria-expanded="false" 
         aria-haspopup="true" aria-label="Cats Menu">
-    <i class="fas fa-bars ms-3"></i>
-    <span>Nuestros Productos</span>
-    <i class="fas fa-chevron-down me-2 arrow-drop"></i>
+    
+    <div class="justify-content-start">
+        <i class="fas fa-bars ms-1"></i>
+        <span>Nuestros Productos</span>
+    </div>
+    <i class="fas fa-chevron-down me-1 arrow-drop"></i>
 </button>
 
 <!-- Lista de categorías -->
@@ -20,7 +23,7 @@
             href="{% url 'pl_category' cat_slug=category.slug %}">
                 {{ category.name }}
                 {% if subcategories %}
-                    <i class="fas fa-chevron-right mt-1"></i>
+                    <i class="fas fa-chevron-right justify-content-center align-content-center"></i>
                 {% endif %}
             </a>
             

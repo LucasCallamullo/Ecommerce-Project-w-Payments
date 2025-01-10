@@ -10,6 +10,8 @@ def product_list(request, cat_slug=None, subcat_slug=None):
     # query = request.GET.get('q')
 
     productos = Product.objects.all()
+    category = None
+    subcategory = None
 
     if cat_slug and not subcat_slug:
         category = PCategory.objects.filter(slug=cat_slug).first()
@@ -17,6 +19,7 @@ def product_list(request, cat_slug=None, subcat_slug=None):
             productos = productos.filter(category=category)
 
     if subcat_slug:
+        category = PCategory.objects.filter(slug=cat_slug).first()
         subcategory = PSubcategory.objects.filter(slug=subcat_slug).first()
         if subcategory:
             productos = productos.filter(subcategory=subcategory)
@@ -26,8 +29,8 @@ def product_list(request, cat_slug=None, subcat_slug=None):
 
     context = {
         'products': productos,
-        'category': PCategory.objects.filter(slug=cat_slug).first(),
-        'subcategory': PSubcategory.objects.filter(slug=subcat_slug).first()
+        'category': category,
+        'subcategory': subcategory
         # 'query': query
     }
     

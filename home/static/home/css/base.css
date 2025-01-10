@@ -16,9 +16,9 @@
 
     /* Sizes */
     --font-xl: 1.6rem;
-    --font-medium: 1.1rem;
+    --font-medium: 1.2rem;
     --font-normal: 1.0rem;
-    --font-small: 0.9rem;
+    --font-small: 0.85rem;
 
     /* Fonts */
     --font-main: 'Montserrat', sans-serif;
@@ -27,6 +27,10 @@
     /* heigths */
     --main-nav-heigth: 60px;
     --top-nav-height: 140px;
+
+    /* width responsive */
+    --width-col-3: 90%
+
 }
 
 /* Modo oscuro */
@@ -71,7 +75,7 @@ footer {
     width: 100%;
     margin: 0 auto;
     padding: 0;
-    overflow-x: visible; /* Permite el scroll si el contenido interno excede el ancho */
+    /* overflow-x: visible;  Permite el scroll si el contenido interno excede el ancho */
 }
 
 .my-main-navbar-bg {
@@ -79,6 +83,7 @@ footer {
     height: var(--main-nav-heigth);
     max-height: var(--main-nav-heigth);
 } 
+
 /* =====================================================================================
                             Top NavBar
 /* ===================================================================================== */
@@ -89,14 +94,14 @@ footer {
 }
 
 #logo_home {
-    width: 80%;
+    width: var(--width-col-3);
     max-height: calc(var(--top-nav-height) * 0.8);
 }
 
 /* Estilos para la barra de búsqueda */
 .my-search-top-bar {
     height: 40px; /* Altura consistente */
-    width: 90%;
+    width: 95%;
     display: flex;
     
     background-color: #fff; /* Color de fondo unificado */
@@ -110,7 +115,7 @@ footer {
     outline: none; /* Elimina el contorno al enfocar */
     background-color: transparent;
     color: var(--text-primary);
-    font-size: 16px; /* Tamaño de fuente */
+    font-size: var(--font-normal);
 }
 
 .my-search-top-bar .form-control:focus {
@@ -186,8 +191,8 @@ footer {
     display: flex;
     align-items: center;
     position: relative;
-    width: 80%;
-    height: 80%;
+    width: var(--width-col-3);
+ 
     font-size: var(--font-small) !important;
     background-color: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
@@ -204,7 +209,7 @@ footer {
     /*  position: relative; */
     top: 100%; 
     left: 0; 
-    width: 80%; /* 80% */
+    width: var(--width-col-3);
 
     background-color: var(--bg-primary);
     border: 3px solid var(--main-color);
@@ -264,6 +269,11 @@ footer {
     text-decoration: none;
 }
 
+#categories-drop i {
+    font-size: 0.7rem;
+    color: #6c757d;
+}
+
 #categories-drop .dropdown-item {
     background-color: var(--bg-primary);
     border-bottom: 1px solid var(--main-color);
@@ -295,12 +305,10 @@ footer {
     display: block;
 }
 
-
-
-
 /* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
 .arrow-drop {
     transition: transform 0.3s ease;
+    font-size: 0.7rem;
 }
 .rotate { 
     transform: rotate(180deg); 
@@ -336,21 +344,22 @@ para los nav items links
 .btn-header {
     position: relative;
     background-color: transparent;
-    height: 80%;
+    height: 100%;
     width: 50px;
-    border: none;
-    outline: none; 
-    align-items: center;
-    justify-content: center;
+    display: flex;               /* Usamos flexbox para centrar el contenido */
+    justify-content: center;     /* Centra los íconos horizontalmente */
+    align-items: center;         /* Centra los íconos verticalmente */
+    cursor: pointer;
+    padding: 5px;                  /* Elimina el padding extra */
 }
 
 .btn-header i {
-    font-size: var(--font-xl); 
+    font-size: var(--font-xl);   /* Ajusta el tamaño del ícono */
     color: white;
-    pointer-events: none; /* Asegura que el icono no bloquee los clics */
+    pointer-events: none;        /* Asegura que el icono no bloquee los clics */
     transition: color 0.3s ease;
     border: none; 
-    outline: none; /* Elimina el contorno al hacer clic */
+    outline: none;               /* Elimina el contorno al hacer clic */
 }
 
 .badge {

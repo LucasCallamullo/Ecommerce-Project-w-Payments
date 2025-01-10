@@ -51,7 +51,7 @@
             <div class="container-fluid">
                 <!-- Logo -->
                 <a class="navbar-brand" href="{% url 'Home' %}">
-                    <img src="{% static 'img/ico/logo.jpg' %}" alt="Logo" style="max-height: 50px; width: auto;">
+                    <img src="{% static 'img/ico/logo.jpg' %}" alt="Logo">
                 </a>
                 <!-- Toggler Button -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#combinedNavbar" aria-controls="combinedNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,18 +90,18 @@
         </nav>
 
         <!-- Optimized Top Navbar -->
-        <nav class="navbar navbar-expand-lg my-main-navbar-bg d-none d-lg-flex w-100" id="TopNavBar">
-            <div class="container-fluid d-flex align-items-center justify-content-start my-container-page">
+        <nav class="navbar navbar-expand-lg d-none d-lg-flex my-main-navbar-bg" id="TopNavBar">
+            <div class="container-fluid my-container-page px-5">
 
                 <!-- Logo -->
-                <div class="col-3 col-md-3 offset-md-1"> 
+                <div class="col-3 col-lg-3"> 
                     <a class="navbar-brand" href="{% url 'Home' %}">
                         <img src="{% static 'img/ico/logo.jpg' %}" id="logo_home" alt="Logo" width="150">
                     </a>
                 </div>
 
                 <!-- Search Bar -->
-                <div class="col-5 col-md-5"> 
+                <div class="col-6 col-lg-6"> 
                     <form class="my-search-top-bar">
                         <input class="form-control" type="search" 
                         placeholder="Search..." aria-label="Search">
@@ -112,7 +112,7 @@
                 </div>
                 
                 <!-- Social Media Icons -->
-                <div class="d-flex col-2 col-md-2">
+                <div class="d-flex col-3 col-lg-3 gap-2 justify-content-end">
                     <a class="btn btn-header-icon" href="{{ecommerce.tt_url}}"  
                         id="themeToggle" target="_blank"><i class="fab fa-whatsapp"></i>
                     </a>
@@ -130,8 +130,8 @@
         </nav>
 
         <!-- Original Main Navbar   -->
-        <nav class="navbar navbar-expand-lg my-main-navbar-bg d-none d-lg-flex w-100">
-            <div class="container-fluid my-container-page">
+        <nav class="navbar navbar-expand-lg my-main-navbar-bg d-none d-lg-flex">
+            <div class="container-fluid my-container-page px-5">
                 <!-- Toggler Button -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#MainNavBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,16 +140,16 @@
         
                 <!-- Navbar Links -->
                 <div class="collapse navbar-collapse" id="MainNavBar">
-                    <ul class="navbar-nav w-100 d-flex align-items-center justify-content-start">
+                    <ul class="navbar-nav w-100 d-flex align-items-center">
 
                         <!-- Dropdown de productos -->
-                        <li class="nav-item dropdown col-3 col-md-3 offset-md-1">
+                        <li class="nav-item dropdown col-3 col-lg-3">
                             {% include "productos/dropmenu_categories.html" %}
                         </li>
                         
                         <!-- Links principales -->
                         <li class="nav-item col-6 col-md-6">
-                            <ul class="navbar-nav d-flex gap-2">
+                            <ul class="navbar-nav d-flex gap-2 justify-content-start">
                                 <li class="nav-item nav-item-link-mainbar">
                                     <a class="nav-link" href="#">Contacto</a>
                                 </li>
@@ -166,7 +166,7 @@
                         </li>
 
                         <!-- Botones de carrito y usuario -->
-                        <li class="nav-item col-md-2 d-flex gap-3">
+                        <li class="nav-item col-lg-3 d-flex gap-4 justify-content-end">
                             <!-- Botón del carrito -->
                             <button class="btn btn-header" id="cart-button" 
                             aria-label="Cart">
@@ -177,7 +177,7 @@
                             </button>
 
                             <!-- Botón y dropdown del usuario -->
-                            <div class="dropdown h-100">
+                            <div class="dropdown">
                                 <button class="btn btn-header" id="user-button" 
                                 aria-haspopup="true" aria-expanded="false" 
                                 aria-label="User Menu">
@@ -207,6 +207,7 @@
                                     <button class="btn btn-secondary w-100 mt-2">Register</button>
                                 </div>
                             </div>
+
                         </li>
                     </ul>
                 </div>
@@ -214,15 +215,13 @@
         </nav>
     </header>
     
-    <!-- Contenido Cambiante -->
     <main>
-        <div class="container-fluid my-container-page">
+        <div class="container-fluid my-container-page px-5">
             {% block content %}
                 <!-- Contenido específico de la página -->
             {% endblock %}
         </div>
     </main>
-
 
     <!-- FOOTER -->   
     <hr class="offset-1 col-10">    
