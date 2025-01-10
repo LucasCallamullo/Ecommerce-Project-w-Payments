@@ -69,7 +69,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 
                 # mis context processor personalizados
-                'productos.context_processors.get_categories_n_subcats'
+                'productos.context_processors.get_categories_n_subcats',
+                'home.context_processors.get_ecommerce_data'
             ],
         },
     },

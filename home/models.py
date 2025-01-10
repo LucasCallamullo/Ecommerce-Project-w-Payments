@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 class Ecommerce(models.Model):
     name = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to='ecommerce/logo/', default='ecommerce/default_logo.jpg')
-    header_image = models.ForeignKey('E_HeaderImages', on_delete=models.CASCADE, related_name='ecommerce_header', blank=True, null=True)
-    banner_image = models.ForeignKey('E_BannerImages', on_delete=models.CASCADE, related_name='ecommerce_banner', blank=True, null=True)
+    logo = models.ImageField(upload_to='ecommerce/logo/', default='ecommerce/default_logo.jpg', blank=True, null=True)
+    header_image = models.ForeignKey('E_HeaderImages', on_delete=models.CASCADE, related_name='e_headers', blank=True, null=True)
+    banner_image = models.ForeignKey('E_BannerImages', on_delete=models.CASCADE, related_name='e_banners', blank=True, null=True)
 
     ig_url = models.URLField(blank=True, null=True, default="https://www.instagram.com")
     tw_url = models.URLField(blank=True, null=True, default="https://x.com/home")
@@ -27,9 +27,12 @@ class E_HeaderImages(models.Model):
     main_header = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        if self.main_header:
-            E_HeaderImages.objects.filter(main_header=True).update(main_header=False)
-        super().save(*args, **kwargs)
+        # Si no hay imágenes existentes, marcar esta como la principal
+        if not E_HeaderImages.objects.exists():
+            self.main_header = True
+        elif self.main_header:
+            # Si la imagen es la nueva principal, desmarcar las demás
+            E_HeaderImages.objects.update(main_header=False)
 
     def __str__(self):
         return f"Header Image {self.id}"
@@ -41,8 +44,13 @@ class E_BannerImages(models.Model):
     main_banner = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        if self.main_banner:
-            E_BannerImages.objects.filter(main_banner=True).update(main_banner=False)
+        # Si no hay imágenes existentes, marcar esta como la principal
+        if not E_BannerImages.objects.exists():
+            self.main_banner = True
+            
+        elif self.main_banner:
+            # Si la imagen es la nueva principal, desmarcar las demás
+            E_BannerImages.objects.update(main_banner=False)
         super().save(*args, **kwargs)
 
     def __str__(self):

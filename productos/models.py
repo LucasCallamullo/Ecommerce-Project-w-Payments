@@ -79,14 +79,13 @@ class ProductImage(models.Model):
     main_image = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Si no hay ninguna imagen principal, marcar la primera imagen como principal
-        if not self.product.images.filter(main_image=True).exists():
+        # Si no hay imágenes existentes, marcar esta como la principal
+        if not ProductImage.objects.exists():
             self.main_image = True
-        
-        # Si hay otras imágenes para este producto, desmarcar todas como principales
-        # if not self.main_image and self.product.images.exists():
-        #    self.product.images.update(main_image=False)
-
+            
+        elif self.main_image:
+            # Si la imagen es la nueva principal, desmarcar las demás
+            ProductImage.objects.update(main_image=False)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -121,7 +120,6 @@ class Product(models.Model):
     
     slug = models.SlugField(unique=True, blank=True, null=True)
 
-    
     def save(self, *args, **kwargs):
         # Genera el slug a partir del nombre
         if not self.slug and self.name:

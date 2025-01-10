@@ -21,9 +21,7 @@ def get_categories_n_subcats(request):
             subcategories = category.subcategories.all()
             
             # Filtrar subcategorías válidas (no None, no vacías, no "nan")
-            valid_subcategories = [
-                sub for sub in subcategories if sub.name and sub.name.lower() != "nan"
-            ]
+            valid_subcategories = [sub for sub in subcategories if sub.name]
             
             # Agregar la categoría incluso si no tiene subcategorías válidas
             categories_dropmenu[category] = valid_subcategories if valid_subcategories else None
