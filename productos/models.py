@@ -79,13 +79,13 @@ class ProductImage(models.Model):
     main_image = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Si hay otras imágenes para este producto, desmarcar todas como principales
-        if self.product.images.exists() and not self.main_image:
-            self.product.images.update(main_image=False)
-
-        # Si es la primera imagen para el producto, marcarla como principal
-        if not self.product.images.exists() or self.main_image:
+        # Si no hay ninguna imagen principal, marcar la primera imagen como principal
+        if not self.product.images.filter(main_image=True).exists():
             self.main_image = True
+        
+        # Si hay otras imágenes para este producto, desmarcar todas como principales
+        # if not self.main_image and self.product.images.exists():
+        #    self.product.images.update(main_image=False)
 
         super().save(*args, **kwargs)
 
@@ -104,9 +104,9 @@ class Product(models.Model):
     description = models.TextField(null=True, blank=True)
     
     # relacion uno a uno, cada producto tiene una categoria, sub, pbrand
-    category = models.ForeignKey('PCategory', on_delete=models.CASCADE)
-    subcategory = models.ForeignKey('PSubcategory', on_delete=models.CASCADE)
-    brand = models.ForeignKey('PBrand', on_delete=models.CASCADE)
+    category = models.ForeignKey('PCategory', on_delete=models.CASCADE, blank=True, null=True)
+    subcategory = models.ForeignKey('PSubcategory', on_delete=models.CASCADE, blank=True, null=True)
+    brand = models.ForeignKey('PBrand', on_delete=models.CASCADE, blank=True, null=True)
     
     # fechas de actualizaciones de losprecios de productos
     created_at = models.DateTimeField(auto_now_add=True)
@@ -128,10 +128,11 @@ class Product(models.Model):
             self.slug = slugify(self.name)
         
         # Verificar que la subcategoría pertenece a la categoría seleccionada
-        if self.subcategory.category != self.category:
-            raise ValueError(
-                f"La subcategoría '{self.subcategory.name}' no pertenece a la categoría '{self.category.name}'."
-            )
+        if self.subcategory is not None:
+            if self.subcategory.category != self.category:
+                raise ValueError(
+                    f"La subcategoría '{self.subcategory.name}' no pertenece a la categoría '{self.category.name}'."
+                )
         # Llamar al método save original
         super().save(*args, **kwargs)
     

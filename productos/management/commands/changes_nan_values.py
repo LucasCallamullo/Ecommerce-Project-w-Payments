@@ -3,6 +3,7 @@ from productos.models import Product, PBrand, PCategory, PSubcategory, ProductIm
 
 # python manage.py changes_nan_values
 
+
 class Command(BaseCommand):
     help = 'Reemplaza los valores "nan" por None en los campos de la base de datos'
 
@@ -49,3 +50,29 @@ class Command(BaseCommand):
 
             if updated:
                 obj.save()
+
+
+"""
+class Command(BaseCommand):
+    help = 'Reemplaza los valores "nan" o None en los campos de la base de datos por None'
+
+    def handle(self, *args, **kwargs):
+        # Procesa los productos
+        productos = Product.objects.all()
+        
+        for product in productos:
+            updated = False
+            
+            if product.category.name is None or product.subcategory.name is None:
+                product.category = None
+                product.subcategory = None
+                updated = True
+            
+            elif product.brand.name is None:
+                product.brand = None
+                updated = True
+                
+            if updated:
+                product.save()
+                self.stdout.write(self.style.SUCCESS(f'Producto "{product.name}" actualizado.'))
+"""

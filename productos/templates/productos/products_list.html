@@ -117,7 +117,6 @@
                             {% for image in product.images.all %}
                                 {% if image.main_image %}
                                     <img src="{{ image.image_url }}" alt="{{ product.name }}">
-                                    <!-- Si es la imagen principal, la mostramos y salimos del bucle -->
                                 {% endif %}
                             {% endfor %}
 

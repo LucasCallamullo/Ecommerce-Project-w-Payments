@@ -1,9 +1,10 @@
 
-
+import os
+import gdown
 import pandas as pd
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from productos.models import Product, PCategory, PSubcategory, PBrand, ProductImage
-
 
 # command python manage.py load_productos
 def clean_value(value):
@@ -43,15 +44,14 @@ def clean_value_zero(value):
 
 class Command(BaseCommand):
     help = "Para cargar de forma generica los productos"
-
+    
     def handle(self, *args, **kwargs):
-        # Ruta al archivo Excel
-        file_path = 'productos/data/productos.xlsx'
-        try:
-            df = pd.read_excel(file_path)
-        except FileNotFoundError:
-            self.stdout.write(self.style.ERROR(f'Archivo no encontrado: {file_path}'))
-            return
+        
+        # Leer el archivo Excel con pandas
+        # recover False = Internet, True = Local
+        recover = False
+        file = self.file_local_or_internet(recover)
+        df = pd.read_excel(file)
 
         # Obtener datos del excel 
         for index, row in df.iterrows():
@@ -65,10 +65,19 @@ class Command(BaseCommand):
             brand = clean_value(row.get("brand"))
             
             # Crear categorías, subcategorias, marcas si no existen
-            category_obj, _ = PCategory.objects.get_or_create(name=category)
-            sub_category_obj, created = PSubcategory.objects.get_or_create(name=subcategory, category=category_obj)
-            brand_obj, _ = PBrand.objects.get_or_create(name=brand)
+            category_obj = None
+            if category is not None:
+                category_obj, _ = PCategory.objects.get_or_create(name=category)
+                    
+            sub_category_obj = None
+            if subcategory is not None:
+                sub_category_obj, created = PSubcategory.objects.get_or_create(name=subcategory, category=category_obj)
             
+            brand_obj = None
+            if brand is not None:
+                 brand_obj, _ = PBrand.objects.get_or_create(name=brand)
+            
+            # Obtenemos el resto de valores del excel
             price = clean_value_zero(row.get("price"))
             price = 0 if price is None else price
             
@@ -99,18 +108,17 @@ class Command(BaseCommand):
                 description=description,
             )
             
-            self.stdout.write(self.style.SUCCESS(f'Producto "{product_obj.name}" se creo correctamente.'))
-
-            # Si el producto ya existe, actualizar el stock
+            # Si el producto ya existe, actualizar las imagenes
             if not created:
-                existing_images = product_obj.images.all()
                 
+                # Corroboramos que las urls no se repitan y se creen otra imagen si ya existe
+                existing_images = product_obj.images.all()
+            
                 if image_url and not existing_images.filter(image_url=image_url).exists():
                     ProductImage.objects.create(
                         product=product_obj,
                         image_url=image_url
                     )
-                    
                     self.stdout.write(
                         self.style.SUCCESS(f'Producto "{product_obj.name}" update image_url.')
                     )
@@ -120,38 +128,66 @@ class Command(BaseCommand):
                         product=product_obj,
                         image_url=image_url2
                     )
-        
                     self.stdout.write(
                         self.style.SUCCESS(f'Producto "{product_obj.name}" update image_url2.')
                     )
-                    
+                 
+            # Si el producto es nuevo, crear las imágenes   
             else:
-                # Si el producto es nuevo, crear las imágenes
                 if image_url:
                     ProductImage.objects.create(
                         product=product_obj,
-                        image_url=image_url,
-                        main_image=True
+                        image_url=image_url
                     )
                 
                 if image_url2:
                     ProductImage.objects.create(
                         product=product_obj,
-                        image_url=image_url2,
-                        main_image=False
+                        image_url=image_url2
                     )
 
+    def file_local_or_internet(self, config_value=True):
+        # recupera de forma local el archivo
+        if config_value:
+            # Ruta al archivo Excel
+            file_path = 'productos/data/products_data.xlsx'
+            try:
+                return file_path
+                
+            except FileNotFoundError:
+                self.stdout.write(self.style.ERROR(f'Archivo no encontrado: {file_path}'))
+                return None
+            
+        # Recupera el archivo desde internet
+        else:
+            # ID del archivo de Google Drive
+            file_id = '150xsU_LQxn9W7Q_kaBKQFkpavj_Tu2sl'
 
+            # Generar la URL de descarga directa
+            url = f'https://drive.google.com/uc?id={file_id}'
 
-
-''' 
-import pandas as pd
-
-# URL directa del archivo en Google Drive
-url = 'https://drive.google.com/uc?id=YOUR_FILE_ID'
-
-# Lee el archivo Excel directamente desde la URL
-df = pd.read_excel(url)
-
-print(df.head())
-'''
+            # Construir la ruta de la carpeta 'productos/data/' dentro del proyecto
+            output_dir = os.path.join(settings.BASE_DIR, 'productos', 'data')
+            
+            # Crear la carpeta donde se guardará el archivo descargado si no existe
+            os.makedirs(output_dir, exist_ok=True)
+            
+            # Ruta completa donde se guardará el archivo descargado
+            output = os.path.join(output_dir, 'products_data.xlsx')
+            
+            # Verificar si el archivo ya existe
+            if not os.path.exists(output):
+                # Descargar el archivo a un archivo local
+                try:
+                    gdown.download(url, output, quiet=False)
+                    return output
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(f'Error al descargar el archivo desde internet: {str(e)}'))
+                    return None
+            else:
+                print(f"El archivo '{output}' ya existe. No se descargará.")
+                return output
+            
+            
+                
+            
