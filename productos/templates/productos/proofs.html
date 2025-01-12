@@ -1,0 +1,54 @@
+<div class="container-fluid mt-5 w-100"> 
+    {% with counter=1 %}
+
+        {% for image in product.images.all %}
+            <!-- Primera imagen de la columna izquierda que es la que se muestra como imagen principal -->
+            {% if image.main_image %}
+                <div class="prod-image-item prod-small-image" data-index="1"
+                        data-image-url="{{ image.image_url }}" 
+                        style="background-image: url('{{ image.image_url }}');">
+                </div>
+            {% else %}
+                <!-- El resto de imágenes -->
+                {% if image.image_url %}
+                    <div class="prod-image-item prod-small-image" data-index="{{ counter }}"
+                            data-image-url="{{ image.image_url }}" 
+                            style="background-image: url('{{ image.image_url }}');">
+                    </div>
+                {% endif %}
+                    
+            {% endif %}
+                
+            {% with counter=counter|add:1 %}
+            {% endwith %}
+        {% endfor %}
+    {% endwith %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% if image.main_image %}
+                        <div class="prod-image-item prod-small-image"  data-index="1"
+                                data-image-url="{{ image.image_url }}" 
+                                style="background-image: url('{{ image.image_url }}');">
+                        </div>
+                    {% else %}
+                        <!-- El resto de imágenes -->
+                        <div class="prod-image-item prod-small-image" data-index="{{ counter }}" 
+                                data-image-url="{{ image.image_url }}" 
+                                style="background-image: url('{{ image.image_url }}');">
+                        </div>
+                        {% with counter=counter|add:1 %}
+                        {% endwith %}
+                    {% endif %}

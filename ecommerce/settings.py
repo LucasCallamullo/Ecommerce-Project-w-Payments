@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'home',
     'productos',
     'django.contrib.humanize',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,8 @@ TEMPLATES = [
                 
                 # mis context processor personalizados
                 'productos.context_processors.get_categories_n_subcats',
-                'home.context_processors.get_ecommerce_data'
+                'home.context_processors.get_ecommerce_data',
+                'cart.context_processors.carrito_total'
             ],
         },
     },

@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from productos.models import Product, PCategory, PSubcategory, ProductImage
 from django.shortcuts import get_object_or_404
-from django.http import Http404
-
+from django.http import Http404, JsonResponse
 
 
 from django.urls import resolve, reverse
@@ -17,9 +16,29 @@ def product_detail(request, id=None, slug=None):
         raise Http404("El producto no existe o la URL está mal formada.")
     
     product = get_object_or_404(Product, id=id)
- 
-    return render(request, 'productos/product_detail.html', {'product': product})
+    images_qs = product.images.all()
+    
+    # Obtener la imagen principal o una de respaldo en caso de que no exista
+    main_image = images_qs.filter(main_image=True).first()
+    if not main_image:
+        main_image = images_qs.first()
+    
+    context = {
+        'product': product,
+        'main_image': main_image
+    }
+    
+    return render(request, 'productos/product_detail.html', context)
 
+
+def get_product_images(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        images = [image.image_url for image in product.images.all() if image.image_url]
+        return JsonResponse({'images': images})
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
+    
 
 
 def product_list(request, cat_slug=None, subcat_slug=None):

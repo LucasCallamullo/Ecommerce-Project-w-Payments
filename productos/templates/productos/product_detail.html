@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
 
 <!-- For More CSS Modules -->
 {% block extra_head %}
@@ -42,79 +43,110 @@
     </div>
 </div>
 
-<div class="d-flex">
+<div class="d-flex gap-3">
 
     <!-- PRIMERA COLUMNA -->
-    <div class="col-lg-5">
-        <div id="prod-container">
+    <div class="col-lg-4">
 
-            <div class="prod-right-column">
-                <div class="prod-image-preview prod-zoomed"></div>
+        <figure id="prod-container">
+            <!-- Contenedor de imagen principal -->
+            <div class="prod-main-img-container">
+                <img id=prod-main-image class="prod-image-preview prod-zoomed"
+                    src="{{ main_image.image_url }}" alt="{{ product.name }}">
+
+                <!-- Botón de la esquina -->
+                <button class="prod-main-corner-box" id="zoom-button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <!-- Contenedor para la imagen en pantalla completa -->
+                <div id="fullscreen-overlay" class="fullscreen-overlay px-5 gap-5"
+                    data-index="{{product.id}}">
+
+                    <!-- Flecha izquierda -->
+                    <button class="arrow-button left-overlay">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <!-- Contenedor para la imagen (nuevo contenedor agregado) -->
+                    <div id="image-container" class="p-0 m-0">
+                    </div>
+
+                    <!-- Flecha derecha -->
+                    <button class="arrow-button right-overlay">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
 
-            <div class="prod-left-column">
+            <!-- Flechas de navegación -->
+            <figcaption class=" justify-content-center align-items-center gap-5">
+                <!-- Flecha izquierda -->
+                <button class="arrow-button left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <!-- Flecha derecha -->
+                <button class="arrow-button right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </figcaption>
+        </figure>
+        
 
-                {% with counter=1 %}
+        <div class="prod-small-images-row gap-3 mt-3">
+            <figure class="prod-small-image-container">
+                <img class="prod-small-image" src="{{ main_image.image_url }}" alt="{{ product.name }}">
+            </figure>
 
-                    {% for image in product.images.all %}
-                        <!-- Primera imagen de la columna izquierda que es la que se muestra como imagen principal -->
-                        {% if image.main_image %}
-                            <div class="prod-image-item prod-small-image" data-index="1"
-                                    data-image-url="{{ image.image_url }}" 
-                                    style="background-image: url('{{ image.image_url }}');">
-                            </div>
-                        {% else %}
-                            <!-- El resto de imágenes -->
-                            {% if image.image_url %}
-                                <div class="prod-image-item prod-small-image" data-index="{{ counter }}"
-                                        data-image-url="{{ image.image_url }}" 
-                                        style="background-image: url('{{ image.image_url }}');">
-                                </div>
-                            {% endif %}
-                               
-                        {% endif %}
-                            
-                        {% with counter=counter|add:1 %}
-                        {% endwith %}
-                    {% endfor %}
-                {% endwith %}
-            </div>
-            
+            {% for image in product.images.all %}
+                {% if image.image_url and not image.main_image %}
+                    <!-- El resto de imágenes -->
+                    <figure class="prod-small-image-container" >
+                        
+                        <img class="prod-small-image" src="{{ image.image_url }}" alt="{{ product.name }}">
+                    </figure>
+                {% endif %}
+            {% endfor %}
         </div>
+
     </div>
 
+
     <!-- SEGUNDA COLUMNA -->
-    <div class="col-lg-5">
-        <h3 class="mt-1 mb-2">{{ product.name }}</h3>
+    <div class="col-lg-5 px-3">
+
+        <h3 class="mb-2 px-1 col-11">{{ product.name }}</h3>
 
         <!-- Cuadros de Stock Y Marca -->
-        <div class="product-info-container mt-2">
-            <div class="product-info col-md-2">
-                <span class="code-label">Cod:</span>
-                <span class="code-value">#471332</span>
+        <div class="d-flex mt-4 gap-2">
+            <div class="product-info gap-1 p-2 col-lg-2">
+                <p>Cod:</p>
+                <span># 100{{product.id}}</span>
             </div>
 
-            <div class="product-info col-md-3">
-                <span class="code-label">Stock:</span>
+            <div class="product-info gap-1 p-2 col-lg-3">
+                <p>Marca:</p>
+                <a href="#" class="brand-value"><strong>{{product.brand}}</strong></a>
+            </div>
+
+            <div class="product-info gap-1 p-2 col-lg-4">
+                <p>Stock:</p>
+
                 {% if product.stock > 4 %}
-                    <span class="code-value" style="color: green;">DISPONIBLE</span>
+                    <span style="color: green;"><strong>DISPONIBLE</strong></span>
                 {% elif product.stock == 0 %}
-                    <span class="code-value" style="color: red;">NO STOCK</span>
+                    <span style="color: red;"><strong>NO STOCK</strong></span>
                 {% else %}
-                    <span class="code-value" style="color: orange;">STOCK BAJO</span>
+                    <span style="color: orange;"><strong>STOCK BAJO</strong></span>
                 {% endif %}
-            </div>
-
-            <div class="product-info col-md-4">
-                <span class="code-label">Marca:</span>
-                <span class="code-value">{{product.brand}}</span>
             </div>
         </div>
 
         <!-- Cuadro de metodo de pago -->
         <div class="payment-info-box mt-3">
-            <div class="payment-info-content">
-                <div class="payment-icon px-lg-4">
+            <div class="mt-1 payment-info-content">
+                <div class="payment-icon px-4">
                     <!-- Aquí puedes reemplazar el enlace del icono con el adecuado -->
                     <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tarjeta-de-credito-bloqueada-12012016-9801418.png"
                             alt="Icono de Tarjetas">
@@ -124,7 +156,7 @@
                     <a href="#"><p>Ver medios de pago</p></a>
                 </div>
             </div>
-            <div class="payment-logo">
+            <div class="mt-1 payment-logo">
                 <img src="https://www.shutterstock.com/image-vector/rivne-ukraine-may-25-2023-260nw-2308151527.jpg"
                         alt="Logo de Medios de Pago">
             </div>
@@ -132,43 +164,48 @@
     </div>
 
     <!-- TERCERA COLUMNA -->
-    <div class="col-lg-2">
-        <div class="price-box">
-            <p class="price-tag p-0"><strong>
-                ${{ product.price|floatformat:0|intcomma }}
-            </strong></p>
+    <div class="col-lg-3 payment-container px-4">
+
+        <div class="payment-child-container">
+            <p class="price-tag">
+                <strong>${{ product.price|intdot }}</strong>
+            </p>
             <span>
                 PRECIO ESPECIAL EFECTIVO O TRANSFERENCIA
             </span>
         </div>
 
-        <div class="price-box p-0">
-            <span> &nbsp;&nbsp;&nbsp; Promociones Bancarias </span>
+        <div class="bank-child-container mt-3">
+            <span> Promociones Bancarias </span>
             <img src="https://firebasestorage.googleapis.com/v0/b/foxtienda-ee7dc.appspot.com/o/1058%2Flogos%2F73479-logos-promos-tarjetas-10.jpg?alt=media&token=983ec195-3d1f-4516-bafc-4ac19610a26d"
                         alt="Logo de Medios de Pago">
         </div>
 
         <!-- Recuadro de botones -->
-        <div class="my-container-add-quant">
-            <div class="quantity-container" style="width: 35%;">
-                <button class="my-container-center btn-quantity-2" onclick="decrement(this)"
-                        id="btn-cart-less-{{product.id}}">
+        <div class="d-flex mt-4">
+
+            <div class="quantity-container px-1 justify-content-between col-5">
+                <button class="btn prod-btn-qty" onclick="decrement(this)">
                     -
                 </button>
 
-                <input type="text" class="form-control quantity-input-2"
-                        id="quant-cart-{{product.id}}" value="1" min="1" readonly>
+                <input type="text" class="form-control prod-input-qty"
+                        id="quant-cart-{{product.id}}" value="1" min="1">
 
-                <button class="my-container-center btn-quantity-2" onclick="increment(this)"
-                        id="btn-cart-plus-bottom-{{product.id}}">
+                <button class="btn prod-btn-qty" onclick="increment(this)">
                     +
                 </button>
             </div>
-            <button id="add-to-cart2-{{product.id}}" class="btn-add-item">
+
+            <div class="col-1"></div>
+
+            <button class="btn-add-item gap-1 col-6" data-index="{{ product.id }}">
                 <span>Agregar</span>
                 <i class="fas fa-shopping-cart"></i>
             </button>
+
         </div>
+
     </div>
 </div>
 
@@ -179,107 +216,8 @@
 
 <!-- SCRIPTS -->
 {% block extra_scripts %}
-<script>
 
-    
-    // Funcion simple de incremento y decremento
-    function increment(button) {
-        const input = button.parentElement.querySelector('.quantity-input-2');
-        let value = parseInt(input.value);
-        input.value = value + 1;
-        }
-    
-        function decrement(button) {
-            const input = button.parentElement.querySelector('.quantity-input-2');
-            let value = parseInt(input.value);
-            if (value > 1) {
-                input.value = value - 1;
-            }
-        }
-    
-        // Añade un evento de clic a cada botón que interactúe con la cantidad
-        $(document).on('click', '[id^="add-to-cart2-"]', function() {
-            const productoId = $(this).attr('id').split('-').pop(); // Captura el ID del producto desde el ID del botón
-            const quantity = document.getElementById(`quant-cart-${productoId}`).value; // Captura el valor actual de la cantidad
-            handleActions(productoId, 'add', quantity); // Llama a la función para manejar la acción
-        });
-    
-    
-        window.onload = () => {
-            const previewEl = document.querySelector('.prod-image-preview');
-            const previewWidth = previewEl.offsetWidth;
-            const previewHeight = previewEl.offsetHeight;
-    
-            // Set background images for thumbnails based on their data attributes
-            const thumbnails = document.querySelectorAll('.prod-small-image');
-            thumbnails.forEach(thumbnail => {
-                const imgUrl = thumbnail.dataset.imageUrl;
-                thumbnail.style.backgroundImage = `url(${imgUrl})`;
-            });
-    
-            // Set default active thumbnail and preview image
-            const defaultThumbnail = document.querySelector('.prod-small-image[data-index="1"]');
-            if (defaultThumbnail) {
-                defaultThumbnail.classList.add('active');
-                const defaultImageUrl = defaultThumbnail.dataset.imageUrl;
-                previewEl.style.backgroundImage = `url(${defaultImageUrl})`;
-            }
-    
-            // Update the preview image on thumbnail mouseover
-            document.querySelector('.prod-left-column').addEventListener('mouseover', e => {
-                if (e.target.classList.contains('prod-small-image')) {
-                    const imgUrl = e.target.dataset.imageUrl;
-                    previewEl.style.backgroundImage = `url(${imgUrl})`;
-                }
-            });
-    
-            // Change the active thumbnail and update the preview image on thumbnail click
-            document.querySelector('.prod-left-column').addEventListener('click', e => {
-                if (e.target.classList.contains('prod-small-image') && !e.target.classList.contains('active')) {
-                    document.querySelector('.prod-small-image.active').classList.remove('active');
-                    e.target.classList.add('active');
-                    const imgUrl = e.target.dataset.imageUrl;
-                    previewEl.style.backgroundImage = `url(${imgUrl})`;
-                }
-            });
-    
-            // Handle zoom effect on mouse move when the preview is zoomed
-            previewEl.addEventListener('mousemove', e => {
-                if (previewEl.classList.contains('prod-zoomed')) {
-                    const offsetXPercent = Math.round(e.offsetX * 100 / previewWidth);
-                    const offsetYPercent = Math.round(e.offsetY * 100 / previewHeight);
-                    previewEl.style.backgroundPosition = `${offsetXPercent}% ${offsetYPercent}%`;
-                }
-            });
-    
-            // Reset background position when the mouse leaves the preview
-            previewEl.addEventListener('mouseleave', e => {
-                previewEl.style.removeProperty('background-position');
-            });
-    
-            // Toggle zoom mode on preview click
-            previewEl.addEventListener('click', () => {
-                if (previewEl.classList.contains('prod-zoomed')) {
-                    previewEl.classList.remove('prod-zoomed');
-                    previewEl.classList.add('prod-normal');
-                    previewEl.style.backgroundSize = 'cover';
-                    previewEl.classList.add('prod-zoom-in-cursor');
-                    previewEl.classList.remove('prod-zoom-out-cursor');
-                } else {
-                    previewEl.classList.add('prod-zoomed');
-                    previewEl.classList.remove('prod-normal');
-                    previewEl.style.backgroundSize = '220% auto';
-                    previewEl.classList.add('prod-zoom-out-cursor');
-                    previewEl.classList.remove('prod-zoom-in-cursor');
-                }
-            });
-    
-            // Set initial cursor style
-            previewEl.classList.add('prod-zoom-in-cursor');
-    
-            // Ensure that zoom is off initially
-            previewEl.classList.remove('prod-zoomed');
-            previewEl.classList.add('prod-normal');
-        };
-</script>
+
+<script src="{% static 'productos/js/product_detail.js' %}"></script>
+
 {% endblock %}
