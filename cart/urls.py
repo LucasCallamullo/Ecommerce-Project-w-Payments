@@ -1,5 +1,5 @@
 from django.urls import path
-from carrito import views
+from cart import views
 
 # endpoint para realizar los cambios del carrito dinamicamente en la pagina
 urlpatterns = [

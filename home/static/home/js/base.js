@@ -48,10 +48,6 @@ document.getElementById('categories-drop').addEventListener('click', function(ev
 });
 
 
-
-
-
-
 // ========================================================================
 //                   Evento de clic en el botón de usuario
 // ========================================================================

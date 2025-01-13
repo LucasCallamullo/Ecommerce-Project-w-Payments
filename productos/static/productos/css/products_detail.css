@@ -324,7 +324,7 @@
 
 
 /* Contenedor interno para los botones y el input */
-.quantity-container {
+.quantity-container-detail {
     display: flex; /* Flexbox para los botones y el input */
     align-items: center; /* Alineación vertical centrada */
     border: 2px solid var(--text-primary);
@@ -359,7 +359,7 @@
 }
 
 /* Campo de entrada (input) */
-.quantity-container:focus-within {
+.quantity-container-detail:focus-within {
     border-color: var(--focus-color); /* Cambia el color del borde cuando el input está enfocado */
 }
 

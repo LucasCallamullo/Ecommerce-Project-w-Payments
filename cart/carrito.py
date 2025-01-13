@@ -1,27 +1,7 @@
 
 
 class Carrito:
-    """
-    Esta clase maneja el carrito de compras de un usuario utilizando la sesión del request en Django.
-
-    Atributos:
-        request: El objeto de solicitud HTTP de Django, utilizado para acceder a la sesión del usuario.
-        session: La sesión del usuario, donde se almacenan los datos del carrito.
-        carrito: Un diccionario que representa el carrito de compras del usuario.
-
-    """
     def __init__(self, request):
-        """
-        Inicializa una instancia de la clase Carrito.
-
-        Parámetros:
-            request (HttpRequest): El objeto de solicitud HTTP de Django que contiene la sesión del usuario.
-
-        Comportamiento:
-            - Obtiene la sesión del usuario a partir del request.
-            - Busca el carrito en la sesión. Si no existe, lo inicializa como un diccionario vacío.
-            - Guarda el carrito en la sesión para su posterior uso.
-        """
         self.request = request
         self.session = request.session
 
@@ -31,9 +11,12 @@ class Carrito:
             carrito = self.session["carrito"] = {}
 
         self.carrito = carrito
+        
+        # if self.carrito[producto_id_str]["cantidad"] + value > producto.stock:
+        #    raise ValueError("No hay suficiente stock disponible")
 
     @property
-    def total(self):
+    def total_price(self):
         """
         Notes:
             - Se añade el atributo self.total para realizar el calculo solo una vez mediante
@@ -41,9 +24,16 @@ class Carrito:
         """
         total = 0
         if self.carrito:
-            total = sum(item['precio'] * item['cantidad'] for item in self.carrito.values())
-        return total
-
+            total = sum(item['price'] * item['qty'] for item in self.carrito.values())
+        return float(total)
+    
+    @property
+    def total_items(self):
+        total_productos = 0
+        if self.carrito:
+            total_productos = sum(item['qty'] for item in self.carrito.values())
+        return total_productos
+        
     @property
     def items(self):
         """
@@ -52,53 +42,75 @@ class Carrito:
             actualizada
         """
         return self.carrito.items()
+    
+
+    def stock_or_available(self, producto, value_add):
+        stock = producto.stock if producto.available else 0
+        
+        if stock == 0:
+            return False
+    
+        quantity = value_add
+        producto_id_str = str(producto.id) 
+        
+        # Comprobar si la clave existe en el diccionario
+        if producto_id_str in self.carrito:
+            quantity += self.carrito[producto_id_str]["qty"]
+    
+        if stock < quantity:
+            return False
+        
+        # si no se quedo antes retorna directamente True asumiendo que hay stock
+        return True
+    
 
     # ======================================================================
     #                   ADD n LESS Products
     # ======================================================================
-    def add_producto(self, producto, value):
-        """
-        Agrega un producto al carrito de compras. Si el producto ya está en el carrito, incrementa la cantidad.
-
-        Parámetros:
-            producto (Producto): La instancia del producto que se va a agregar al carrito.
-        """
-        producto_id_str = str(producto.id)  # Convertir el ID del producto a cadena de texto
-
+    def add_product(self, product, qty):
+        # Convertir el ID del producto a cadena de texto para las keys del dict
+        producto_id_str = str(product.id)  
+        print("llegue aca")
+        
         # Verifica si el producto no está en el carrito para agregarlo
         if producto_id_str not in self.carrito.keys():
-            # Obtiene la lista de imágenes del producto
-            imagenes = producto.imagenes.all()
-
-            # Selecciona la primera imagen (o una imagen preferida si existe)
-            imagen_url = imagenes.first().imagen.url if imagenes.exists() else None
-
+            
+            # Obtener la imagen principal del producto con su propiedad
+            image_url = product.main_image
+            
+            # Crear item con elementos necesarios
             self.carrito[producto_id_str] = {
-                "id": producto.id,
-                "nombre": producto.nombre,
-                "precio": producto.precio_contado,
-                "imagen": imagen_url,
-                "cantidad": value
+                "id": product.id,
+                "name": product.name,
+                "price": float(product.price),
+                "image": image_url,
+                "qty": qty
             }
 
         # Si el producto ya está en el carrito solo uno a la cantidad
         else:
-            # se puede agregar una variable de comparacion con el stock *************
-            self.carrito[producto_id_str]["cantidad"] += value
+            # se puede agregar una variable de comparacion con el stock #
+            self.carrito[producto_id_str]["qty"] += qty
 
         self.save()
 
     def less_producto(self, producto_id):
-        producto_id_str = str(producto_id)  # Convertir el ID del producto a cadena de texto
+        # Convertir el ID del producto a cadena de texto
+        producto_id_str = str(producto_id)
 
-        if self.carrito[producto_id_str]["cantidad"] > 1:
-            self.carrito[producto_id_str]["cantidad"] -= 1
+        if self.carrito[producto_id_str]["qty"] > 1:
+            self.carrito[producto_id_str]["qty"] -= 1
+            delete_item = False
         else:
             # Opcionalmente, podemos eliminar el producto si la cantidad llega a 0
             del self.carrito[producto_id_str]
+            delete_item = True
 
         # guardamos los cambios
         self.save()
+        
+        # este retorno nos sirve para los mensajes de las alertas
+        return delete_item
 
     # ======================================================================
     #                   SAVE, CLEAR; DELETE
@@ -110,7 +122,6 @@ class Carrito:
     def remove_producto(self, producto_id):
         producto_id_str = str(producto_id)  # Convertir el ID del producto a cadena de texto
 
-        # if producto_id_str in self.carrito:
         del self.carrito[producto_id_str]
         self.save()
 
@@ -118,12 +129,6 @@ class Carrito:
         # Todavia no tiene uso en el widget
         self.carrito = {}
         self.save()
-
-    def get_total_precio(self):
-        return sum(item["precio"] * item["cantidad"] for item in self.carrito.values())
-
-    def get_total_items(self):
-        return sum(item["cantidad"] for item in self.carrito.values())
 
 
 

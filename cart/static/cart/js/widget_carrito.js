@@ -18,10 +18,32 @@ document.getElementById('overlay').addEventListener('click', function() {
     document.getElementById('overlay').classList.remove('show');
 });
 
+
+/* ==========================================================================================
+                   "Función" para Eventos de mostrar y ocultar alertas de los items
+========================================================================================== */
+// Mostrar la alerta
+function openAlert(message) {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.querySelector('.alert-message').textContent = message; // Agrega el mensaje dinámico
+    alertBox.classList.add('show');
+    alertBox.classList.remove('hidden');
+
+    // Inicia un temporizador para cerrar la alerta después de 2 segundos
+    setTimeout(closeAlert, 1000); // 1000 ms = 1 segundos
+}
+
+// Cerrar la alerta
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.classList.remove('show');
+    alertBox.classList.add('hidden');
+}
+
 /* ==========================================================================================
                     Handle_Function para controlar los distintos eventos
 ========================================================================================== */
-async function handleActions(productId, action, value = 1) {
+async function handleCartActions(productId, action, value=1) {
     try {
         const response = await fetch('/carrito/update/', {
             method: 'POST',     // Especifica que el método de la solicitud es POST
@@ -41,62 +63,45 @@ async function handleActions(productId, action, value = 1) {
         }
 
         const data = await response.json();
+        
+        openAlert(`${data.message}`)
+
+        if (!data.flag_stock) {
+            return
+        }
 
         // Actualiza la vista del WDIGET carrito con los datos más recientes
         updateCart(data);
 
         // Muestra el carrito y el overlay
-        // Nota por algun motivo esto se tiene que ejecutar antes jeej
         document.getElementById('cart-container').classList.add('show');
         document.getElementById('overlay').classList.add('show');
 
         // Actualiza la VIEW del carrito con los datos más recientes
-        updateCartView(data);
+        // updateCartView(data);
 
     } catch (error) {
         console.error('Error:', error); // Maneja y muestra cualquier error en la consola
     }
 }
 
+
 /* ==========================================================================================
                     Función para actualizar la vista del carrito
 ========================================================================================== */
 function updateCart(data) {
+    // actualiza el badge total
     const badgeCantTotal = document.getElementById('badge-cart-button');
-    const carritoTotal = document.getElementById('carrito-total');
-    const carritoContent = document.getElementById('carrito-contenido');
+    badgeCantTotal.textContent = `${data.qty_total}`;
 
+    const carritoTotal = document.getElementById('carrito-total');
     var precioTotal = formatNumberWithCommas(data.total);
     carritoTotal.textContent = `$${precioTotal}`;
-
-    badgeCantTotal.textContent = `${data.cant_total}`;
-
-    /* carritoTotal.textContent = `Total: $${data.total}`; */
-    carritoContent.innerHTML = ''; // Borra el contenido actual del carrito
-
-    data.items.forEach(item => {
-        var precioFormateado = formatNumberWithCommas(item.precio);
-
-        const itemHTML = `
-            <div class="cart-item position-relative mb-3 d-flex align-items-center">
-                <img src="${item.imagen}" class="img-fluid" alt="Product Image">
-                <div>
-                    <h6>${item.nombre}</h6>
-                    <p>${item.cantidad} × $${precioFormateado}</p>
-                    <!-- Contador y botón de eliminar -->
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-secondary btn-sm" id="decrement-quantity-${item.id}">-</button>
-                        <input type="number" class="form-control form-control-sm mx-2" id="quantity-${item.id}" value="${item.cantidad}" min="1" readonly>
-                        <button class="btn btn-secondary btn-sm" id="increment-quantity-${item.id}">+</button>
-                    </div>
-                </div>
-                <!-- Botón de eliminar en la esquina superior derecha -->
-                <button class="btn btn-danger btn-sm remove-btn" id="remove-item-${item.id}">✖</button>
-            </div>
-        `;
-        carritoContent.innerHTML += itemHTML;
-    });
-
+    
+    // Reemplaza el contenido con el nuevo HTML
+    const carritoContent = document.getElementById('cart-content');
+    carritoContent.innerHTML = data.html; 
+    
     // Reasignar eventos después de actualizar el carrito
     assignButtonEvents();
 }
@@ -112,29 +117,29 @@ function formatNumberWithCommas(number) {
 /* ==========================================================================================
                     Función para asignar eventos a los botones
 ========================================================================================== */
+
 function assignButtonEvents() {
     // Reasigna eventos a los botones de incremento
-    document.querySelectorAll('[id^="increment-quantity-"]').forEach(button => {
-        button.addEventListener('click', () => {
-            const productoId = button.id.split('-').pop();
-            handleActions(productoId, 'add');
+    document.querySelectorAll('.cart-item-btn-plus').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-index');
+            const qty_add = 1;
+            handleCartActions(productId, 'add', qty_add);
         });
     });
 
     // Reasigna eventos a los botones de decremento
-    document.querySelectorAll('[id^="decrement-quantity-"]').forEach(button => {
-        button.addEventListener('click', () => {
-            const productoId = button.id.split('-').pop();
-            handleActions(productoId, 'less');
+    document.querySelectorAll('.cart-item-btn-minus').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-index');
+            handleCartActions(productId, 'less');
         });
     });
 
-    // Obtener todos los id de botones de delete productos
-    document.querySelectorAll('[id^="remove-item-"]').forEach(button => {
-        button.addEventListener('click', () => {
-            const productoId = button.id.split('-').pop();
-            handleActions(productoId, 'remove');
-            handleRemove(button.id);
+    document.querySelectorAll('.cart-btn-remove-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-index');
+            handleCartActions(productId, 'remove');
         });
     });
 }
@@ -147,13 +152,14 @@ function handleRemove(itemId) {
     // alert('Ítem eliminado');
 }
 
-// Reasignar eventos después de actualizar el carrito
+// Reasignar eventos al cargar la pagina
 assignButtonEvents();
 
 
+/* ==========================================================================================
 // Función para obtener el valor del cookie por nombre actua como nuestro csrf token
-// Esta funcion se aplica en widget_carrito como en add_btn.js de producto js
-
+========================================================================================== */
+// Esta funcion se aplica en widget_carrito como en crud_to_cart.js de producto js
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

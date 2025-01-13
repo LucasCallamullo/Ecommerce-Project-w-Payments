@@ -171,54 +171,53 @@
                         </li>
 
                         <!-- Botones de carrito y usuario -->
-                        <li class="nav-item col-lg-3 d-flex gap-4 justify-content-end">
+                        <li class="nav-item col-lg-3">
+                            <ul class="navbar-nav d-flex gap-4 justify-content-end">
 
-                            <!-- boton dark - mode -->
-                            <button class="btn btn-header" id="themeToggle">
-                                <i id="theme-icon" class="fas fa-moon"></i>
-                            </button>
-                            
-                            <!-- Botón del carrito -->
-                            <button class="btn btn-header" id="cart-button" 
-                            aria-label="Cart">
-                                <i class="fas fa-shopping-cart"></i>
-                                <!-- Badge para mostrar el número de productos -->
-                                <span class="badge position-absolute top-0 start-100 translate-middle" 
-                                id="badge-cart-button">5</span>
-                            </button>
-
-                            <!-- Botón y dropdown del usuario -->
-                            <div class="dropdown">
-                                <button class="btn btn-header" id="user-button" 
-                                aria-haspopup="true" aria-expanded="false" 
-                                aria-label="User Menu">
-                                    <i class="fas fa-user"></i>
-                                </button>
+                                <!-- boton dark - mode -->
+                                <li class="nav-item">
+                                    <button class="btn btn-header" id="themeToggle">
+                                        <i id="theme-icon" class="fas fa-moon"></i>
+                                    </button>
+                                </li>
                                 
-                                <!-- Contenido del dropdown -->
-                                <div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
-                                    <form>
-                                        <!-- Campo de Email -->
-                                        <div class="mb-3">
-                                            <label for="user-email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="user-email" placeholder="Enter email" required>
-                                        </div>
-
-                                        <!-- Campo de Password -->
-                                        <div class="mb-3">
-                                            <label for="user-password" class="form-label">Password</label>
-                                            <input type="password" class="form-control" id="user-password" placeholder="Enter password" required>
-                                        </div>
-
-                                        <!-- Botón de Login -->
-                                        <button type="submit" class="btn btn-primary w-100">Login</button>
-                                    </form>
-                                    <hr>
-                                    <!-- Botón de Registro -->
-                                    <button class="btn btn-secondary w-100 mt-2">Register</button>
-                                </div>
-                            </div>
-
+                                <!-- Botón del carrito -->
+                                <li class="nav-item">
+                                    {% include "cart/widget_carrito.html" %}
+                                </li>
+                            
+                                <!-- Botón y dropdown del usuario -->
+                                <li class="nav-item dropdown">
+                                    <button class="btn btn-header" id="user-button" 
+                                    aria-haspopup="true" aria-expanded="false" 
+                                    aria-label="User Menu">
+                                        <i class="fas fa-user"></i>
+                                    </button>
+                                    
+                                    <!-- Contenido del dropdown -->
+                                    <div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
+                                        <form>
+                                            <!-- Campo de Email -->
+                                            <div class="mb-3">
+                                                <label for="user-email" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="user-email" placeholder="Enter email" required>
+                                            </div>
+    
+                                            <!-- Campo de Password -->
+                                            <div class="mb-3">
+                                                <label for="user-password" class="form-label">Password</label>
+                                                <input type="password" class="form-control" id="user-password" placeholder="Enter password" required>
+                                            </div>
+    
+                                            <!-- Botón de Login -->
+                                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                                        </form>
+                                        <hr>
+                                        <!-- Botón de Registro -->
+                                        <button class="btn btn-secondary w-100 mt-2">Register</button>
+                                    </div>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -231,6 +230,15 @@
             {% block content %}
                 <!-- Contenido específico de la página -->
             {% endblock %}
+        </div>
+
+        <!-- Alerts -->
+        <div class="custom-alert" id="alertBox">
+            <i class="fa-regular fa-circle-check"></i>
+            <span class="alert-message">Holy guacamole!</span>
+            <button onclick="closeAlert()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
     </main>
 
@@ -323,6 +331,8 @@
     <!-- Optional: Your custom scripts -->
     <script src="{% static 'home/js/base.js' %}"></script>
 
+    <!-- JavaScript for Carrito Widget -->
+    <script src="{% static 'cart/js/widget_carrito.js' %}"></script>
 
     {% block extra_scripts %}
         <!-- Cargas archivos .js propios de cada template/vista -->

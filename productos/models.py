@@ -138,3 +138,19 @@ class Product(models.Model):
         return self.name
 
     
+    @property
+    def main_image(self):
+        image_url = None
+        if self.images.exists():
+            images = self.images.all()
+
+            # Intentar obtener la imagen principal
+            main_image = images.filter(main_image=True).first()
+
+            # Si no hay una imagen principal, obtener la primera imagen
+            image_url = main_image.image_url if main_image else images.first().imagen_url
+            
+        return image_url
+    
+        
+    

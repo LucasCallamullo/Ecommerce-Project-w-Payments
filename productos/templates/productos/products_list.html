@@ -121,14 +121,14 @@
                             {% endfor %}
 
                             <!-- Botón de la esquina -->
-                            <button class="corner-box" onclick="alert('Botón de la esquina clicado')">
+                            <button class="corner-box">
                                 <i class="fas fa-expand-arrows-alt"></i>
                             </button>
                         </div>
         
                         <!-- Información del Producto -->
-                        <figcaption class="product-info p-2">
-                            <a href="#">
+                        <figcaption class="product-info p-2" onclick="event.stopPropagation();">
+                            <a href="{% url 'product_detail' product.id product.slug %}">
                                 <p>{{ product.name }}</p>
                             </a>
 
@@ -144,28 +144,26 @@
                                 <p>${{ product.price }}</p>
                             </div>
 
-                            <button onclick="alert('producto id {{product.id}}')" class="add-button">
+                            <button class="prod-add-button" data-product-id="{{product.id}}">
                                 Agregar
                             </button>
 
                         </figcaption>
                     </figure>
+
                 </div>
             {% endfor %}
+
         </div>
     </div>
 
-    
-
 </div>
-
-
 
 {% endblock %}
 
 
-
 {% block extra_scripts %}
     <!-- JavaScript for Product Page -->
+    <script src="{% static 'cart/js/crud_to_cart.js' %}"></script>
 {% endblock %}
 

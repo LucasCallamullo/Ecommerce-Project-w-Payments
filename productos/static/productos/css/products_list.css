@@ -162,7 +162,7 @@ Estilo general de la barra lateral
     font-weight: bold;
 }
 
-.add-button {
+.prod-add-button {
     display: none;
     padding: 5px 10px;
     background-color: var(--main-color);
@@ -170,6 +170,7 @@ Estilo general de la barra lateral
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease, opacity 0.3s ease;
+    z-index: 100;
 
     margin-top: 8%;
     width: 90%;
@@ -181,13 +182,13 @@ Estilo general de la barra lateral
     pointer-events: none; /* El botón no es tocable cuando está oculto */
 }
 
-.product-card:hover .add-button {
+.product-card:hover .prod-add-button {
     display: block;
     opacity: 1; /* Se hace visible al hacer hover */
     pointer-events: auto; /* Habilita la interacción cuando es visible */
 }
 
-.add-button:hover {
+.prod-add-button:hover {
     background-color: var(--main-light-color);
 }
 
@@ -208,7 +209,7 @@ Estilo general de la barra lateral
         height: 450px; 
     }
 
-    .add-button {
+    .prod-add-button {
         display: block;
         opacity: 1; /* Se hace visible al hacer hover */
         pointer-events: auto; /* Habilita la interacción cuando es visible */
@@ -228,7 +229,7 @@ Estilo general de la barra lateral
         height: 420px; 
     }
 
-    .add-button {
+    .prod-add-button {
         display: block;
         opacity: 1; /* Se hace visible al hacer hover */
         pointer-events: auto; /* Habilita la interacción cuando es visible */
