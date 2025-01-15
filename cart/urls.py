@@ -5,5 +5,5 @@ from cart import views
 urlpatterns = [
 
     path('carrito/update/', views.update_productos, name='update_productos'),
-    path('ver-carrito/', views.ver_carrito, name='Ver_Carrito'),
+    path('ver-carrito/', views.cart_page_detail, name='cart_page_detail'),
 ]

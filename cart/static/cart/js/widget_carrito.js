@@ -40,11 +40,16 @@ function closeAlert() {
     alertBox.classList.add('hidden');
 }
 
+
 /* ==========================================================================================
                     Handle_Function para controlar los distintos eventos
 ========================================================================================== */
 async function handleCartActions(productId, action, value=1) {
     try {
+        // Verificamos si estamos en la página del carrito antes de mostrar el carrito y overlay
+        const currentPage = window.location.pathname;
+        const cart_view = ( currentPage == '/ver-carrito/' );
+
         const response = await fetch('/carrito/update/', {
             method: 'POST',     // Especifica que el método de la solicitud es POST
             headers: {
@@ -54,7 +59,8 @@ async function handleCartActions(productId, action, value=1) {
             body: new URLSearchParams({
                 'producto_id': productId, // Envía el ID del producto como parte del cuerpo de la solicitud
                 'action': action,    // 'add', 'less', 'remove'
-                'value': value    // value for quantity
+                'value': value,    // value for quantity
+                'cart_view': cart_view ? 'true':'false'   // cart_view for cart_view update
             })
         });
 
@@ -64,26 +70,32 @@ async function handleCartActions(productId, action, value=1) {
 
         const data = await response.json();
         
-        openAlert(`${data.message}`)
+        // Muestra una alerta con el mensaje del servidor
+        openAlert(data.message);
 
-        if (!data.flag_stock) {
-            return
-        }
+        // Si no hay stock suficiente, termina aquí
+        if (!data.flag_stock) return;
 
         // Actualiza la vista del WDIGET carrito con los datos más recientes
         updateCart(data);
 
-        // Muestra el carrito y el overlay
-        document.getElementById('cart-container').classList.add('show');
-        document.getElementById('overlay').classList.add('show');
+        // Muestra el carrito y el overlay si no estas en la pagina del carrito
+        if ( !cart_view ) {
+            document.getElementById('cart-container').classList.add('show');
+            document.getElementById('overlay').classList.add('show');
+        }
 
         // Actualiza la VIEW del carrito con los datos más recientes
-        // updateCartView(data);
+        // typeof == solo ejecuta la funcion si esta definida en mi contexto actual
+        if (cart_view && typeof updateCartView === 'function') {
+            updateCartView(data);
+        }
 
     } catch (error) {
         console.error('Error:', error); // Maneja y muestra cualquier error en la consola
     }
 }
+
 
 
 /* ==========================================================================================
@@ -100,7 +112,7 @@ function updateCart(data) {
     
     // Reemplaza el contenido con el nuevo HTML
     const carritoContent = document.getElementById('cart-content');
-    carritoContent.innerHTML = data.html; 
+    carritoContent.innerHTML = data.widget_html; 
     
     // Reasignar eventos después de actualizar el carrito
     assignButtonEvents();

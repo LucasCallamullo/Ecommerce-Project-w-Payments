@@ -12,8 +12,6 @@ class Carrito:
 
         self.carrito = carrito
         
-        # if self.carrito[producto_id_str]["cantidad"] + value > producto.stock:
-        #    raise ValueError("No hay suficiente stock disponible")
 
     @property
     def total_price(self):
@@ -69,8 +67,7 @@ class Carrito:
     # ======================================================================
     def add_product(self, product, qty):
         # Convertir el ID del producto a cadena de texto para las keys del dict
-        producto_id_str = str(product.id)  
-        print("llegue aca")
+        producto_id_str = str(product.id)
         
         # Verifica si el producto no está en el carrito para agregarlo
         if producto_id_str not in self.carrito.keys():
@@ -111,6 +108,7 @@ class Carrito:
         
         # este retorno nos sirve para los mensajes de las alertas
         return delete_item
+
 
     # ======================================================================
     #                   SAVE, CLEAR; DELETE

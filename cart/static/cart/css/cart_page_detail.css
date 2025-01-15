@@ -1,0 +1,304 @@
+
+
+:root {
+    /* main color de la empresa */
+    --main-color: #5e08e7;
+    --main-light-color: #9554ff;
+
+    /* Primary Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9faa9;
+    
+    --text-primary: #000000;
+    --text-secondary: #6c757d;
+
+    /* Gradients */
+    --gradient: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+    --gradient2: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+
+    /* Sizes */
+    --font-xl: 1.6rem;
+    --font-medium: 1.2rem;
+    --font-normal: 1.0rem;
+    --font-small: 0.85rem;
+    --font-x-small: 0.7rem;
+
+    /* Fonts */
+    --font-main: 'Montserrat', sans-serif;
+    --font-slim: 'Montserrat', sans-serif;
+
+    /* heigths */
+    --main-nav-heigth: 60px;
+    --top-nav-height: 140px;
+
+    /* width responsive */
+    --width-col-3: 90%
+
+}
+
+.btn-paralelogramo {
+    color: white;
+    font-family: var(--font-main);
+    font-size: var(--font-normal);
+    background-color: var(--main-color);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    transform: skew(-30deg);
+}
+
+.btn-paralelogramo span {
+    display: inline-block;
+    transform: skew(30deg);
+}
+
+
+
+/* Contenedor principal */
+.cart-view-container {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    background-color: var(--bg-primary);
+}
+
+/* Cabecera del carrito */
+.cart-view-header {
+    display: grid;
+    grid-template-columns: 15% 32% 14% 16% 17% 9%;
+    border-bottom: 2px solid var(--bg-secondary);
+    padding: 10px 0;
+    text-align: start;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.cart-view-header .cart-col {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.cart-view-header .cart-view-product {
+    margin-left: 8% !important;
+}
+
+/* Filas del carrito */
+.cart-view-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-row {
+    display: grid;
+    grid-template-columns: 15% 32% 14% 16% 17% 9%;
+    align-items: center;
+    height: 120px;
+    padding: 2%;
+    border-bottom: 1px solid var(--text-secondary);
+}
+
+.cart-col {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 0;
+    margin: 0;
+}
+
+/* Columna de imágenes */
+.image-col img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+
+.img-sm {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    height: 100%;  /* 110px; */
+    cursor: pointer;
+}
+
+/* columna de nombre de producto */
+.cart-view-product-name {
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+    font-weight: bold;
+    font-size: var(--font-small);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: start !important;
+    margin-left: 4%;
+    margin-right: 2%;
+}
+
+.cart-view-product-name:hover {
+    color: var(--main-color) !important;
+    text-decoration: none !important;
+}
+
+/* Contenedor interno para los botones y el input */
+.quantity-container-detail {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid var(--text-primary);
+    transition: border-color 0.3s;
+    
+    height: 45%;
+    width: 70%;
+    background-color: transparent;
+}
+
+/* Botones de incremento y decremento */
+.prod-btn-qty {
+    color: var(--text-secondary);
+    font-size: var(--font-medium);
+    
+    border: none;
+    outline: none;
+    z-index: 100;
+
+    font-weight: bold;
+    width: 30%;
+    max-width: 30%;
+    height: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Efecto hover en los botones */
+.prod-btn-qty:hover {
+    color: var(--text-primary); /* Cambia el color del texto */
+    font-size: var(--font-medium);
+}
+
+/* Botón al hacer clic */
+.prod-btn-qty:active {
+    background-color: var(--bg-primary);
+    transform: scale(0.95); /* Simula un efecto de presionado */
+    border: none;
+}
+
+.prod-span-qty {
+    
+    font-size: var(--font-small);
+    color: var(--text-primary);
+    width: 40%;
+    height: 100%;
+    max-width: 40%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Texto centrado */
+}
+
+/* Para los botones de mg and delete */ 
+.cart-view-btn-cont {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-cart-view {
+    color: #fff;
+    background-color: #8b8b8b6b;
+    border: none; 
+    border-radius: 50%;
+    font-size: var(--font-normal);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.btn-cart-view:hover {
+    color: #fff;
+    background-color: #DC0000;
+    transform: scale(1.1);
+}
+
+.btn-cart-view:active {
+    transform: scale(0.9) !important;
+    color: #DC0000 !important;
+    border: 1px solid #DC0000 !important;
+    background-color: #fff !important;
+}
+
+/* para los cupones */
+.container-coupon {
+    width: 70%; 
+    display: flex;
+    align-items: center;
+}
+
+.btn-coupon-apply {
+    color: #ffffff;
+    background-color: var(--main-color);
+    border: none;
+    width: 25%;
+    font-size: var(--font-normal);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-coupon-apply:hover {
+    background-color: var(--main-light-color);
+}
+
+
+/*
+Segunda Columna 
+*/
+.cart-view-bg-cont {
+    background-color: var(--bg-primary);
+    padding: 4%;
+    width: 90%;
+    margin-left: 6%;
+}
+
+.cart-view-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2%;
+}
+
+.total-divider {
+    border: none;
+    height: 1%;
+    background-color: var(--text-primary);
+    margin: 5px 0;
+}
+
+.btn-main {
+    border-radius: 2px;
+    text-transform: capitalize;
+    font-size: var(--font-normal);
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #fff;
+    width: 100%;
+    background-color: var(--main-color);
+    border: none;
+}
+
+.btn-main:hover {
+    background-color: var(--main-light-color);
+}
+
+
+
+
+

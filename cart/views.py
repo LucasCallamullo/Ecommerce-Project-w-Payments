@@ -40,6 +40,7 @@ def update_productos(request):
             producto_id = int(request.POST.get('producto_id'))
             action = request.POST.get('action')
             value_add = int(request.POST.get('value'))
+            cart_view = request.POST.get('cart_view')
             
             # consultamos primero el producto para cancelar todo si no existiera
             producto = get_object_or_404(Product, id=producto_id)
@@ -73,16 +74,25 @@ def update_productos(request):
 
             else:
                 return JsonResponse({'error': 'Acción inválida'}, status=400)
-
-            # renderizar el nuevo html que vamos a integrar con js al html
-            html = render_to_string('cart/cart_items.html', {'carrito': carrito})
+                
+            # renderizar el nuevo html del widget que vamos a integrar con js al html
+            context = {'carrito': carrito}
+            widget_html = render_to_string('cart/cart_items.html', context)
+            
+            
+            cart_view = True if cart_view == 'true' else False
+            
+            cart_view_html = None
+            if cart_view:
+                cart_view_html = render_to_string('cart/table_cart_detail.html', context)
             
             return JsonResponse({
-                'html': html, 
+                'widget_html': widget_html, 
                 'total': carrito.total_price, 
                 'message': message,
                 'flag_stock': flag_stock,
                 'qty_total': carrito.total_items,
+                'cart_view_html': cart_view_html
             })
 
         # cuando no exista el id en el carrito
@@ -92,6 +102,5 @@ def update_productos(request):
     return JsonResponse({'error': 'Solicitud inválida'}, status=400)
 
 
-def ver_carrito(request):
-
-    return render(request, "carrito/ver_carrito.html")
+def cart_page_detail(request):
+    return render(request, "cart/cart_page_detail.html")
