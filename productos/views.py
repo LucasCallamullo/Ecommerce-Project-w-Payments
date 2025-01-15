@@ -7,6 +7,7 @@ from productos.models import Product, PCategory, PSubcategory, ProductImage
 from django.shortcuts import get_object_or_404
 from django.http import Http404, JsonResponse
 
+from django.template.loader import render_to_string
 
 from django.urls import resolve, reverse
 
@@ -68,7 +69,7 @@ def product_list(request, cat_slug=None, subcat_slug=None):
 
 
 def product_top_search(request):
-
+    
     query = request.GET.get('top_q', '')
 
     productos = Product.objects.all()
@@ -80,6 +81,46 @@ def product_top_search(request):
     }
     
     return render(request, 'productos/products_list.html', context)
+
+
+def search_product_q(request):
+    top_query = request.GET.get('topQuery', '0')
+    category_id = int(request.GET.get('categoryId', '0'))
+    sub_category_id = int(request.GET.get('subCategoryId', '0'))
+    inputNow = request.GET.get('inputNow', '0')
+    
+    products = Product.objects.all()
+    
+    if category_id and not sub_category_id:
+        products = products.filter(category=category_id)
+    
+    if sub_category_id:
+        products = products.filter(category=category_id, subcategory=sub_category_id)
+        
+    if top_query != '0':
+        products = products.filter(name__icontains=top_query)
+        
+    if inputNow != '0': 
+        products = products.filter(name__icontains=inputNow)
+    
+    context = {'products': products}
+    html_cards = render_to_string('productos/products_list_cards.html', context)
+    
+    return JsonResponse({
+        'html_cards': html_cards
+    })
+
+    
+    
+    
+    
+
+
+
+
+
+
+
 
 
 

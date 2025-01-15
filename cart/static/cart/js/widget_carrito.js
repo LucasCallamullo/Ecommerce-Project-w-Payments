@@ -23,9 +23,21 @@ document.getElementById('overlay').addEventListener('click', function() {
                    "Función" para Eventos de mostrar y ocultar alertas de los items
 ========================================================================================== */
 // Mostrar la alerta
-function openAlert(message) {
+function openAlert(message, action) {
     const alertBox = document.getElementById('alertBox');
     alertBox.querySelector('.alert-message').textContent = message; // Agrega el mensaje dinámico
+    
+    // Elimina cualquier clase previa para evitar conflictos
+    alertBox.classList.remove('alert-green', 'alert-red');
+
+    // Agrega la clase correspondiente según la acción
+    if (action === 'remove' || message === 'Producto eliminado de tu carrito.' ) {
+        alertBox.classList.add('alert-red');
+    } else {
+        alertBox.classList.add('alert-green');
+    }
+
+    // Muestra la alerta
     alertBox.classList.add('show');
     alertBox.classList.remove('hidden');
 
@@ -71,7 +83,7 @@ async function handleCartActions(productId, action, value=1) {
         const data = await response.json();
         
         // Muestra una alerta con el mensaje del servidor
-        openAlert(data.message);
+        openAlert(data.message, action);
 
         // Si no hay stock suficiente, termina aquí
         if (!data.flag_stock) return;

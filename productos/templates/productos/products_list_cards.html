@@ -1,0 +1,48 @@
+
+
+
+{% for product in products %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <figure class="product-card" onclick="window.location.href='{% url 'product_detail' product.id product.slug %}'">
+            <!-- Imagen del Producto -->
+            <div class="image-container">
+
+                {% for image in product.images.all %}
+                    {% if image.main_image %}
+                        <img src="{{ image.image_url }}" alt="{{ product.name }}">
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Botón de la esquina -->
+                <button class="corner-box">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+            </div>
+
+            <!-- Información del Producto -->
+            <figcaption class="product-info p-2" onclick="event.stopPropagation();">
+                <a href="{% url 'product_detail' product.id product.slug %}">
+                    <p>{{ product.name }}</p>
+                </a>
+
+                <div class="text-start">
+                    {% if product.stock > 4 %}
+                        <p class="m-0 p-0" style="color: green;">Disponible</p>
+                    {% elif product.stock > 0 and product.stock < 4 %}
+                        <p class="m-0 p-0" style="color: orange;">Stock Bajo</p>
+                    {% else %}
+                        <p class="m-0 p-0" style="color: red;">Sin Stock</p>
+                    {% endif %}
+
+                    <p>${{ product.price }}</p>
+                </div>
+
+                <button class="prod-add-button" data-product-id="{{product.id}}">
+                    Agregar
+                </button>
+
+            </figcaption>
+        </figure>
+
+    </div>
+{% endfor %}

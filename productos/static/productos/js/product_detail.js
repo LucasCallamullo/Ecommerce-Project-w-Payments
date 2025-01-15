@@ -1,12 +1,17 @@
 
 
 // ========================================================================
-//               funcion botones
+//               funcion botones del input y "agregar item"
 // ========================================================================
 function increment(button) {
     // Encuentra el contenedor del input relacionado
     const input = button.parentElement.querySelector('.prod-input-qty');
     let currentValue = parseInt(input.value, 10); // Obtiene el valor actual como número entero
+    
+    // Validar si el valor es un número válido
+    if (isNaN(currentValue) || currentValue <= 0) {
+        currentValue = 1
+    }
 
     // Incrementa el valor
     currentValue += 1;
@@ -20,6 +25,11 @@ function decrement(button) {
     const input = button.parentElement.querySelector('.prod-input-qty');
     let currentValue = parseInt(input.value, 10); // Obtiene el valor actual como número entero
 
+    // Validar si el valor es un número válido
+    if (isNaN(currentValue) || currentValue <= 0) {
+        currentValue = 1
+    }
+
     // Decrementa el valor, pero no permite valores menores que 1
     if (currentValue > 1) {
         currentValue -= 1;
@@ -28,6 +38,25 @@ function decrement(button) {
     // Actualiza el valor en el input
     input.value = currentValue;
 }
+
+
+// Reasigna eventos a los botones de incremento
+document.querySelectorAll('.btn-add-item').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-index');
+        const input = button.parentElement.querySelector('.prod-input-qty');
+        let currentValue = parseInt(input.value, 10);
+
+        // Validar si el valor es un número válido
+        if (isNaN(currentValue) || currentValue <= 0) {
+            // remove es una advertencia en rojo
+            openAlert('Ingrese un número correctamente', 'remove')
+            return; // No enviar la solicitud si el valor no es válido
+        }
+
+        handleCartActions(productId, 'add', currentValue);
+    });
+});
 
 
 // ========================================================================
@@ -103,8 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
-
+// Efectos de zoom
 window.onload = () => {
     const overlay = document.getElementById('fullscreen-overlay');
     const productId = parseInt(overlay.dataset.index, 10);

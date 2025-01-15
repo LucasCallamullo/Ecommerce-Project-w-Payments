@@ -34,19 +34,8 @@
     <!-- Primera Columna -->
     <div class="col-lg-8">
 
-        <div class="cart-view-container">
-            <div class="cart-view-header">
-                <div class="cart-col image-col"> </div>
-                <div class="cart-col cart-view-product">Product</div>
-                <div class="cart-col">Price</div>
-                <div class="cart-col">Quantity</div>
-                <div class="cart-col">Subtotal</div>
-                <div class="cart-col actions-col"> </div>
-            </div>
-        
-            <div class="cart-view-content" id="cart-view-content">
-                {% include "cart/table_cart_detail.html" %}
-            </div>
+        <div class="cart-view-container" id="cart-view-container">
+            {% include "cart/table_cart_detail.html" %}
         </div>
         
 

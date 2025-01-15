@@ -13,7 +13,9 @@ urlpatterns = [
     path('category/<slug:cat_slug>/', views.product_list, name='pl_category'),
     path('category/<slug:cat_slug>/<slug:subcat_slug>/', views.product_list, name='pl_subcategory'),
     path('product/<int:id>-<slug:slug>/', views.product_detail, name='product_detail'),
+    
     path('search/', views.product_top_search, name='product_top_search'),
+    path('search-product/', views.search_product_q, name='search_product_q'),
     
     # endpoints images
     path('images/<int:product_id>/images/', views.get_product_images, name='get_product_images'),

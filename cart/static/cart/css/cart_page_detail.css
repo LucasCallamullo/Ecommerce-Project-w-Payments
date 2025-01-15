@@ -257,6 +257,35 @@
     background-color: var(--main-light-color);
 }
 
+.view-cart-empty {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5%;
+}
+
+.view-cart-empty img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
+
+.view-cart-empy-a {
+    font-size: var(--font-normal);
+    background-color: var(--main-color);
+    width: 40%;
+    height: 30%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1%;
+    margin: 5%;
+    color: #fff !important;
+}
+.view-cart-empy-a:hover {
+    background-color: var(--main-light-color);
+}
 
 /*
 Segunda Columna 

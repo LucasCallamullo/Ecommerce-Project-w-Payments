@@ -6,7 +6,7 @@
 
 <!-- For More CSS Modules -->
 {% block extra_head %}
-    <title> {{product.name}} </title>
+    <title> {{ store.name }} | {{ product.name}} </title>
     <link href="{% static 'productos/css/products_detail.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -189,8 +189,8 @@
                     -
                 </button>
 
-                <input type="text" class="form-control prod-input-qty"
-                        id="quant-cart-{{product.id}}" value="1" min="1">
+                <input type="text" class="form-control prod-input-qty" 
+                data-index="{{product.id}}" value="1" min="1">
 
                 <button class="btn prod-btn-qty" onclick="increment(this)">
                     +

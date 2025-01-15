@@ -584,21 +584,37 @@ Alerts
 
     width: 20%; /* Ajusta según tus necesidades */
     padding: 1rem;
-    border: 1px solid #00c01a;
-    background-color: #00c01a;
+    
     color: #fff;
 
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    
     font-size: var(--font-normal);
 
     opacity: 0; /* Oculto por defecto */
     pointer-events: none; /* Deshabilita la interacción por defecto */
 }
 
+.alert-green {
+    border: 1px solid #00c01a;
+    background-color: #00c01a;
+    transition: background-color 0.5s ease;
+}
+
+.alert-red {
+    border: 1px solid #be0404e3;
+    background-color: #be0404e3;
+    transition: background-color 0.5s ease;
+}
+
 .custom-alert i {
     font-size: var(--font-medium);
+}
+
+.custom-alert span {
+    margin-left: 5%;
 }
 
 /* Botón de cerrar */

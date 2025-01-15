@@ -1,53 +1,83 @@
 
+
+{% load static %}
 {% load custom_filters %}
 
-
-
-{% for key, value in carrito.items %}                 
-    <div class="cart-row">
-        <!-- Imagen del producto -->
-        <div class="cart-col image-col">
-            <a href="#">
-                <img src="{{ value.image }}" class="img-sm" alt="{{ value.name }}">
-            </a>
-        </div>
-
-        <!-- Nombre del producto -->
-        <div class="cart-col">
-            <a href="#" class="cart-view-product-name">{{ value.name }}</a>
-        </div>
-
-        <!-- Precio -->
-        <div class="cart-col">
-            <span>${{ value.price|intdot }}</span>
-        </div>
-
-        <!-- Cantidad -->
-        <div class="cart-col quantity-container-detail">
-            <button class="prod-btn-qty cart-view-minus" data-index="{{value.id}}">
-                -
-            </button>
-            <span class="prod-span-qty"> {{ value.qty }} </span>
-            <button class="prod-btn-qty cart-view-plus" data-index="{{value.id}}">
-                +
-            </button>
-        </div>
-
-        <!-- Subtotal -->
-        <div class="cart-col">
-            <span id="cart-view-sub-total">
-                ${{ value.price }} * {{ value.qty }}
-            </span>
-        </div>
-
-        <!-- Botones de acción -->
-        <div class="cart-col cart-view-btn-cont gap-3">
-            <button class="btn btn-cart-view cart-view-btn-like" data-index="{{value.id}}">
-                <i class="fa fa-heart"></i>
-            </button>
-            <button class="btn btn-cart-view cart-view-btn-delete" data-index="{{value.id}}">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+{% if carrito.items %}
+  
+    <div class="cart-view-header">
+        <div class="cart-col image-col"> </div>
+        <div class="cart-col cart-view-product">Product</div>
+        <div class="cart-col">Price</div>
+        <div class="cart-col">Quantity</div>
+        <div class="cart-col">Subtotal</div>
+        <div class="cart-col actions-col"> </div>
     </div>
-{% endfor %}
+
+
+    <div class="cart-view-content" id="cart-view-content">
+
+        {% for key, value in carrito.items %}                 
+            <div class="cart-row">
+                <!-- Imagen del producto -->
+                <div class="cart-col image-col">
+                    <a href="#">
+                        <img src="{{ value.image }}" class="img-sm" alt="{{ value.name }}">
+                    </a>
+                </div>
+
+                <!-- Nombre del producto -->
+                <div class="cart-col">
+                    <a href="#" class="cart-view-product-name">{{ value.name }}</a>
+                </div>
+
+                <!-- Precio -->
+                <div class="cart-col">
+                    <span>${{ value.price|intdot }}</span>
+                </div>
+
+                <!-- Cantidad -->
+                <div class="cart-col quantity-container-detail">
+                    <button class="prod-btn-qty cart-view-minus" data-index="{{value.id}}">
+                        -
+                    </button>
+                    <span class="prod-span-qty"> {{ value.qty }} </span>
+                    <button class="prod-btn-qty cart-view-plus" data-index="{{value.id}}">
+                        +
+                    </button>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="cart-col">
+                    <span id="cart-view-sub-total">
+                        ${{ value.price }} * {{ value.qty }}
+                    </span>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="cart-col cart-view-btn-cont gap-3">
+                    <button class="btn btn-cart-view cart-view-btn-like" data-index="{{value.id}}">
+                        <i class="fa fa-heart"></i>
+                    </button>
+                    <button class="btn btn-cart-view cart-view-btn-delete" data-index="{{value.id}}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+    
+    <div class="view-cart-empty"> 
+        <h1>Tu carrito esta vacío</h1>
+        <img src="{% static 'img/cart-view.png' %}" alt="Cartt">
+    </div>
+
+    <a class="view-cart-empy-a" href="{% url 'product_list' %}">
+        Ver todos nuestros productos.
+    </a>
+
+{% endif %}

@@ -9,7 +9,7 @@ function updateCartView(data) {
     carritoTotal2.textContent = `$${precioTotal}`;
     
     // Reemplaza el contenido con el nuevo HTML
-    const carritoContent = document.getElementById('cart-view-content');
+    const carritoContent = document.getElementById('cart-view-container');
     carritoContent.innerHTML = data.cart_view_html; 
     
     // Reasignar eventos después de actualizar el carrito
