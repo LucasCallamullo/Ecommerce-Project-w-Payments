@@ -440,28 +440,57 @@ para los nav items links
     display: none;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
+    
+    width: 220px;
 }
 
 /* Estilo de los inputs y el botón dentro del dropdown */
-#user-dropdown input[type="email"],
-#user-dropdown input[type="password"],
-#user-dropdown button {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+.widget-register-form input,
+.widget-register-form button {
+    width: 100% !important;
+    padding: 8px !important;
+    margin: 5px 0 !important;
+    border: 1px solid #ccc !important;
 }
 
-#user-dropdown button {
+
+.widget-register-form button {
     background-color: var(--main-light-color);
     color: white;
     border: none;
+    border-radius: 0 !important;
     cursor: pointer;
 }
 
-#user-dropdown button:hover {
-    background-color: #444;
+.widget-register-form button:hover {
+    border: none !important;
+    outline: none !important; 
+    background-color: var(--main-color);
+    transform: scale(1.01);
+}
+
+.btn-widget-register {
+    display: inline-block;  /* Asegura que se comporte como un botón */
+    text-align: center;
+    width: 100%; 
+    padding: 4% 5%;     /* Estilo adicional de padding */
+    border: 1px solid transparent;
+    background-color: var(--text-secondary); 
+    color: #fff;          
+    text-decoration: none; 
+    
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-widget-register:hover {
+    background-color: var(--main-color); 
+    text-decoration: none;
+}
+
+.btn-widget-register i {
+    font-size: var(--font-medium);
+    margin-right: 10%;
 }
 
 

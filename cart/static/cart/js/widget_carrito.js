@@ -23,7 +23,7 @@ document.getElementById('overlay').addEventListener('click', function() {
                    "Función" para Eventos de mostrar y ocultar alertas de los items
 ========================================================================================== */
 // Mostrar la alerta
-function openAlert(message, action) {
+function openAlert(message, action='', color='', timeout=1000) {
     const alertBox = document.getElementById('alertBox');
     alertBox.querySelector('.alert-message').textContent = message; // Agrega el mensaje dinámico
     
@@ -31,7 +31,7 @@ function openAlert(message, action) {
     alertBox.classList.remove('alert-green', 'alert-red');
 
     // Agrega la clase correspondiente según la acción
-    if (action === 'remove' || message === 'Producto eliminado de tu carrito.' ) {
+    if (action === 'remove' || message === 'Producto eliminado de tu carrito.' || color === 'red' ) {
         alertBox.classList.add('alert-red');
     } else {
         alertBox.classList.add('alert-green');
@@ -42,7 +42,7 @@ function openAlert(message, action) {
     alertBox.classList.remove('hidden');
 
     // Inicia un temporizador para cerrar la alerta después de 2 segundos
-    setTimeout(closeAlert, 1000); // 1000 ms = 1 segundos
+    setTimeout(closeAlert, timeout); // 1000 ms = 1 segundos
 }
 
 // Cerrar la alerta

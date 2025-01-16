@@ -1,0 +1,72 @@
+.btn-paralelogramo {
+    color: white;
+    font-family: var(--font-main);
+    font-size: var(--font-normal);
+    background-color: var(--main-color);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    transform: skew(-30deg);
+}
+
+.btn-paralelogramo span {
+    display: inline-block;
+    transform: skew(30deg);
+}
+
+/* primera columna */
+.user-register-info {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--text-secondary);
+    width: 90%;
+    height: 75vh;
+    padding: 2% 4%;
+}
+
+.user-register-info h2 {
+    margin-top: 2%;
+    margin-bottom: 15%;
+}
+
+/* segunda columna */
+.register-user-container {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--text-secondary);
+    padding: 2% 2%; /* eje y   ,   eje x  */
+    height: 75vh;
+}
+
+.register-container { 
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.register-container label { 
+    font-size: var(--font-normal);
+    font-weight: bold;
+    margin-bottom: 2%;
+}
+
+.register-container input,
+.register-container select { 
+    height: 36px !important;
+}
+
+.register-user-btn {
+    color: #fff;
+    border: none;
+    outline: none;
+    background-color: var(--main-color);
+    margin-top: 5%;
+    margin-left: 3%;
+}
+
+.register-user-btn:hover,
+.register-user-btn:active {
+    color: #fff;
+    background-color: var(--main-light-color);
+}

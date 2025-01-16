@@ -69,7 +69,6 @@ async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) 
 }
 
 
-
 function productButtonEvents() {
     // Agregar el evento click dinámicamente
     document.querySelectorAll('.prod-add-button').forEach(button => {

@@ -49,8 +49,8 @@ document.querySelectorAll('.btn-add-item').forEach(button => {
 
         // Validar si el valor es un número válido
         if (isNaN(currentValue) || currentValue <= 0) {
-            // remove es una advertencia en rojo
-            openAlert('Ingrese un número correctamente', 'remove')
+            // tercer argumento 'red' es una advertencia en rojo
+            openAlert('Ingrese un número correctamente.', '', 'red')
             return; // No enviar la solicitud si el valor no es válido
         }
 

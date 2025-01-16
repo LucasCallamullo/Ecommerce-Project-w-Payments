@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'django.contrib.humanize',
+    
     'home',
     'productos',
-    'django.contrib.humanize',
     'cart',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,8 @@ TEMPLATES = [
                 # mis context processor personalizados
                 'productos.context_processors.get_categories_n_subcats',
                 'home.context_processors.get_ecommerce_data',
-                'cart.context_processors.carrito_total'
+                'cart.context_processors.carrito_total',
+                'users.context_processors.widget_register_form',
             ],
         },
     },
@@ -102,6 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
         }
     },
 ]
+
+# para usar nuestro modelo personalizado de user
+AUTH_USER_MODEL = 'users.CustomUser'
+
 """ 
 Esto estaba antes en AUTH_PASSWORD_VALIDATORS = [
     {

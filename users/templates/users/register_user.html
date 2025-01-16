@@ -1,0 +1,129 @@
+{% extends "home/base.html" %}
+
+{% load static %}
+
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'users/css/register_user.css' %}">
+{% endblock %}
+    
+
+
+
+{% block content %}
+
+<!-- Primera fila -->
+<div class="d-flex mt-3 mb-4 gap-3">
+    <!-- top buttons -->
+    <a class="btn-paralelogramo px-lg-3" href="{% url 'Home' %}">
+        <span> Home </span>
+    </a>
+
+    <a class="btn-paralelogramo px-lg-3" href="{% url 'register_user' %}">
+        <span> Registro </span>
+    </a>
+</div>
+
+
+<!-- Segunda Fila -->
+<div class="d-flex"> 
+
+    <!-- Primera columna -->
+     <div class="col-4">
+        <div class="user-register-info">
+            <h2> Registrarse </h2>
+            <p>
+                Puedes registrarte como un usuario del sitio, podras gestionar tus compras, 
+                consultas y datos personales.
+            </p>
+        </div>
+     </div>
+
+    <!-- Segunda columna -->
+    <form id="register-form" class="col-8 register-user-container" method="POST" action="{% url 'register_user' %}">
+        {% csrf_token %}
+        
+        <!-- Fila para Email y Password -->
+        <div class="d-flex">
+            <div class="col-6 mb-3">
+                <div class="register-container">
+                    <label for="email">E-mail</label>
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="col-6 mb-3">
+                <div class="register-container">
+                    <label for="password1">Password</label>
+                    {{ form.password1 }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Fila para Nombre y Apellido -->
+        <div class="d-flex mb-3">
+            <div class="col-6">
+                <div class="register-container">
+                    <label for="first_name">Nombre</label>
+                    {{ form.first_name }}
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="register-container">
+                    <label for="last_name">Apellido</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Fila para Teléfono y Provincia -->
+        <div class="d-flex mb-3">
+            <div class="col-6">
+                <div class="register-container">
+                    <label for="phone">Celular</label>
+                    {{ form.phone }}
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="register-container">
+                    <label for="province">Provincia</label>
+                    {{ form.province }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Fila para Dirección -->
+        <div class="d-flex">
+            <div class="col-6">
+                <div class="register-container">
+                    <label for="address">Dirección</label>
+                    {{ form.address }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex">
+            <input type="submit" value="Registrarse" class="btn register-user-btn">
+        </div>
+    </form>
+</div>
+
+    
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+    <script>
+        // Realmente no ameritaba crear un archivo js por una funcion
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('register-form');
+            // esta funcion se llama desde widget_register.js que se precarga antes debido a que esta
+            // antes que este bloque en base.html
+            validFormsWithAlerts(form)
+        });
+    </script>
+{% endblock %}

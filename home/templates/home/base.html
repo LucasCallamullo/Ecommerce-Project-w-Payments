@@ -188,34 +188,7 @@
                             
                                 <!-- Botón y dropdown del usuario -->
                                 <li class="nav-item dropdown">
-                                    <button class="btn btn-header" id="user-button" 
-                                    aria-haspopup="true" aria-expanded="false" 
-                                    aria-label="User Menu">
-                                        <i class="fas fa-user"></i>
-                                    </button>
-                                    
-                                    <!-- Contenido del dropdown -->
-                                    <div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
-                                        <form>
-                                            <!-- Campo de Email -->
-                                            <div class="mb-3">
-                                                <label for="user-email" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="user-email" placeholder="Enter email" required>
-                                            </div>
-    
-                                            <!-- Campo de Password -->
-                                            <div class="mb-3">
-                                                <label for="user-password" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="user-password" placeholder="Enter password" required>
-                                            </div>
-    
-                                            <!-- Botón de Login -->
-                                            <button type="submit" class="btn btn-primary w-100">Login</button>
-                                        </form>
-                                        <hr>
-                                        <!-- Botón de Registro -->
-                                        <button class="btn btn-secondary w-100 mt-2">Register</button>
-                                    </div>
+                                    {% include "users/widget_login.html" %}
                                 </li>
                             </ul>
                         </li>
@@ -329,14 +302,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
-    <!-- Optional: Your custom scripts -->
+    
     <script src="{% static 'home/js/base.js' %}"></script>
 
     <!-- JavaScript for Carrito Widget -->
     <script src="{% static 'cart/js/widget_carrito.js' %}"></script>
-
+    
+    <!-- JavaScript for users Widget -->
+    <script src="{% static 'users/js/widget_register.js' %}"></script>
+    
+    <!-- Optional: Your custom scripts -->
     {% block extra_scripts %}
-        <!-- Cargas archivos .js propios de cada template/vista -->
+        <!-- Cargas archivos .js propios de cada template/vista esto es util ya que se cargan despues
+         de los scripts de la base dejando a funciones de los mismos como globales-->
     {% endblock %}
 
 </body>

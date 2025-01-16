@@ -48,56 +48,41 @@ document.getElementById('categories-drop').addEventListener('click', function(ev
 });
 
 
-// ========================================================================
-//                   Evento de clic en el botón de usuario
-// ========================================================================
-document.getElementById('user-button').addEventListener('click', function(event) {
-    var dropdown = document.getElementById('user-dropdown');
+/* ==========================================================================================
+              Función Generica para Eventos de mostrar y ocultar alertas
+========================================================================================== */
+// Mostrar la alerta
+// function openAlert(message, action='', color='', timeout=1000) {
 
-    // Verifica si el dropdown está actualmente visible
-    if (dropdown.classList.contains('show')) {
-        // Si está visible, quita la clase 'show' y añade 'hide' para iniciar la animación de cierre
-        dropdown.classList.remove('show');
-        dropdown.classList.add('hide');
-    } else {
-        // Si no está visible, quita la clase 'hide' y añade 'show' para iniciar la animación de apertura
-        dropdown.classList.remove('hide');
-        dropdown.classList.add('show');
-        dropdown.style.display = 'block';
-    }
-
-    // Evita que el evento se propague y cierre el dropdown al hacer clic dentro de él
-    event.stopPropagation();
-});
-
-// Evento de clic en cualquier parte del documento
-document.addEventListener('click', function(event) {
-    var dropdown = document.getElementById('user-dropdown');
-    var button = document.getElementById('user-button');
-
-    // Verifica si el clic no se hizo dentro del dropdown ni del botón
-    if (!dropdown.contains(event.target) && !button.contains(event.target)) {
-        // Si el dropdown está visible, quita la clase 'show' y añade 'hide' para iniciar la animación de cierre
-        if (dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-            dropdown.classList.add('hide');
-        }
-    }
-});
-
-// Evita que el dropdown se cierre al hacer clic dentro de él
-document.getElementById('user-dropdown').addEventListener('click', function(event) {
-    event.stopPropagation();
-});
-
-document.getElementById('user-dropdown').addEventListener('animationend', function(event) {
-    var dropdown = document.getElementById('user-dropdown');
+function openAlert(message, color='', timeout=1000) {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.querySelector('.alert-message').textContent = message; // Agrega el mensaje dinámico
     
-    // Verifica si la animación que terminó fue 'slideUp'
-    if (event.animationName === 'slideUp') {
-        dropdown.style.display = 'none'; // Oculta el dropdown después de la animación
+    // Elimina cualquier clase previa para evitar conflictos
+    alertBox.classList.remove('alert-green', 'alert-red');
+
+    // Agrega la clase correspondiente según la acción
+    if ( color === 'red' ) {
+        alertBox.classList.add('alert-red');
+    } else {
+        alertBox.classList.add('alert-green');
     }
-});
+
+    // Muestra la alerta
+    alertBox.classList.add('show');
+    alertBox.classList.remove('hidden');
+
+    // Inicia un temporizador para cerrar la alerta después de 2 segundos
+    setTimeout(closeAlert, timeout); // 1000 ms = 1 segundos
+}
+
+// Cerrar la alerta
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.classList.remove('show');
+    alertBox.classList.add('hidden');
+}
+
 
 
 // ========================================================================
