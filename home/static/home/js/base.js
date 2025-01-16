@@ -51,36 +51,68 @@ document.getElementById('categories-drop').addEventListener('click', function(ev
 /* ==========================================================================================
               Función Generica para Eventos de mostrar y ocultar alertas
 ========================================================================================== */
-// Mostrar la alerta
-// function openAlert(message, action='', color='', timeout=1000) {
-
 function openAlert(message, color='', timeout=1000) {
-    const alertBox = document.getElementById('alertBox');
-    alertBox.querySelector('.alert-message').textContent = message; // Agrega el mensaje dinámico
+    const alertsContainer = document.getElementById('alertsContainer');
     
-    // Elimina cualquier clase previa para evitar conflictos
-    alertBox.classList.remove('alert-green', 'alert-red');
+    // Crear una nueva alerta
+    const alertBox = document.createElement('div');
+    alertBox.classList.add('custom-alert');
+    
+    // Establecer el ícono según el color
+    const icon = document.createElement('i');
+    if (color === 'red') {
+        icon.classList.add('fa-regular', 'fa-circle-xmark');
+    } else {
+        icon.classList.add('fa-regular', 'fa-circle-check');
+    }
+    alertBox.appendChild(icon);
 
-    // Agrega la clase correspondiente según la acción
-    if ( color === 'red' ) {
+
+    // Establecer el mensaje
+    const alertMessage = document.createElement('span');
+    alertMessage.classList.add('alert-message');
+    alertMessage.textContent = message;
+    alertBox.appendChild(alertMessage);
+
+    // Agregar el botón de cierre
+    const closeButton = document.createElement('button');
+    closeButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    closeButton.onclick = function() {
+        closeAlert(alertBox);
+    };
+    alertBox.appendChild(closeButton);
+
+    // Agregar la clase correspondiente para el color
+    if (color === 'red') {
         alertBox.classList.add('alert-red');
     } else {
         alertBox.classList.add('alert-green');
     }
 
-    // Muestra la alerta
-    alertBox.classList.add('show');
-    alertBox.classList.remove('hidden');
+    // Insertar la nueva alerta en el contenedor
+    // alertsContainer.appendChild(alertBox);
 
-    // Inicia un temporizador para cerrar la alerta después de 2 segundos
-    setTimeout(closeAlert, timeout); // 1000 ms = 1 segundos
+    // Insertar la nueva alerta en el contenedor en la primera posición 
+    alertsContainer.insertBefore(alertBox, alertsContainer.firstChild);
+
+    // Mostrar la alerta con animación
+    setTimeout(() => {
+        alertBox.classList.add('show');
+    }, 10); // Asegura que la clase se aplique después de que se haya añadido al DOM
+
+    // Cerrar la alerta después del tiempo especificado
+    setTimeout(() => {
+        closeAlert(alertBox);
+    }, timeout);
 }
 
-// Cerrar la alerta
-function closeAlert() {
-    const alertBox = document.getElementById('alertBox');
+function closeAlert(alertBox) {
     alertBox.classList.remove('show');
     alertBox.classList.add('hidden');
+    // Eliminar la alerta después de la animación de ocultado
+    setTimeout(() => {
+        alertBox.remove();
+    }, 400); // Asegura que se elimine después de la animación
 }
 
 

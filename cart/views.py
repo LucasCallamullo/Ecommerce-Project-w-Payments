@@ -59,17 +59,27 @@ def update_productos(request):
                 flag_stock = carrito.stock_or_available(producto, value_add)
                 if not flag_stock:
                     message = f'Producto Sin Stock.'
-                    return JsonResponse( {'flag_stock': flag_stock, 'message': message} )
+                    color = 'red'
+                    return JsonResponse( {'flag_stock': flag_stock, 'message': message, color: 'red'} )
                 
                 carrito.add_product(producto, value_add)
+                color = 'green'
                 message = 'Producto agregado.'
+
 
             elif action == 'less':
                 delete_item = carrito.less_producto(producto_id=producto_id)
-                message = 'Producto reducido.' if not delete_item else 'Producto eliminado de tu carrito.'
+                if not delete_item:
+                    color = 'green'
+                    message = 'Producto reducido.'
+                else:
+                    color = 'red'
+                    message = 'Producto eliminado del carrito.'
+                
 
             elif action == 'remove':
                 carrito.remove_producto(producto_id=producto_id)
+                color = 'red'
                 message = 'Producto eliminado de tu carrito.'
 
             else:
@@ -79,9 +89,8 @@ def update_productos(request):
             context = {'carrito': carrito}
             widget_html = render_to_string('cart/cart_items.html', context)
             
-            
+            # solo renderizar la vista del carrito en caso de que estemos en la pagina del carrito
             cart_view = True if cart_view == 'true' else False
-            
             cart_view_html = None
             if cart_view:
                 cart_view_html = render_to_string('cart/table_cart_detail.html', context)
@@ -90,6 +99,7 @@ def update_productos(request):
                 'widget_html': widget_html, 
                 'total': carrito.total_price, 
                 'message': message,
+                'color': color,
                 'flag_stock': flag_stock,
                 'qty_total': carrito.total_items,
                 'cart_view_html': cart_view_html

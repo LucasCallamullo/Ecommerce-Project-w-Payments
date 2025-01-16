@@ -49,9 +49,9 @@ document.querySelectorAll('.btn-add-item').forEach(button => {
 
         // Validar si el valor es un número válido
         if (isNaN(currentValue) || currentValue <= 0) {
-            // tercer argumento 'red' es una advertencia en rojo
-            openAlert('Ingrese un número correctamente.', '', 'red')
-            return; // No enviar la solicitud si el valor no es válido
+            // esta funcion generica se llama desde home/base/base.js
+            openAlert('Ingrese un número correctamente.', 'red', 1000)
+            return;
         }
 
         handleCartActions(productId, 'add', currentValue);

@@ -601,41 +601,86 @@ footer strong {
 }
 
 /*
-Alerts 
+                Alerts        Estilos generales para el contenedor de la alerta
 */
-/* Estilos generales para el contenedor de la alerta */
-.custom-alert {
+/* Contenedor de alertas */
+.alerts-container {
     position: fixed;
     top: 80%;
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    z-index: 1050; 
-
-    width: 20%; /* Ajusta según tus necesidades */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    width: 20%;
     padding: 1rem;
-    
-    color: #fff;
+    display: flex;
+    flex-direction: column; /* Las alertas nuevas aparecen al final */
+    gap: 10px; /* Espacio entre alertas */
+}
 
+/* Estilo base para las alertas */
+.custom-alert {
+    background-color: #fff;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: var(--font-normal);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
-    font-size: var(--font-normal);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(100%); /* Empuja la alerta hacia abajo inicialmente */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
-    opacity: 0; /* Oculto por defecto */
-    pointer-events: none; /* Deshabilita la interacción por defecto */
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(100%); /* Comienza un poco abajo */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Se mueve a su posición original */
+    }
+}
+
+/* Animación de salida */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0); /* Se encuentra en su posición original */
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-100%); /* Se mueve hacia arriba fuera de la vista */
+    }
+}
+
+/* Mostrar alerta */
+.custom-alert.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-100%);
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+/* Ocultar alerta */
+.custom-alert.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%); /* La alerta se mueve hacia arriba cuando se oculta */
+    animation: fadeOut 0.3s ease-in-out forwards;
 }
 
 .alert-green {
     border: 1px solid #00c01a;
     background-color: #00c01a;
-    transition: background-color 0.5s ease;
 }
 
 .alert-red {
     border: 1px solid #be0404e3;
     background-color: #be0404e3;
-    transition: background-color 0.5s ease;
 }
 
 .custom-alert i {
@@ -659,41 +704,6 @@ Alerts
 .custom-alert button:hover {
     transform: scale(0.9);
 }
-  
-/* Animación de entrada */
-@keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-      display: flex;
-    }
-}
-  
-/* Animación de salida */
-@keyframes fadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-      display: none;
-    }
-}
-  
-/* Clase para ocultar la alerta */
-.custom-alert.show {
-    opacity: 1; /* Muestra la alerta */
-    pointer-events: auto; /* Permite la interacción */
-    animation: fadeIn 0.4s ease-in-out forwards;
-}
-
-.custom-alert.hidden {
-    animation: fadeOut 0.4s ease-in-out forwards;
-    pointer-events: none; /* Evita la interacción durante la salida */
-}
-
   
 
 /* ======================================================================================

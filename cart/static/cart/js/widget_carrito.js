@@ -20,40 +20,6 @@ document.getElementById('overlay').addEventListener('click', function() {
 
 
 /* ==========================================================================================
-                   "Función" para Eventos de mostrar y ocultar alertas de los items
-========================================================================================== */
-// Mostrar la alerta
-function openAlert(message, action='', color='', timeout=1000) {
-    const alertBox = document.getElementById('alertBox');
-    alertBox.querySelector('.alert-message').textContent = message; // Agrega el mensaje dinámico
-    
-    // Elimina cualquier clase previa para evitar conflictos
-    alertBox.classList.remove('alert-green', 'alert-red');
-
-    // Agrega la clase correspondiente según la acción
-    if (action === 'remove' || message === 'Producto eliminado de tu carrito.' || color === 'red' ) {
-        alertBox.classList.add('alert-red');
-    } else {
-        alertBox.classList.add('alert-green');
-    }
-
-    // Muestra la alerta
-    alertBox.classList.add('show');
-    alertBox.classList.remove('hidden');
-
-    // Inicia un temporizador para cerrar la alerta después de 2 segundos
-    setTimeout(closeAlert, timeout); // 1000 ms = 1 segundos
-}
-
-// Cerrar la alerta
-function closeAlert() {
-    const alertBox = document.getElementById('alertBox');
-    alertBox.classList.remove('show');
-    alertBox.classList.add('hidden');
-}
-
-
-/* ==========================================================================================
                     Handle_Function para controlar los distintos eventos
 ========================================================================================== */
 async function handleCartActions(productId, action, value=1) {
@@ -83,7 +49,7 @@ async function handleCartActions(productId, action, value=1) {
         const data = await response.json();
         
         // Muestra una alerta con el mensaje del servidor
-        openAlert(data.message, action);
+        openAlert(data.message, data.color, 1000);
 
         // Si no hay stock suficiente, termina aquí
         if (!data.flag_stock) return;
