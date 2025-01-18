@@ -80,21 +80,20 @@ Estilo general de la barra lateral
 /* Product Card */
 .product-card {
     position: relative;
+    overflow: visible !important; /*  hidden Permite que el contenido se muestre fuera del contenedor */
     width: 100%; /* Ancho maximo ? */
-    max-width: 100%;
     height: 350px; /* Altura inicial */
-    border: 1px solid var(--bg-primary);
-    overflow: hidden; /* Oculta el contenido extra */
-    transition: box-shadow 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .product-card:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    height: 420px; /* Altura aumentada al hacer hover */
-    max-width: inherit;
     z-index: 10; /* Asegura que se superponga a otros elementos */
     background-color: var(--bg-primary);
+
+    border: 1px solid var(--text-secondary);
+    border-bottom: none;
+
     overflow: hidden;
     position: relative; /* con absolute se logra el resultaod que quiero ver capaz con media queries */
 }
@@ -153,39 +152,67 @@ Estilo general de la barra lateral
     opacity: 1; /* Mantiene el texto visible */
 }
 
-.product-info p {
-    font-size: var(--font-normal);
-}
+/* Contenedor extensor */
+.prod-extender-btn {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-.product-info .text-start p {
-    font-size: var(--font-normal);
-    font-weight: bold;
+    width: 100%;
+    height: 0; /* Inicia con altura 0 */
+    background-color: var(--bg-primary);
+    
+    bottom: -50px;
+    left: 0;
+    z-index: 15;
+    
+    opacity: 0; 
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, bottom 0.3s ease-in-out;
+    
+    border: 1px solid var(--bg-primary);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .prod-add-button {
-    display: none;
-    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* align-self: center; */
     background-color: var(--main-color);
-    color: white;
+    color: #fff;
     border: none;
+    outline: none;
+    padding: 7px 10px;
+    margin-bottom: 5%;
+    width: 70%; 
+    gap: 5%;
     cursor: pointer;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-    z-index: 100;
-
-    margin-top: 8%;
-    width: 90%;
-    height: 40px;
-
-    opacity: 0; /* Oculto inicialmente */
-    align-self: center;
-    position: relative; /* Para mantenerlo dentro del fondo */
+    opacity: 0;
     pointer-events: none; /* El botón no es tocable cuando está oculto */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Mostrar el extensor y el botón al pasar el mouse */
+.product-card:hover .prod-extender-btn,
+.prod-extender-btn:hover {
+    opacity: 1;
+    pointer-events: auto;
+    bottom: -78px; /* Mueve el contenedor hacia la parte inferior */
+    height: 80px; /* Extiende la altura completa */
+    width: calc(100% + 2px);
+    margin-left: -1px;   /* necesario para lograr que se ajuster a la tarjeta bien con los borders */
+    border: 1px solid var(--text-secondary);
+    border-top: none;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2); /* Aumenta la sombra al hacer hover */
 }
 
 .product-card:hover .prod-add-button {
-    display: block;
-    opacity: 1; /* Se hace visible al hacer hover */
+    opacity: 1;
     pointer-events: auto; /* Habilita la interacción cuando es visible */
+    transform: scale(1);
+    z-index: 15;
 }
 
 .prod-add-button:hover {

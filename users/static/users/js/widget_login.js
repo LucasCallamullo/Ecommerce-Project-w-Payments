@@ -84,7 +84,7 @@ function validFormsWithAlerts(form) {
                 
                 // verificar bien despues el comportamiento de redirigir
                 setTimeout(() => {
-                    window.location.href = '/'; 
+                    window.location.href = data.redirect_url; 
                 }, 1000);
 
             } else {
@@ -104,4 +104,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // obtener el formulario y mandar a validarlo
     const form = document.getElementById('widget-register-form');
     validFormsWithAlerts(form)
+});
+
+
+// Esta funcion es para cambiar lo que se muestra una vez que esta logeado
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const user_span = document.getElementById('user-email')
+    const datasos = user_span.dataset;
+
+    const email = datasos.email || '0';
+    const name = datasos.name || '0';
+    const lastName = datasos.lastName || '0';
+
+    if (name !== '0') {
+        var username = name + ' ' + lastName
+    } else {
+        // Obtener la parte antes del '@'
+        var username = email.split('@')[0];
+    }
+
+    user_span.textContent = username;
 });

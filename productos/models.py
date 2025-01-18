@@ -152,5 +152,13 @@ class Product(models.Model):
             
         return image_url
     
+    @property
+    def calc_discount(self):
+        price = self.price
+        discount = self.discount
+        discount_amount = price * discount / 100
+        new_price = price - discount_amount
+        return new_price
+    
         
     

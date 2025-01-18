@@ -60,7 +60,7 @@ def update_productos(request):
                 if not flag_stock:
                     message = f'Producto Sin Stock.'
                     color = 'red'
-                    return JsonResponse( {'flag_stock': flag_stock, 'message': message, color: 'red'} )
+                    return JsonResponse( {'flag_stock': flag_stock, 'message': message, 'color': color} )
                 
                 carrito.add_product(producto, value_add)
                 color = 'green'

@@ -9,14 +9,59 @@ from django.contrib.auth.decorators import login_required
 
 
 from users.forms import CreateUserForm, WidgetLoginForm, EditUserForm
+from productos.models import Product
 
 # This is for edit form
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from django.utils.html import escape
 from django.urls import reverse
 
 
+
+@login_required
+def profile_page(request):
+    user = request.user
+    proucts = Product.objects.all()
+    
+    contexto = {
+        'user': user,
+        'proucts': proucts
+    }
+    return render(request, 'users/profile.html', contexto)
+
+
+@login_required
+def profile_tab(request, tab_name):
+    
+    products = Product.objects.all()
+    products = products.filter(category=1)
+    context = { 'products': products }
+    
+    if tab_name == 'first-tab':
+        html_content = render_to_string('users/tabs/pedidos.html', context)
+        scripts = ['/static/js/pedidos.js']  # Ruta al script
+        return JsonResponse({'html': html_content, 'scripts': scripts})
+
+    if tab_name == 'second-tab':
+        html_content = render_to_string('users/tabs/favoritos.html', context)
+        scripts = ['/static/users/js/favoritos.js']
+        return JsonResponse({'html': html_content, 'scripts': scripts})
+
+    if tab_name == 'third-tab':
+        html_content = render_to_string('users/tabs/compras.html', context)
+        scripts = ['/static/js/compras.js']
+        return JsonResponse({'html': html_content, 'scripts': scripts})
+
+
+    return JsonResponse({'error': 'Tab not found'}, status=404)
+
+
+
+# ===========================================================================
+#                Log in n create users function
+# ===========================================================================
 def get_form_errors(form_errors):
     # Procesar errores de manera legible
     errors = []
@@ -51,7 +96,7 @@ def register_widget(request):
 
             if user:
                 login(request, user)
-                return JsonResponse({'success': True, 'redirect_url': 'Home'})
+                return JsonResponse({'success': True, 'redirect_url': '/profile_page/'})
             
             # Si no se pudo autenticar, agregar errores específicos
             form.add_error('password', 'La contraseña no es válida.')
@@ -62,7 +107,6 @@ def register_widget(request):
 
     # Manejar solicitudes no POST
     return JsonResponse({'success': False, 'error': 'Método no permitido.'})
-
 
 
 def register_user(request):
@@ -96,6 +140,3 @@ def register_user(request):
         form = CreateUserForm()
 
     return render(request, 'users/register_user.html', {'form': form})
-
-
-

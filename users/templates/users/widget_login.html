@@ -9,9 +9,11 @@
     {% if user.is_authenticated %}
 
         <!-- Botón de Registro -->
-        <a href="{% url 'Home' %}" class="btn-widget-register">
+        <a href="{% url 'Profile' %}" class="btn-widget-register">
             <i class="fas fa-user-circle"></i>
-            <span id="user-email"></span>
+            <span id="user-email" data-email="{{user.email}}"
+                data-name="{{user.first_name}}" data-last-name="{{user.last_name}}">
+            </span>
         </a>
 
         <form class="widget-register-form" method="POST" action="{% url 'close_session' %}">
@@ -21,14 +23,6 @@
                 <span class="ms-2">Cerrar Sesión</span>
             </button>
         </form>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var email = "{{ user.email }}";
-                var username = email.split('@')[0]; // Obtener la parte antes del '@'
-                document.getElementById('user-email').textContent = username + ' @';
-            });
-        </script>
 
     {% else %}
     

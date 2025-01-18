@@ -39,6 +39,7 @@ function updateProductListFromInput() {
     }, 300);
 };
 
+
 async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) {
     try {
         const url = `/search-product/?inputNow=${encodeURIComponent(inputNow)}

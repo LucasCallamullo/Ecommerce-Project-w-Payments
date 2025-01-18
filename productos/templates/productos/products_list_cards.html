@@ -22,24 +22,26 @@
             <!-- Información del Producto -->
             <figcaption class="product-info p-2" onclick="event.stopPropagation();">
                 <a href="{% url 'product_detail' product.id product.slug %}">
-                    <p>{{ product.name }}</p>
+                    <h6>{{ product.name }}</h6>
                 </a>
 
-                <div class="text-start">
-                    {% if product.stock > 4 %}
-                        <p class="m-0 p-0" style="color: green;">Disponible</p>
-                    {% elif product.stock > 0 and product.stock < 4 %}
-                        <p class="m-0 p-0" style="color: orange;">Stock Bajo</p>
-                    {% else %}
-                        <p class="m-0 p-0" style="color: red;">Sin Stock</p>
-                    {% endif %}
+                {% if product.stock > 4 %}
+                    <span class="bold-green">Disponible</span>
+                {% elif product.stock > 0 and product.stock < 4 %}
+                    <span class="bold-orange">Stock Bajo</span>
+                {% else %}
+                    <span class="bold-red">Sin Stock</span>
+                {% endif %}
 
-                    <p>${{ product.price }}</p>
+                <strong>${{ product.price }}</strong>
+
+                
+                <!-- Botón de agregar al carrito -->
+                <div class="prod-extender-btn">
+                    <button class="prod-add-button" data-product-id="{{product.id}}">
+                        Agregar
+                    </button>
                 </div>
-
-                <button class="prod-add-button" data-product-id="{{product.id}}">
-                    Agregar
-                </button>
 
             </figcaption>
         </figure>
