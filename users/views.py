@@ -125,7 +125,7 @@ def register_user(request):
             if user:
                 # capaz pensar otra logica en este caso
                 login(request, user)
-                return JsonResponse({'success': True})
+                return JsonResponse({'success': True, 'redirect_url': '/profile_page/'})
             
             else:
                 # Error al autenticar por si sucediera ya que casi nunca paso

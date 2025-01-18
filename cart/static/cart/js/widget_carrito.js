@@ -122,7 +122,8 @@ function assignButtonEvents() {
     document.querySelectorAll('.cart-item-btn-minus').forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-index');
-            handleCartActions(productId, 'less');
+            const qty_substract = 1;
+            handleCartActions(productId, 'less', qty_substract);
         });
     });
 

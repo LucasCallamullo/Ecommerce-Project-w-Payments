@@ -35,79 +35,68 @@ from django.core.serializers.json import DjangoJSONEncoder
 def update_productos(request):
 
     if request.method == 'POST':
-        try:
-            # recupera valores del widget_carrito.js
-            producto_id = int(request.POST.get('producto_id'))
-            action = request.POST.get('action')
-            value_add = int(request.POST.get('value'))
-            cart_view = request.POST.get('cart_view')
-            
-            # consultamos primero el producto para cancelar todo si no existiera
-            producto = get_object_or_404(Product, id=producto_id)
 
-            # Recuperar carrito de la sesión del usuario
-            if request.user.is_authenticated:
-                carrito = Carrito(request)
-                # carrito = Carrito.objects.filter(usuario=request.user).first()
-            else:
-                carrito = Carrito(request)
+        # recupera valores del widget_carrito.js
+        producto_id = int(request.POST.get('producto_id'))
+        action = request.POST.get('action')
+        value_add = int(request.POST.get('value'))
+        cart_view = request.POST.get('cart_view')
+        
+        # consultamos primero el producto para cancelar todo si no existiera
+        product = get_object_or_404(Product, id=producto_id)
+
+        # Recuperar carrito de la sesión del usuario
+        carrito = Carrito(request)
+        
+        # inicializamos valores por defecto
+        flag_stock = True
+        delete_item = False
+        
+        # delegamos la accion que toma el carrito si cumple con tener stock
+        if action == 'add':
             
-            # delegamos la accion que toma el carrito si cumple con tener stock
-            flag_stock = True
-            if action == 'add':
-                # recuperamos la cantidad del carrito para sumarla a la nueva cantidad y consultar el stock
-                flag_stock = carrito.stock_or_available(producto, value_add)
-                if not flag_stock:
-                    message = f'Producto Sin Stock.'
-                    color = 'red'
-                    return JsonResponse( {'flag_stock': flag_stock, 'message': message, 'color': color} )
-                
-                carrito.add_product(producto, value_add)
-                color = 'green'
+            # usamos el metodo para verificar en base a los retornos si se pudo o no que hacer
+            flag_stock = carrito.add_product(product=product, qty=value_add)
+            if not flag_stock:
+                message = 'Producto Sin Stock.'
+                color = 'red'
+                return JsonResponse( {'flag_stock': flag_stock, 'message': message, 'color': color} )
+            else:
                 message = 'Producto agregado.'
 
-
-            elif action == 'less':
-                delete_item = carrito.less_producto(producto_id=producto_id)
-                if not delete_item:
-                    color = 'green'
-                    message = 'Producto reducido.'
-                else:
-                    color = 'red'
-                    message = 'Producto eliminado del carrito.'
-                
-
-            elif action == 'remove':
-                carrito.remove_producto(producto_id=producto_id)
-                color = 'red'
-                message = 'Producto eliminado de tu carrito.'
-
-            else:
-                return JsonResponse({'error': 'Acción inválida'}, status=400)
-                
-            # renderizar el nuevo html del widget que vamos a integrar con js al html
-            context = {'carrito': carrito}
-            widget_html = render_to_string('cart/cart_items.html', context)
+        elif action == 'less':
+            delete_item = carrito.subtract_product(product=product, qty=value_add)
+            message = 'Producto reducido.' if not delete_item else 'Producto eliminado del carrito.'
             
-            # solo renderizar la vista del carrito en caso de que estemos en la pagina del carrito
-            cart_view = True if cart_view == 'true' else False
-            cart_view_html = None
-            if cart_view:
-                cart_view_html = render_to_string('cart/table_cart_detail.html', context)
-            
-            return JsonResponse({
-                'widget_html': widget_html, 
-                'total': carrito.total_price, 
-                'message': message,
-                'color': color,
-                'flag_stock': flag_stock,
-                'qty_total': carrito.total_items,
-                'cart_view_html': cart_view_html
-            })
+        elif action == 'remove':
+            delete_item = carrito.remove_product(product=product)
+            message = 'Producto eliminado de tu carrito.'
 
-        # cuando no exista el id en el carrito
-        except ValueError:
-            return JsonResponse({'error': 'ID de producto inválido'}, status=400)
+        else:
+            return JsonResponse({'error': 'Acción inválida'}, status=400)
+            
+        # obtenemos el el background de fondo de la alerta para el json response
+        color = 'green' if not delete_item else 'red'
+        
+        # renderizar el nuevo html del widget que vamos a integrar con js al html
+        context = {'carrito': carrito}
+        widget_html = render_to_string('cart/cart_items.html', context)
+        
+        # solo renderizar la vista del carrito en caso de que estemos en la pagina del carrito
+        cart_view = True if cart_view == 'true' else False
+        cart_view_html = None
+        if cart_view:
+            cart_view_html = render_to_string('cart/table_cart_detail.html', context)
+        
+        return JsonResponse({
+            'widget_html': widget_html, 
+            'total': carrito.total_price, 
+            'message': message,
+            'color': color,
+            'flag_stock': flag_stock,
+            'qty_total': carrito.total_items,
+            'cart_view_html': cart_view_html
+        })
 
     return JsonResponse({'error': 'Solicitud inválida'}, status=400)
 
