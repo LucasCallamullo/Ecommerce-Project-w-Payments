@@ -11,9 +11,7 @@ from django.template.loader import render_to_string
 
 
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.html import escape
-
 from orders.forms import OrderForm
 
 
@@ -36,51 +34,69 @@ def get_form_errors(form_errors):
 
 
 # Desactiva la verificación CSRF solo si estás manejando solicitudes AJAX y no puedes usar el token
-@csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
+# @ csrf_exempt
 def valid_form_order(request):
     
     if request.method == 'POST':
         # Recuperar los datos enviados
         id_payment = request.POST.get('payment_id')
-        envio_method_id = request.POST.get('envio_method_id')
+        id_envio_method = request.POST.get('envio_method_id')
+
+        print("Algo salio mal aca antes del form")
 
         # Procesar los datos del formulario
-        form = OrderForm(request.POST)
+        form = OrderForm(request.POST, id_envio_method=id_envio_method)
+        
+        print("Algo salio mal aca despues del form")
         
         if form.is_valid():
-            # Procesar la información del formulario y los datos adicionales
-            name = form.cleaned_data.get('name')
-            last_name = form.cleaned_data.get('last_name')
-            cellphone = form.cleaned_data.get('cellphone')
-            email = form.cleaned_data.get('email')
-            dni = form.cleaned_data.get('dni')
-            detail_order = form.cleaned_data.get('detail_order')
+            # Crear un diccionario con los datos del formulario
+            order_data = {
+                'name': form.cleaned_data.get('name'),
+                'last_name': form.cleaned_data.get('last_name'),
+                'cellphone': form.cleaned_data.get('cellphone'),
+                'email': form.cleaned_data.get('email'),
+                'dni': form.cleaned_data.get('dni'),
+                'detail_order': form.cleaned_data.get('detail_order', ''),
+                'id_payment': id_payment,
+                'id_envio_method': id_envio_method,
+            }
             
             # Manejar otros campos según el método de envío
-            if envio_method_id == '1':  # Retiro en local
-                name_retiro = form.cleaned_data.get('name_retiro')
-                dni_retiro = form.cleaned_data.get('dni_retiro')
-                
+             # Retiro en local
+            if id_envio_method == '1': 
+                order_data.update({
+                    'name_retiro': form.cleaned_data.get('name_retiro'),
+                    'dni_retiro': form.cleaned_data.get('dni_retiro'),
+                })
             # Envío a domicilio
             else:  
-                province = form.cleaned_data.get('province')
-                city = form.cleaned_data.get('city')
-                address = form.cleaned_data.get('address')
-                postal_code = form.cleaned_data.get('postal_code')
-                detail = form.cleaned_data.get('detail')
+                order_data.update({
+                    'province': form.cleaned_data.get('province'),
+                    'city': form.cleaned_data.get('city'),
+                    'address': form.cleaned_data.get('address'),
+                    'postal_code': form.cleaned_data.get('postal_code', ''), #no necesario
+                    'detail': form.cleaned_data.get('detail', ''),
+                })
             
+            # Guardar los datos en la sesión
+            request.session['order_data'] = order_data
+            request.session.modified = True
             
-            # Si no se pudo autenticar, agregar errores específicos
-            form.add_error('password', 'La contraseña no es válida.')
-
+            # vaya a la pagina de pago
+            return JsonResponse({
+                'success': True, 
+                'redirect_url': '/payment/',
+                'message': 'Pedido guardado termine su metodo de pago para finalizar'
+            })
+            
         # Procesar errores del formulario
         error_message = get_form_errors(form.errors.items())
-        return JsonResponse({'success': False, 'error': error_message}, status=400)
-
-
+        return JsonResponse({'success': False, 'error': error_message})
 
     # Manejar solicitudes no POST
-    return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
+    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
 
 
 

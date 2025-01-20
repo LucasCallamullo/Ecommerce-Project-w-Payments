@@ -81,64 +81,87 @@ confirmButton.addEventListener('click', () => {
     flagsOrdersConfirm();
 });
 
-// Función para abrir el modal
+
+// Llamar a la función en el evento del botón de confirmación
 confirmButtonModal.addEventListener('click', () => {
     flagsOrdersConfirm();
-    
-    if (idPayment == 0 || envioMethodId == 0) return;
 
-    const form = document.getElementById('form-order');
-    handleFormOrder(form, idPayment, envioMethodId)
+    console.log(idPayment, envioMethodId);
+
+    if (idPayment == 0 || envioMethodId == 0) {
+        openAlert('Te quedaste acá', 'red', 2000);
+        return;
+    }
+
+    const modalOverlay2 = document.getElementById('modal-overlay');
+    modalOverlay2.style.display = 'none';
+
+    // Simula el clic en el botón submit oculto
+    document.getElementById('submit-hidden').click();
 });
 
 
-async function handleFormOrder(form, idPayment, envioMethodId) {
+// Función para manejar el formulario con validaciones y alertas
+function validFormOrderWithAlerts(form) {
 
-    // agregamos los id como parte del formulario
-    const formData = new FormData(form);
-    formData.append('payment_id', idPayment);
-    formData.append('envio_method_id', envioMethodId);
+    form.addEventListener('submit', async function(event) {
 
-    try {
-        // mandamomos como url la action del formulario
-        const response = await fetch(form.action, { 
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-        });
+        // Evita que el formulario se envíe de forma tradicional
+        event.preventDefault(); 
 
-        if (!response.ok) {
-            throw new Error('Error en la respuesta del servidor.');
+        // Agregar los valores adicionales a los datos del formulario
+        const formData = new FormData(form);
+        formData.append('payment_id', idPayment);
+        formData.append('envio_method_id', envioMethodId);
+
+        console.log("aca paso algo malo");
+
+        try {
+            // Mandamos la solicitud fetch con la acción del formulario
+            const response = await fetch(form.action, { 
+                method: 'POST',
+                body: formData,
+                headers: {
+                    // Asegúrate de enviar el token CSRF
+                    // 'X-CSRFToken': getCookie('csrftoken')
+                    'X-Requested-With': 'XMLHttpRequest' 
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor.');
+            }
+
+            const data = await response.json(); // Procesar la respuesta como JSON
+
+            if (data.success) {
+                // Función para mostrar alertas (debe estar definida en tu proyecto)
+                openAlert(data.message, 'green', 1000);
+                console.log(data.message);
+
+                // Redirigir a la URL proporcionada por la respuesta
+                setTimeout(() => {
+                    window.location.href = data.redirect_url; 
+                }, 1000);
+
+            } else {
+                const message = data.error || 'Ocurrió un error inesperado.';
+                openAlert(message, 'red', 2000);
+                console.log(message);
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            openAlert('Error al procesar la solicitud. Intenta nuevamente.', 'red', 2000);
         }
+    });
+}
 
-        const data = await response.json(); // Procesar la respuesta como JSON
-
-        if (data.success) {
-            // La funcion openAlert viene de home/js/base.js
-            openAlert('Registro Orden exitoso', 'green', 1000);
-            
-            // verificar bien despues el comportamiento de redirigir
-            setTimeout(() => {
-                window.location.href = data.redirect_url; 
-            }, 1000);
-
-        } else {
-            // La funcion openAlert viene de home/js/base.js
-            const message = data.error || 'Ocurrió un error inesperado.';
-            openAlert(message, 'red', 2000);
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-        openAlert('Error al procesar la solicitud. Intenta nuevamente.', 'red', 2000);
-    }
-};
-
-
-
-
+document.addEventListener('DOMContentLoaded', () => {
+    // obtener el formulario y mandar a validarlo
+    const form = document.getElementById('form-order');
+    validFormOrderWithAlerts(form)
+});
 
 
 function flagsOrdersConfirm() {
@@ -147,7 +170,8 @@ function flagsOrdersConfirm() {
     } else if ( envioMethodId == 0 ) {
         openAlert('Todavía no seleccionaste un método de envío.', 'red', 2000)
     } else {
-        modalOverlay.style.display = 'flex';
+        const modalOverlay2 = document.getElementById('modal-overlay');
+        modalOverlay2.style.display = 'flex';
     }
 }
 

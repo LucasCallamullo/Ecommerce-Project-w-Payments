@@ -114,3 +114,29 @@ class OrderForm(forms.Form):
         required=False, 
         widget=forms.TextInput(attrs={'placeholder': 'DNI de quien retira'})
     )
+    
+    
+    def __init__(self, *args, id_envio_method=None, **kwargs):
+        """
+        Constructor del formulario para ajustar dinámicamente los campos requeridos
+        según el método de envío seleccionado.
+        """
+        super().__init__(*args, **kwargs)
+
+        # Configuración dinámica de campos
+        envio_fields = ['province', 'city', 'address', 'postal_code']
+        retiro_fields = ['name_retiro', 'dni_retiro']
+
+        # Retiro en local
+        if id_envio_method == "1":  
+            for field in envio_fields:
+                self.fields[field].required = False
+            for field in retiro_fields:
+                self.fields[field].required = True
+        
+        # Envío a domicilio
+        else:  
+            for field in envio_fields:
+                self.fields[field].required = True
+            for field in retiro_fields:
+                self.fields[field].required = False
