@@ -14,3 +14,18 @@ def intdot(value):
         return f"{value:,.0f}".replace(",", ".")
     except (ValueError, TypeError):
         return value
+
+
+@register.filter
+def multiply(value, arg):
+    """
+    Multiplica dos valores.
+    :param value: El primer valor (precio).
+    :param arg: El segundo valor (cantidad).
+    :return: El resultado de la multiplicación.
+    """
+    try:
+        value = float(value) * int(arg)
+        return f"{value:,.0f}".replace(",", ".")
+    except (ValueError, TypeError):
+        return 0

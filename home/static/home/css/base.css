@@ -125,6 +125,25 @@ footer {
     margin: 0;
 }
 
+.btn-paralelogramo {
+    color: white;
+    font-family: var(--font-main);
+    font-size: var(--font-normal);
+    background-color: var(--main-color);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    transform: skew(-30deg);
+}
+
+.btn-paralelogramo span {
+    display: inline-block;
+    transform: skew(30deg);
+}
+
+
 /* =====================================================================================
                             Top NavBar
 /* ===================================================================================== */

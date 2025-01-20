@@ -49,9 +49,7 @@
 
                 <!-- Subtotal -->
                 <div class="cart-col">
-                    <span id="cart-view-sub-total">
-                        ${{ value.price }} * {{ value.qty }}
-                    </span>
+                    ${{ value.price|multiply:value.qty }}
                 </div>
 
                 <!-- Botones de acción -->

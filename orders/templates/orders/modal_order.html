@@ -1,0 +1,69 @@
+
+{% load static %}
+{% load custom_filters %}
+
+
+
+
+
+
+<div class="mb-3 d-flex align-content-center align-items-center justify-content-between">
+    <h2 class="ms-2"> Tu Pedido </h2>
+    <button class="btn-order-close" id="close-modal">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+  
+<div class="container-modal-limit-order">
+    <div class="cart-view-header">
+        <div class="cart-col image-col"> </div>
+        <div class="cart-col cart-view-product">Producto</div>
+        <div class="cart-col justify-content-end">Precio</div>
+        <div class="cart-col justify-content-end">Cantidad</div>
+        <div class="cart-col justify-content-end">Sub-Total</div>
+    </div>
+
+
+    <div class="cart-view-content" id="cart-view-content">
+
+        {% for key, value in carrito.items %}                 
+            <div class="cart-row">
+                <!-- Imagen del producto -->
+                <div class="cart-col image-col">
+                    <img src="{{ value.image }}" class="img-sm" alt="{{ value.name }}">
+                </div>
+
+                <!-- Nombre del producto -->
+                <div class="cart-col">
+                    <div class="cart-view-product-name">{{ value.name }}</div>
+                </div>
+
+                <!-- Precio -->
+                <div class="cart-col justify-content-end">
+                    <span>${{ value.price|intdot }}</span>
+                </div>
+
+                <!-- Catnidad -->
+                <div class="cart-col justify-content-end">
+                    <span>{{ value.qty }}</span>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="cart-col justify-content-end">
+                    ${{ value.price|multiply:value.qty }}
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+
+<div class="d-flex align-content-center align-items-center justify-content-between mt-4">
+    <button class="btn-confirm-order" id="btn-confirm-order-modal"> 
+        Confirmar Pedido 
+    </button>
+    
+    <h3 class="gap-2"> Total: ${{ total_price|intdot }} </h3>
+</div>
+

@@ -1,39 +1,4 @@
-:root {
-    /* main color de la empresa */
-    --main-color: #5e08e7;
-    --main-light-color: #9554ff;
 
-    /* Primary Colors */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8f9faa9;
-    
-    --text-primary: #000000;
-    --text-secondary: #6c757d;
-
-    /* Gradients */
-    --gradient: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
-    --gradient2: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
-
-    /* Sizes */
-    --font-xl: 1.6rem;
-    --font-medium: 1.2rem;
-    --font-normal: 1.0rem;
-    --font-small: 0.85rem;
-    --font-small-up: 0.92rem;
-    --font-x-small: 0.7rem;
-
-    /* Fonts */
-    --font-main: 'Montserrat', sans-serif;
-    --font-slim: 'Montserrat', sans-serif;
-
-    /* heigths */
-    --main-nav-heigth: 60px;
-    --top-nav-height: 140px;
-
-    /* width responsive */
-    --width-col-3: 90%
-
-}
 
 /* ========================================================================
                         PROFILE PAGE

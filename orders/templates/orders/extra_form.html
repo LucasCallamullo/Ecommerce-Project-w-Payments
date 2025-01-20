@@ -1,0 +1,54 @@
+
+
+{% if flag %}
+    <h3>Datos de Retiro</h3>
+
+    <div class="row"> 
+        <div class="col">
+            <label for="nombre_quien_retira">Nombre quien retira</label>
+            {{ form.name_retiro }}
+        </div>
+
+        <div class="col">
+            <label for="dni_quien_retira">DNI quien retira</label>
+            {{ form.dni_retiro }}
+        </div>
+    </div>
+  
+    
+
+        
+
+{% else %}
+    
+    <h3>Datos de Envío</h3>
+    <div class="row"> 
+        <div class="col">
+            <label for="provincia">Provincia</label>
+            {{ form.province }}
+        </div>
+
+        <div class="col">
+            <label for="ciudad">Ciudad</label>
+            {{ form.city }}
+        </div>
+    </div>
+
+    <div class="row"> 
+        <div class="col">
+            <label for="domicilio">Domicilio Completo</label>
+            {{ form.address }}
+        </div>
+        <div class="col">
+            <label for="codigo_postal">Código Postal</label>
+            {{ form.postal_code }}
+        </div>
+    </div>
+
+    <div class="row"> 
+        <label for="detalles">Detalles del Envío</label>
+        {{ form.detail }}
+    </div>
+
+
+{% endif %}

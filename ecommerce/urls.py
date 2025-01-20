@@ -30,5 +30,7 @@ urlpatterns = [
     
     path('', include("users.urls")),
     
+    path('', include("orders.urls")),
+    
     
 ]

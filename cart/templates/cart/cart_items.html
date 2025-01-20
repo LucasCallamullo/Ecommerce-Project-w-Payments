@@ -1,6 +1,6 @@
 
-{% load custom_filters %}
 
+{% load custom_filters %}
 
 
 {% for key, value in carrito.items %}
@@ -10,7 +10,7 @@
         <div class="cart-item-info">
             <div class="cart-span-cont"> 
                 <span> {{ value.name }} </span>
-                <span> {{ value.qty }} × ${{ value.price|intdot }} </span>
+                <span> {{ value.qty }} × ${{ value.price|intdot }} = ${{ value.price|multiply:value.qty }} </span>
 
                 <!-- Botón de eliminar en la esquina superior derecha -->
                 <button class="btn cart-btn-remove-item" data-index="{{ value.id }}">
