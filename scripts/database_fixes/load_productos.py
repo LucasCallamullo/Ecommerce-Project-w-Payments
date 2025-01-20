@@ -1,10 +1,17 @@
 
-import os
-import gdown
+
 import pandas as pd
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from productos.models import Product, PCategory, PSubcategory, PBrand, ProductImage
+
+
+""" 
+    Comando incial, de python para cargar valores desde el excel queda abandonado en esta carpeta 
+    porque ya no sirve tuvo muchas actualizaciones
+"""
+
+
 
 # command python manage.py load_productos
 def clean_value(value):
@@ -158,7 +165,11 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(f'Archivo no encontrado: {file_path}'))
                 return None
             
+        """ 
+        import os
+        import gdown
         # Recupera el archivo desde internet
+        # Opcion para pip install gdown ver mas opciones en el futuro
         else:
             # ID del archivo de Google Drive
             file_id = '150xsU_LQxn9W7Q_kaBKQFkpavj_Tu2sl'
@@ -187,6 +198,7 @@ class Command(BaseCommand):
             else:
                 print(f"El archivo '{output}' ya existe. No se descargará.")
                 return output
+        """
             
             
                 

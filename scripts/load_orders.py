@@ -1,7 +1,6 @@
 
 
-import os
-import sys
+import os, sys
 import django
 
 # Agrega el directorio raíz del proyecto al PYTHONPATH para que Django encuentre los módulos
