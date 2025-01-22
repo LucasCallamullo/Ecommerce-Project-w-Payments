@@ -18,12 +18,14 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# esto es para usar keys como variables de entorno?¡ 
+
+# =====================================================================================
+#                         TOD¿ LO RELACIONADOS CON VARIABLES DE ENTORNO
+# =====================================================================================
 import environ, os
 
 # Inicializar el entorno
 env = environ.Env()
-
 
 # Configurar las claves de Mercado Pago
 try:
@@ -31,18 +33,17 @@ try:
     # Intentar cargar las claves con environ
     MERCADO_PAGO_PUBLIC_KEY = env('MERCADO_PAGO_PUBLIC_KEY')
     MERCADO_PAGO_ACCESS_TOKEN = env('MERCADO_PAGO_ACCESS_TOKEN')
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = env('SECRET_KEY')
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = env('DEBUG')
 
 except environ.ImproperlyConfigured:
     # Si falla con environ, usar os.getenv como respaldo
     MERCADO_PAGO_PUBLIC_KEY = os.getenv('MERCADO_PAGO_PUBLIC_KEY', 'default_public_key')
     MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MERCADO_PAGO_ACCESS_TOKEN', 'default_access_token')
-
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
+    SECRET_KEY = os.getenv('DEBUG', True)
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
 
@@ -107,12 +108,9 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-
 try:
     # Intentar cargar las variables de entorno desde el archivo .env con environ
     environ.Env.read_env()
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -136,8 +134,6 @@ except environ.ImproperlyConfigured:
             'PORT': os.getenv('MYSQL_PORT', '3306'),
         }
     }
-
-
 """ 
 DATABASES = {
     'default': {
