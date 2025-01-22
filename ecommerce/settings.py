@@ -18,10 +18,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-import pymysql
 # Registrar pymysql como controlador de MySQL
+import pymysql
 pymysql.install_as_MySQLdb()
-
 
 # =====================================================================================
 #                         TOD¿ LO RELACIONADOS CON VARIABLES DE ENTORNO
@@ -208,4 +207,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Permite todos los dominios (en producción, puedes especificar solo el dominio de Railway)
 # ALLOWED_HOSTS = ['localhost', 'web-production-8df2.up.railway.app']
-# CSRF_TRUSTED_ORIGINS = ['https://web-production-8df2.up.railway.app', 'http://localhost']
+CSRF_TRUSTED_ORIGINS = ['https://generic-ecommerce-project-production.up.railway.app', 'http://localhost']
