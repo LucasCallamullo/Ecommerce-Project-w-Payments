@@ -99,6 +99,7 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -179,4 +180,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Permite todos los dominios (en producción, puedes especificar solo el dominio de Railway)
 # ALLOWED_HOSTS = ['localhost', 'web-production-8df2.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://web-production-8df2.up.railway.app', 'http://localhost']
+# CSRF_TRUSTED_ORIGINS = ['https://web-production-8df2.up.railway.app', 'http://localhost']

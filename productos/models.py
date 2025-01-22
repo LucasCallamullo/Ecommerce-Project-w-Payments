@@ -6,8 +6,8 @@ from django.utils.text import slugify
 
 
 class PCategory(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    name = models.CharField(max_length=30, blank=True, null=True, unique=True)
+    slug = models.SlugField(max_length=30, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
@@ -26,9 +26,9 @@ class PCategory(models.Model):
     
 
 class PSubcategory(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True)
     category = models.ForeignKey('PCategory', on_delete=models.CASCADE, related_name='subcategories')
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
@@ -52,8 +52,8 @@ class PSubcategory(models.Model):
     
 
 class PBrand(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    name = models.CharField(max_length=30, blank=True, null=True, unique=True)
+    slug = models.SlugField(max_length=30, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
@@ -80,13 +80,19 @@ class ProductImage(models.Model):
 
     def save(self, *args, **kwargs):
         # Si no hay imágenes existentes, marcar esta como la principal
-        if not ProductImage.objects.exists():
+        if not self.product.images.exists():
             self.main_image = True
             
-        elif self.main_image:
-            # Si la imagen es la nueva principal, desmarcar las demás
-            ProductImage.objects.update(main_image=False)
+        # Si no hay imágenes del producto marcadas como principal, marcar esta
+        elif not self.product.images.filter(main_image=True).first():
+            self.main_image = True
+            
+        # si ya hay imagen principal dar valor de false
+        else:
+            self.main_image = False
+            
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"Image for {self.product.name}"
@@ -95,7 +101,7 @@ class ProductImage(models.Model):
 class Product(models.Model):
     
     # atributos varios del producto
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=120, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=False, null=True, blank=True)
     stock = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -120,7 +126,7 @@ class Product(models.Model):
     # color = models.CharField(max_length=50, null=True, blank=True)
     # size = models.CharField(max_length=50, null=True, blank=True)
     
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(max_length=120, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Genera el slug a partir del nombre
