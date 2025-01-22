@@ -101,11 +101,22 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('MYSQL_DATABASE'),
+        'USER': env('MYSQL_USER'),
+        'PASSWORD': env('MYSQL_PASSWORD'),
+        'HOST': env('MYSQL_HOST'),
+        'PORT': env('MYSQL_PORT'),
+    }
+}
+""" 
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+"""
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 LANGUAGE_CODE = 'en-us'
@@ -164,3 +175,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # agregados para el dploy con whitenoise
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# Permite todos los dominios (en producción, puedes especificar solo el dominio de Railway)
+# ALLOWED_HOSTS = ['localhost', 'web-production-8df2.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-8df2.up.railway.app', 'http://localhost']
