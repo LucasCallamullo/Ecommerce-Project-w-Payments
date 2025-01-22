@@ -3,6 +3,11 @@
 import os
 import sys
 
+import pymysql
+
+# Registrar pymysql como controlador de MySQL
+pymysql.install_as_MySQLdb()
+
 
 def main():
     """Run administrative tasks."""
