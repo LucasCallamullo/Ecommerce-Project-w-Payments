@@ -14,21 +14,29 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # esto es para usar keys como variables de entorno?¡ 
-import environ
+import environ, os
 
 # Inicializar el entorno
 env = environ.Env()
-environ.Env.read_env()
+
 
 # Configurar las claves de Mercado Pago
-MERCADO_PAGO_PUBLIC_KEY = env('MERCADO_PAGO_PUBLIC_KEY')
-MERCADO_PAGO_ACCESS_TOKEN = env('MERCADO_PAGO_ACCESS_TOKEN')
+try:
+    environ.Env.read_env()
+    # Intentar cargar las claves con environ
+    MERCADO_PAGO_PUBLIC_KEY = env('MERCADO_PAGO_PUBLIC_KEY')
+    MERCADO_PAGO_ACCESS_TOKEN = env('MERCADO_PAGO_ACCESS_TOKEN')
+
+except environ.ImproperlyConfigured:
+    # Si falla con environ, usar os.getenv como respaldo
+    MERCADO_PAGO_PUBLIC_KEY = os.getenv('MERCADO_PAGO_PUBLIC_KEY', 'default_public_key')
+    MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MERCADO_PAGO_ACCESS_TOKEN', 'default_access_token')
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
@@ -100,16 +108,36 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('MYSQL_DATABASE'),
-        'USER': env('MYSQL_USER'),
-        'PASSWORD': env('MYSQL_PASSWORD'),
-        'HOST': env('MYSQL_HOST'),
-        'PORT': env('MYSQL_PORT'),
+
+try:
+    # Intentar cargar las variables de entorno desde el archivo .env con environ
+    environ.Env.read_env()
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': env('MYSQL_DATABASE'),
+            'USER': env('MYSQL_USER'),
+            'PASSWORD': env('MYSQL_PASSWORD'),
+            'HOST': env('MYSQL_HOST'),
+            'PORT': env('MYSQL_PORT'),
+        }
     }
-}
+
+except environ.ImproperlyConfigured:
+    # Si falla con environ, usar os.getenv como respaldo
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('MYSQL_DATABASE', 'default_database'),
+            'USER': os.getenv('MYSQL_USER', 'default_user'),
+            'PASSWORD': os.getenv('MYSQL_PASSWORD', 'default_password'),
+            'HOST': os.getenv('MYSQL_HOST', 'localhost'),
+            'PORT': os.getenv('MYSQL_PORT', '3306'),
+        }
+    }
+
+
 """ 
 DATABASES = {
     'default': {
