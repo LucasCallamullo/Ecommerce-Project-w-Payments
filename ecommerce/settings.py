@@ -18,6 +18,10 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import pymysql
+# Registrar pymysql como controlador de MySQL
+pymysql.install_as_MySQLdb()
+
 
 # =====================================================================================
 #                         TOD¿ LO RELACIONADOS CON VARIABLES DE ENTORNO
