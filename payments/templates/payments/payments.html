@@ -1,11 +1,77 @@
 
 
+
+{% extends "home/base.html" %}
+
 <!-- Verifica los datos del contexto -->
 
-<h1> DATOSSS  </h1>
 
-{% if order_data %}
-    <p>Order Data: {{ order_data }}</p>
-{% else %}
-    <p>No order data available.</p>
-{% endif %}
+{% block extra_head %}
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+{% endblock %}
+
+
+
+
+{% block content %}
+
+
+    <div id="wallet_container">
+
+    </div>
+
+
+
+
+
+    <h1> DATOSSS </h1>
+
+    {% if payer %}
+        <p>Order Data: {{ payer }}</p>
+    {% else %}
+        <p>No order data available.</p>
+    {% endif %}
+
+    
+    <p>
+        {{ preference_id }}
+    </p>
+
+
+    <p>
+        {% for pay in payer.items %}
+            <span> datos :  {{pay}} </span>
+        {% endfor %}
+    </p>
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block extra_scripts %}
+    <script>
+         // Usa la public key que pasaste desde el backend
+        const mp = new MercadoPago('{{ public_key }}', { 
+            locale: 'es-AR'
+        });
+
+        mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                // Usa el preference_id que pasaste desde el backend
+                preferenceId: "{{ preference_id }}",  
+                redirectMode: "blank",
+            },
+            customization: {
+                texts: {
+                    valueProp: 'smart_option',
+                },
+            },
+         });
+    </script>
+
+{% endblock %}
+

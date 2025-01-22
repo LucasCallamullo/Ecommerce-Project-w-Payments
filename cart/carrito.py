@@ -288,7 +288,7 @@ class Carrito:
             
             quantity = self.carrito[product_id_str]["qty"]
             if cart:
-                cart.update_cart_db(product, action='add', qty=quantity)
+                cart.update_cart_db(product=product, action='add', qty=quantity)
             
         return True
 
@@ -314,7 +314,7 @@ class Carrito:
         if self.request.user.is_authenticated and self.cart_id:
             cart = self.verify_cart()
             if cart:
-                cart.update_cart_db(product, action='substract', qty=qty)
+                cart.update_cart_db(product=product, action='substract', qty=qty)
             
         # guardamos los cambios en el carrito de la session
         self.save()
@@ -337,7 +337,7 @@ class Carrito:
         if self.request.user.is_authenticated and self.cart_id:
             cart = self.verify_cart()
             if cart:
-                cart.update_cart_db(product, action='remove')
+                cart.update_cart_db(product=product, action='remove')
             
         return True
 
@@ -353,4 +353,4 @@ class Carrito:
         if self.request.user.is_authenticated and self.cart_id:
             cart = self.verify_cart()
             if cart:
-                cart.items.all().delete()
+                cart.update_cart_db(action='clear')

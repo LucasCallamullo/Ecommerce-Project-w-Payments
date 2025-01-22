@@ -13,7 +13,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     
-    def update_cart_db(self, product, action='nada', qty=0):
+    def update_cart_db(self, product=None, action='nada', qty=0):
         """
         Centraliza todas las actualizaciones del carrito con un método en el mismo modelo.
         Para asegurar la consistencia de la base de datos, se utiliza el método atomic().
@@ -24,6 +24,7 @@ class Cart(models.Model):
                 - 'add': Agregar el producto al carrito.
                 - 'remove': Eliminar el producto del carrito.
                 - 'substract': Restar la cantidad del producto en el carrito.
+                - 'clear': Limpiar el carrito despues de procesar el pago
                 Por defecto es 'nada', lo que no realiza ninguna acción.
             qty (int, optional): La cantidad a agregar o restar. El valor predeterminado es 0.
 
@@ -47,7 +48,9 @@ class Cart(models.Model):
                     cart_item.save()
                 else:
                     cart_item.delete()
-
+            
+            elif action == 'clear':
+                self.items.all().delete()
 
 
 class CartItem(models.Model):

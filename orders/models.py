@@ -3,7 +3,10 @@ from django.db import models
 # Create your models here.
 
 class OrderStatus(models.Model):
-    # [('pendiente', 'Pendiente'), ('enviado', 'Enviado'), ('completado', 'Completado')])
+    # 1	Cancelado
+    # 2	Pendiente
+    # 3	Enviado
+    # 4	Completado
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, null=True)
     
@@ -42,7 +45,7 @@ class Order(models.Model):
     factura = models.ForeignKey('Factura', on_delete=models.SET_NULL, null=True)
     at_create = models.DateTimeField(auto_now_add=True)
     available = models.BooleanField(default=True)
-    total = models.DecimalField(max_digits=10, decimal_places=2)
+    detail_order = models.TextField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.user.email}"
@@ -77,17 +80,54 @@ class EnvioMethod(models.Model):
         return self.name
     
 
-class TipoFactura(models.TextChoices):
-    A = 'A', 'A'
-    B = 'B', 'B'
-    C = 'C', 'C'
-
-
 class Factura(models.Model):
-    tipo = models.CharField(max_length=1, choices=TipoFactura.choices, default=TipoFactura.B)
-    buyer_name = models.CharField(max_length=100, blank=True, null=True)
-    buyer_dni = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    f_type = models.CharField(
+        max_length=1, 
+        choices=[
+            ('A', 'A'),
+            ('B', 'B'),
+            ('C', 'C')
+        ],
+        default="B"
+    )
     
+    buyer_name = models.CharField(max_length=100, blank=True, null=True)
+    buyer_last_name = models.CharField(max_length=100, blank=True, null=True)
+    buyer_dni = models.IntegerField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    cellphone = models.CharField(max_length=15, blank=True, null=True)
+
+    total_items = models.DecimalField(max_digits=10, decimal_places=2)
+    shipment_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    invoice_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    
+    name_mp = models.CharField(max_length=100, blank=True, null=True)
+    last_name_mp = models.CharField(max_length=100, blank=True, null=True)
+    dni_mp = models.CharField(max_length=20, blank=True, null=True)
+    
+    status = models.CharField(
+        max_length=1, 
+        choices=[
+            ('P', 'Pending'),
+            ('A', 'Paid'),
+            ('C', 'Cancelled')
+        ],
+        default='A'
+    )
+
+    @property
+    def total(self):
+        return float(self.total_items + self.shipment_cost - self.discount)
+
     def __str__(self):
-        return self.tipo
+        return f"Factura {self.tipo} - {self.buyer_name} {self.buyer_last_name} - Total: {self.total}"
+    
+    def save(self, *args, **kwargs):
+        # Generar un número de factura si no existe # Ejemplo: FAC-000001
+        if not self.invoice_number:
+            self.invoice_number = f"FAC-{self.id:06d}"  
+        super().save(*args, **kwargs)

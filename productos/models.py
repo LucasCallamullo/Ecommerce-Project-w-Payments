@@ -98,7 +98,9 @@ class Product(models.Model):
     name = models.CharField(max_length=255, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=False, null=True, blank=True)
-    stock = models.IntegerField(null=True, blank=True, default=0)
+    stock = models.PositiveIntegerField(null=True, blank=True, default=0)
+    stock_reserved = models.PositiveIntegerField(default=0)
+    
     discount = models.IntegerField(default=0)
     description = models.TextField(null=True, blank=True)
     
@@ -137,6 +139,26 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    
+    def make_stock_reserved(self, quantity):
+        """
+            Metodo de los productos para poder reservar stock en las distintas ordenes de pago
+        """
+        if not self.available or self.stock < quantity:
+            return False
+        
+        self.stock -= quantity
+        self.stock_reserved += quantity
+        self.save()
+        return True
+    
+    
+    def make_stock_unreserved(self, quantity):
+        self.stock += quantity
+        self.stock_reserved -= quantity
+        self.save()
+        
+    
     
     @property
     def main_image(self):

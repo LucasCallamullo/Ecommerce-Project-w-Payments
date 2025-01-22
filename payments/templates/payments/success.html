@@ -1,0 +1,41 @@
+{% extends "home/base.html" %}
+
+{% block extra_head %}
+<!-- Puedes agregar iconos o enlaces adicionales aquí si lo necesitas -->
+{% endblock %}
+
+{% block content %}
+
+    <p> {{ payment }} </p>
+
+    <hr>
+
+    <p class="mt-5" style="background-color: aquamarine;"> 
+        {{ payment_response }}
+    </p>
+
+
+
+    <h1>¡Pago realizado con éxito!</h1>
+    <p>Gracias por tu compra. Tu pedido ha sido procesado.</p>
+
+    <p>Detalles del pago:</p>
+    <ul>
+        <li>ID de pago: {{ payment_data.id }}</li>
+        <li>Estado del pago: {{ payment_data.status }}</li>
+        <li>Producto(s) comprado(s):</li>
+        <ul>
+            {% for item in payment_data.items %}
+                <li>{{ item.title }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }}</li>
+            {% endfor %}
+        </ul>
+    </ul>
+
+    <!-- Aquí podrías incluir algún icono de éxito -->
+    <img src="https://www.mercadopago.com/org-img/MP3/home/logomp3.gif" alt="Pago exitoso">
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Aquí podrías incluir scripts adicionales si los necesitas -->
+{% endblock %}

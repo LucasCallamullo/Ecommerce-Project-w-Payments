@@ -11,26 +11,10 @@ from django.template.loader import render_to_string
 
 
 from django.http import JsonResponse
-from django.utils.html import escape
 from orders.forms import OrderForm
 
+from orders.utils import get_form_errors, confirm_stock_available
 
-
-
-def get_form_errors(form_errors):
-    # Procesar errores de manera legible
-    errors = []
-    for field, messages in form_errors:
-        for message in messages:
-            # Si el error no pertenece a un campo específico
-            if field == '__all__':
-                errors.append(escape(message))
-            else:
-                errors.append(f"{field.capitalize()}: {escape(message)}")
-    
-    # Juntar los errores en un solo string separado por |
-    error_message = " | ".join(errors)  
-    return error_message
 
 
 # Desactiva la verificación CSRF solo si estás manejando solicitudes AJAX y no puedes usar el token
@@ -39,16 +23,18 @@ def get_form_errors(form_errors):
 def valid_form_order(request):
     
     if request.method == 'POST':
+        
+        # Confirmar pedido:
+        confirm_stock, error_message = confirm_stock_available(request.user.id)
+        if confirm_stock is False:
+            return JsonResponse({'success': False, 'error': error_message})
+        
         # Recuperar los datos enviados
         id_payment = request.POST.get('payment_id')
         id_envio_method = request.POST.get('envio_method_id')
 
-        print("Algo salio mal aca antes del form")
-
         # Procesar los datos del formulario
         form = OrderForm(request.POST, id_envio_method=id_envio_method)
-        
-        print("Algo salio mal aca despues del form")
         
         if form.is_valid():
             # Crear un diccionario con los datos del formulario
@@ -87,7 +73,7 @@ def valid_form_order(request):
             # vaya a la pagina de pago
             return JsonResponse({
                 'success': True, 
-                'redirect_url': '/payment/',
+                'redirect_url': '/payment_view/',
                 'message': 'Pedido guardado termine su metodo de pago para finalizar'
             })
             
