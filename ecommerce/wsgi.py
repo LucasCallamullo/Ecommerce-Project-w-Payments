@@ -8,6 +8,10 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/wsgi/
 """
 
 import os
+import pymysql
+
+# Registrar pymysql como controlador de MySQL
+pymysql.install_as_MySQLdb()
 
 from django.core.wsgi import get_wsgi_application
 
