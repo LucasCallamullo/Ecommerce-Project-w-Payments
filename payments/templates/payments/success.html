@@ -54,7 +54,7 @@
                 <p><strong>Factura Numero:</strong> ${{ order.factura.invoice_number }}</p>
                 <p><strong>Total Items:</strong> ${{ order.factura.total_items }}</p>
                 <p><strong>Costo de Envio:</strong> ${{ order.factura.shipment_cost }}</p>
-                <p><strong>Costo Total:</strong> ${{ order.factura.total_items + order.factura.shipment_cost }}</p>
+                <p><strong>Costo Total:</strong> ${{ order.factura.total }}</p>
 
                 <!-- Order Items -->
                 <h4 class="mb-3">Pedido Items</h4>
@@ -73,7 +73,7 @@
                             <td>{{ item.product.name }}</td>
                             <td>{{ item.quantity }}</td>
                             <td>${{ item.price }}</td>
-                            <td>${{ item.price * item.quantity }}</td>
+                            <td>${{ item.subtotal }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -103,7 +103,7 @@
     <ul>
         {% for key, product in cart.items %}
             <li>
-                {{ product.name }} - Cantidad: {{ product.quantity }} - Precio: {{ product.price }}
+                {{ product.name }} - Cantidad: {{ product.qty }} - Precio: {{ product.price }}
             </li>
         {% endfor %}
     </ul>
