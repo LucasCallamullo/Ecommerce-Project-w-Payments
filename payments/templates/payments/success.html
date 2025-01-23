@@ -101,7 +101,7 @@
 
     <h2> Carrito </h2>
     <ul>
-        {% for item in cart.items %}
+        {% for item in cart.items.all %}
             <li>
                 {{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.product.price }}
             </li>
