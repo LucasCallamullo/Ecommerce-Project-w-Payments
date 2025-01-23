@@ -101,9 +101,9 @@
 
     <h2> Carrito </h2>
     <ul>
-        {% for key, product in cart.items %}
+        {% for item in cart.items %}
             <li>
-                {{ product.name }} - Cantidad: {{ product.qty }} - Precio: {{ product.price }}
+                {{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.product.price }}
             </li>
         {% endfor %}
     </ul>
