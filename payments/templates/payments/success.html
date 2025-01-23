@@ -1,10 +1,15 @@
 {% extends "home/base.html" %}
 
+{% load static %}
+
+
 {% block extra_head %}
-<!-- Puedes agregar iconos o enlaces adicionales aquí si lo necesitas -->
-    <link rel="stylesheet" href="{% static 'payments/css/sucess.css' %}">
+
+    <link href="{% static 'payments/css/sucess.css' %}" rel="stylesheet">
 
 {% endblock %}
+
+
 
 {% block content %}
 
