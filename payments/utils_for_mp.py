@@ -73,8 +73,8 @@ def get_items_from_cart(request):
     
     user = request.user
     
-    if not request.user.is_authenticated:
-        return items, total_cart
+    # if not user.is_authenticated:
+    #    return items, total_cart
 
     # REcuperamos el cart asociado al usuario con prefetch_related para optimizar la consulta
     cart = Cart.objects.prefetch_related('items__product').get(user=user)
@@ -168,11 +168,11 @@ def get_payer_info_from_form(request):
         "email": order_data.get("email", ''),
         "phone": {
             "area_code": "351",
-            "number": int(order_data.get("cellphone", 0)),
+            "number": order_data.get("cellphone", ""),
         },
         "identification": {
             "type": "DNI",
-            "number": int(order_data.get("dni", 0)),
+            "number": order_data.get("dni", ""),
         },
     }
     
@@ -182,7 +182,7 @@ def get_payer_info_from_form(request):
         payer["address"] = {
             "street_name": order_data.get("address", ''),
             "street_number": 123,
-            "zip_code": int(order_data.get("postal_code", 0)),
+            "zip_code": order_data.get("postal_code", ""),
         }
         
     return payer

@@ -103,6 +103,7 @@ def success(request):
     cart = Cart.request.user.carrito
     
     contexto = {
+        'cart': cart,
         'items': items,
         'order': order,
         'payment': payment,
