@@ -125,10 +125,3 @@ class Factura(models.Model):
 
     def __str__(self):
         return f"Factura {self.tipo} - {self.buyer_name} {self.buyer_last_name} - Total: {self.total}"
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        
-        if not self.invoice_number:
-            self.invoice_number = f"FAC-{self.id:06d}"
-            super().save(*args, **kwargs)

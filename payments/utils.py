@@ -60,36 +60,43 @@ def confirm_order(request, payer):
             # Crear factura
             mp_name = mp_last_name = mp_dni = None
             if payer:
-                mp_name = payer.get("first_name", "")
-                mp_last_name = payer.get("last_name", "") 
-                mp_dni = payer.get("identification", {}).get("number", "")
+                mp_name = payer.get("first_name", None)
+                mp_last_name = payer.get("last_name", None) 
+                mp_dni = payer.get("identification", None).get("number", None)
             
             
             cart = Cart.objects.prefetch_related('items__product').get(user=request.user)
             total_cart = sum(float(item.product.price) * item.quantity for item in cart.items.all())
+            
             factura = Factura.objects.create(
                 f_type="B",
-                buyer_name=order_data["name"],
-                buyer_last_name=order_data["last_name"],
-                buyer_dni=order_data["dni"],
-                email=order_data["email"],
-                cellphone=order_data["cellphone"],
+                buyer_name=order_data.get("name", ""),
+                buyer_last_name=order_data.get("last_name", ""),
+                buyer_dni=order_data.get("dni", ""),
+                email=order_data.get("email", ""),
+                cellphone=order_data.get("cellphone", ""),
                 total_items=total_cart,
                 shipment_cost=envio_method.price,
                 name_mp = mp_name,
                 last_name_mp = mp_last_name,
                 dni_mp = mp_dni,
             )
+            # Asignar el número de factura basado en el ID generado
+            factura.invoice_number = f"FAC-{factura.id:06d}"
+            factura.save()
 
             # Crear orden
             payment_id = int(order_data["id_payment"])
+            payment_method = PaymentMethod.objects.get(id=payment_id)
+            status = OrderStatus.objects.get(id=2)  # Orden Pendiente
+            
             new_order = Order.objects.create(
-                user=request.user,
-                status=OrderStatus.objects.get(id=2),  # Orden Pendiente
-                payment=PaymentMethod.objects.get(id=payment_id),
-                envio=envio,
-                detail_order=order_data["detail_order"],
-                factura=factura
+                user= request.user,
+                status= status,
+                payment= payment_method,
+                envio= envio,
+                detail_order= order_data.get("detail_order", ""),
+                factura= factura
             )
 
             # Crear OrderItems
@@ -101,6 +108,8 @@ def confirm_order(request, payer):
                     price=float(item.product.price)
                 )
                 
+                
+            
             # 
             message = f"Se creo correctamente la orden: {e}"
             return new_order, message
