@@ -5,7 +5,7 @@
 ### Description
 Este proyecto es una aplicación web de comercio electrónico completamente funcional desarrollada con Django para el back-end y un front-end responsivo utilizando HTML, CSS (Bootstrap) y JavaScript. La aplicación permite a los usuarios gestionar de manera eficiente carritos, productos y cuentas a través de un sistema CRUD, con actualizaciones de contenido en tiempo real utilizando AJAX. Además, el uso de Pandas y Excel simplifica la carga inicial de datos de productos, permitiendo una configuración rápida y eficiente al importar detalles de productos directamente desde archivos de Excel, facilitando así tener una página completamente funcional con un esfuerzo mínimo.
 
-[![Static Badge](https://img.shields.io/badge/Documentation-EN-blue)](https://github.com/LucasCallamullo/generic-ecommerce-project/edit/main/README.md) [![Documentation ES](https://img.shields.io/badge/Documentation-ES-green)](https://github.com/LucasCallamullo/generic-ecommerce-project/edit/main/README-es.md)
+[![Static Badge](https://img.shields.io/badge/Documentation-EN-blue)](https://github.com/LucasCallamullo/generic-ecommerce-project/main/README.md) [![Documentation ES](https://img.shields.io/badge/Documentation-ES-green)](https://github.com/LucasCallamullo/generic-ecommerce-project/main/README-es.md)
 
 ### [EN]
 
