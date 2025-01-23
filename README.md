@@ -1,7 +1,7 @@
 ## Proyecto WebApp Ecommerce
 
 ### Description
-This project is a fully functional Ecommerce WebApp developed with Django for the back-end and a responsive front-end using HTML, CSS (Bootstrap), and JavaScript. The application allows users to efficiently manage products and accounts through a CRUD system, with advanced features such as secure authentication and real-time content updates using AJAX.
+This project is a fully functional Ecommerce WebApp developed with Django for the back-end and a responsive front-end using HTML, CSS (Bootstrap), and JavaScript. The application allows users to efficiently manage carts, products and accounts through a CRUD system, real-time content updates using AJAX. Additionally, the use of Pandas and Excel simplifies the initial loading of product data, allowing for quick and efficient setup by importing product details directly from Excel files, making it easy to have a fully functional page with minimal effort.
 
 [![Static Badge](https://img.shields.io/badge/Documentation-EN-blue)](https://github.com/LucasCallamullo/E-commerce-App-Web/blob/main/README.md) [![Documentation ES](https://img.shields.io/badge/Documentation-ES-green)](https://github.com/LucasCallamullo/E-commerce-App-Web/blob/main/README-ES.md)
 
@@ -51,9 +51,7 @@ Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
 ## Other Functionalities
 Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
 
-<br></br>
-
-#### Installation and Setup
+## Installation and Setup
 1. **Clone the repository:**:
    ```bash
    git clone https://github.com/LucasCallamullo/generic-ecommerce-project.git
