@@ -61,8 +61,11 @@ def confirm_order(request, payer):
             mp_name = mp_last_name = mp_dni = None
             if payer:
                 mp_name = payer.get("first_name", None)
-                mp_last_name = payer.get("last_name", None) 
-                mp_dni = payer.get("identification", None).get("number", None)
+                mp_last_name = payer.get("last_name", None)
+                identification = payer.get("identification", None)
+                if identification:
+                    mp_dni = identification.get("number", None)
+
             
             
             cart = Cart.objects.prefetch_related('items__product').get(user=request.user)
@@ -80,10 +83,9 @@ def confirm_order(request, payer):
                 name_mp = mp_name,
                 last_name_mp = mp_last_name,
                 dni_mp = mp_dni,
+                invoice_number = None
             )
-            # Asignar el número de factura basado en el ID generado
-            factura.invoice_number = f"FAC-{factura.id:06d}"
-            factura.save()
+            
 
             # Crear orden
             payment_id = int(order_data["id_payment"])
@@ -105,13 +107,11 @@ def confirm_order(request, payer):
                     order=new_order,
                     product=item.product,
                     quantity=item.quantity,
-                    price=float(item.product.price)
+                    price=item.product.price
                 )
                 
-                
-            
             # 
-            message = f"Se creo correctamente la orden: {e}"
+            message = f"Se creo correctamente la orden"
             return new_order, message
     
     # Manejar errores y registrar logs si es necesario
