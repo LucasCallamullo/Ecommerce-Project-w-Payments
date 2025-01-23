@@ -122,7 +122,7 @@ def reset_stocks(request):
     )
 
     # Mensaje de confirmación para el usuario (si es necesario)
-    return render(request, "Home", {"message": "Stocks reiniciados con éxito"})
+    return render(request, 'home/home.html')
     
     
     
