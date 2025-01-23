@@ -41,6 +41,7 @@ Users Endpoint: CRUD operations for users
 Estos endpoints están diseñados para ser utilizados a través de solicitudes AJAX en la aplicación:
 
 
+
 # Principales Endpoints
 
 - **POST /carrito/update/**: Endpoint AJAX para gestionar las acciones del carrito (agregar, reducir, eliminar productos). Devuelve un html renderizado si sale todo bien, sino mensajes de advertencia al usuario como que ya no queda stock, agrego un prodcuto o elimino el producto.
@@ -54,12 +55,12 @@ La solicitud debe incluir los detalles necesarios en el cuerpo:
 
 - **GET /search-product/**: Endpoint AJAX para filtrar productos por nombre, category, subcategory o query por nombre asociada previamente. Responde con HTML para actualizar dinámicamente la interfaz de usuario. Los parámetros de filtro se obtienen con un metodo GET.
 
-- **Datos del cuerpo de la solicitud:**
-    - `topQuery` (str): Cadena de búsqueda previa para los productos.
-    - `categoryId` (int): ID de la categoría para filtrar.
-    - `subCategoryId` (int): ID de la subcategoría para filtrar.
-    - `inputNow` (str): Entrada actual para búsqueda en tiempo real. (3 lettras o más para activar)
-Parámetros de la URL:
+  - **Datos del cuerpo de la solicitud:**
+      - `topQuery` (str): Cadena de búsqueda previa para los productos.
+      - `categoryId` (int): ID de la categoría para filtrar.
+      - `subCategoryId` (int): ID de la subcategoría para filtrar.
+      - `inputNow` (str): Entrada actual para búsqueda en tiempo real. (3 lettras o más para activar)
+
 
 
 
