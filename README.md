@@ -16,19 +16,25 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 |:-:|:-:|:-:|:-:|
 
 
-
-
 ### 🛠️ Tools 
 | ![Git Badge](https://img.shields.io/badge/git%20-%23F05033.svg?&style=for-the-badge&logo=git&logoColor=white) | [![GitHub Badge](https://img.shields.io/badge/github%20-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)](https://github.com/LucasCallamullo) | ![VSCode Badge](https://img.shields.io/badge/VSCode-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white) | ![DBeaver Badge](https://img.shields.io/badge/dbeaver-382923?style=for-the-badge&logo=dbeaver&logoColor=white)
 |:-:|:-:|:-:|:-:|
 
 
 #### Features
-* RESTful API: Implemented in Django to handle all CRUD operations (Create, Read, Update, Delete) for both products and users.
-* Responsive Interface: Adaptive design for different devices using HTML, CSS, and Bootstrap.
-* Secure Authentication: Integrated user registration and authentication system, ensuring data privacy and security.
-* Real-Time Updates: Utilization of AJAX to enhance user experience, allowing actions like updating the shopping cart without page reloads.
-* MySQL Database: Connection and data manipulation through Django's ORM, ensuring integrity and efficiency in database operations.
+* RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
+* Real-Time Updates: Utilization of AJAX for a seamless user experience, particularly in cart or login actions within the app.
+* MySQL Database: Connection and data manipulation through Django's ORM.
+* Deployment: The application is deployed on Railway, ensuring easy access and scalability.
+* Responsive Interface: Adaptive design for different devices using HTML, CSS and Bootstrap 5.
+
+Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
+
+API Endpoints
+List of the main API endpoints with a brief description of each.
+Products Endpoint: CRUD operations for products.
+Users Endpoint: CRUD operations for users
+
 
 #### Installation and Setup
 1. **Clone the repository:**:
