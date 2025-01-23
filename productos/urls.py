@@ -8,6 +8,9 @@ from django.urls import path
 from productos import views
 
 urlpatterns = [
+    path('reset_stocks/', views.reset_stocks, name='reset_stocks'),
+    
+    
     # filters
     path('products/', views.product_list, name='product_list'),
     path('category/<slug:cat_slug>/', views.product_list, name='pl_category'),
@@ -19,6 +22,7 @@ urlpatterns = [
     
     # endpoints images
     path('images/<int:product_id>/images/', views.get_product_images, name='get_product_images'),
+    
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

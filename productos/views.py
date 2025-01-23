@@ -41,7 +41,6 @@ def get_product_images(request, product_id):
         return JsonResponse({'error': 'Product not found'}, status=404)
     
 
-
 def product_list(request, cat_slug=None, subcat_slug=None):
     # query = request.GET.get('q')
     productos = Product.objects.all()
@@ -110,6 +109,22 @@ def search_product_q(request):
         'html_cards': html_cards
     })
 
+
+from django.db.models import F
+def reset_stocks(request):
+    """
+    Reinicia los stocks sumando el stock reservado al stock general para los productos afectados.
+    """
+    # Actualizar en bloque usando F() para optimizar
+    Product.objects.filter(stock_reserved__gt=0).update(
+        stock=F('stock') + F('stock_reserved'),
+        stock_reserved=0  # Opcional: reinicia el stock reservado si es necesario
+    )
+
+    # Mensaje de confirmación para el usuario (si es necesario)
+    return render(request, "Home", {"message": "Stocks reiniciados con éxito"})
+    
+    
     
     
     
