@@ -40,6 +40,10 @@ class Carrito:
                 self.cart_id = None
                 self.session["cart_id"] = self.cart_id
                 self.session.modified = True
+                
+                self.last_modified = None
+                self.session['last_modified'] = None
+                self.session.modified = True
 
 
     # ======================================================================
