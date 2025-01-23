@@ -35,6 +35,38 @@ List of the main API endpoints with a brief description of each.
 Products Endpoint: CRUD operations for products.
 Users Endpoint: CRUD operations for users
 
+## API Endpoints
+
+### Cart Endpoint
+Estos endpoints están diseñados para ser utilizados a través de solicitudes AJAX en la aplicación:
+
+
+# Principales Endpoints
+
+- **POST /carrito/update/**: Endpoint AJAX para gestionar las acciones del carrito (agregar, reducir, eliminar productos). Devuelve un html renderizado si sale todo bien, sino mensajes de advertencia al usuario como que ya no queda stock, agrego un prodcuto o elimino el producto.
+La solicitud debe incluir los detalles necesarios en el cuerpo:
+  - **Datos del cuerpo de la solicitud:**
+    - `producto_id` (int): ID del producto a agregar.
+    - `value` (int): Cantidad del producto.
+    - `action` (str): Acción a realizar (`add`, `less`, `remove`).
+    - `cart_view` (str): Indica si se está en la vista del carrito (`true`, `false`).
+
+
+- **GET /search-product/**: Endpoint AJAX para filtrar productos por nombre, category, subcategory o query por nombre asociada previamente. Responde con HTML para actualizar dinámicamente la interfaz de usuario. Los parámetros de filtro se obtienen con un metodo GET.
+
+- **Datos del cuerpo de la solicitud:**
+    - `topQuery` (str): Cadena de búsqueda previa para los productos.
+    - `categoryId` (int): ID de la categoría para filtrar.
+    - `subCategoryId` (int): ID de la subcategoría para filtrar.
+    - `inputNow` (str): Entrada actual para búsqueda en tiempo real. (3 lettras o más para activar)
+Parámetros de la URL:
+
+
+
+### Otras Funcionalidades
+La mayoría de las funcionalidades del sitio se renderizan directamente a través de vistas de Django, proporcionando una experiencia de usuario directa y sin interrupciones. Las operaciones CRUD para productos y usuarios se manejan a través de estas vistas.
+
+
 
 #### Installation and Setup
 1. **Clone the repository:**:
