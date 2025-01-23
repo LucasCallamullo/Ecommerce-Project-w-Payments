@@ -20,7 +20,7 @@ class Carrito:
         if request.user.is_authenticated:
             
             # Esto se dara post logeo realmente, porque recien ahi tendra un cart_id
-            if self.cart_id:
+            if self.cart_id and self.last_modified:
                 # recuperramos Cart con el realted_name
                 cart = self.request.user.carrito     
                 
@@ -41,9 +41,7 @@ class Carrito:
                 self.session["cart_id"] = self.cart_id
                 self.session.modified = True
                 
-                self.last_modified = None
-                self.session['last_modified'] = None
-                self.session.modified = True
+                
 
 
     # ======================================================================
@@ -316,7 +314,7 @@ class Carrito:
         # Actualiza el carrito en la base de datos
         if self.request.user.is_authenticated and self.cart_id:
             quantity = self.carrito[product_id_str]["qty"]
-            self.handle_cart_to_db(product=product, action='add', qty=quantity)
+            self.handle_cart_to_db(product=product, action='add', quantity=quantity)
             
         return True
 
