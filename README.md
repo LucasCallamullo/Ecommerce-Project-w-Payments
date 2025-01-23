@@ -31,35 +31,32 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
 
 API Endpoints
-List of the main API endpoints with a brief description of each.
-Products Endpoint: CRUD operations for products.
-Users Endpoint: CRUD operations for users
+
 
 ## API Endpoints
+List of the main API endpoints with a brief description of each:
+- **Products Endpoint:** CRUD operations for products.
+- **Users Endpoint:** CRUD operations for users.
 
-### Cart Endpoint
-Estos endpoints están diseñados para ser utilizados a través de solicitudes AJAX en la aplicación:
+## Main Endpoints
 
+- **POST /carrito/update/**: AJAX endpoint to manage cart actions (add, reduce, remove products). Returns rendered HTML if successful; otherwise, it shows warning messages to the user such as out of stock, product added, or product removed. The request must include the following details in the body:
+  - **Request body data:**
+    - `producto_id` (int): ID of the product to add.
+    - `value` (int): Quantity of the product.
+    - `action` (str): Action to perform (`add`, `less`, `remove`).
+    - `cart_view` (str): Indicates if the user is on the cart view (`true`, `false`).
 
+- **GET /search-product/**: AJAX endpoint to filter products by name, category, subcategory, or previous search query. Responds with HTML to dynamically update the user interface. Filter parameters are retrieved using the GET method.
+  - **URL parameters:**
+    - `topQuery` (str): Previous search string for products.
+    - `categoryId` (int): Category ID to filter by.
+    - `subCategoryId` (int): Subcategory ID to filter by.
+    - `inputNow` (str): Current input for real-time search (activated with 3 or more letters).
 
-# Principales Endpoints
+## Other Functionalities
+Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
 
-- **POST /carrito/update/**: Endpoint AJAX para gestionar las acciones del carrito (agregar, reducir, eliminar productos). Devuelve un html renderizado si sale todo bien, sino mensajes de advertencia al usuario como que ya no queda stock, agrego un prodcuto o elimino el producto.
-La solicitud debe incluir los detalles necesarios en el cuerpo:
-  - **Datos del cuerpo de la solicitud:**
-    - `producto_id` (int): ID del producto a agregar.
-    - `value` (int): Cantidad del producto.
-    - `action` (str): Acción a realizar (`add`, `less`, `remove`).
-    - `cart_view` (str): Indica si se está en la vista del carrito (`true`, `false`).
-
-
-- **GET /search-product/**: Endpoint AJAX para filtrar productos por nombre, category, subcategory o query por nombre asociada previamente. Responde con HTML para actualizar dinámicamente la interfaz de usuario. Los parámetros de filtro se obtienen con un metodo GET.
-
-  - **Datos del cuerpo de la solicitud:**
-      - `topQuery` (str): Cadena de búsqueda previa para los productos.
-      - `categoryId` (int): ID de la categoría para filtrar.
-      - `subCategoryId` (int): ID de la subcategoría para filtrar.
-      - `inputNow` (str): Entrada actual para búsqueda en tiempo real. (3 lettras o más para activar)
 
 
 
