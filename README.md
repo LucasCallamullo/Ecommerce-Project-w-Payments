@@ -47,7 +47,7 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 
 4. **Run the load_data Script: This command will load initial data into your database using pandas and openpyxl**
    ```bash
-   python manage.py load_data
+   python manage.py load_data_project
 
 
 ### [ES]
