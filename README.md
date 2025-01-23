@@ -30,15 +30,9 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 
 Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
 
-API Endpoints
+<br></br>
 
-
-## API Endpoints
-List of the main API endpoints with a brief description of each:
-- **Products Endpoint:** CRUD operations for products.
-- **Users Endpoint:** CRUD operations for users.
-
-## Main Endpoints
+## API Main Endpoints
 
 - **POST /carrito/update/**: AJAX endpoint to manage cart actions (add, reduce, remove products). Returns rendered HTML if successful; otherwise, it shows warning messages to the user such as out of stock, product added, or product removed. The request must include the following details in the body:
   - **Request body data:**
@@ -57,14 +51,7 @@ List of the main API endpoints with a brief description of each:
 ## Other Functionalities
 Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
 
-
-
-
-
-### Otras Funcionalidades
-La mayoría de las funcionalidades del sitio se renderizan directamente a través de vistas de Django, proporcionando una experiencia de usuario directa y sin interrupciones. Las operaciones CRUD para productos y usuarios se manejan a través de estas vistas.
-
-
+<br></br>
 
 #### Installation and Setup
 1. **Clone the repository:**:
@@ -88,9 +75,6 @@ La mayoría de las funcionalidades del sitio se renderizan directamente a travé
 
 ### [ES]
 [![Documentation ES](https://img.shields.io/badge/Documentation-ES-green)](https://github.com/LucasCallamullo/E-commerce-App-Web/blob/main/README-ES.md)
-
-
-
 
 ### Images:
 ![](https://i.pinimg.com/736x/73/5b/6e/735b6ebb2cf852e28472a2efcc378e9e.jpg)
