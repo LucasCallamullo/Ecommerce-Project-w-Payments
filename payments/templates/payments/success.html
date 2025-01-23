@@ -2,39 +2,117 @@
 
 {% block extra_head %}
 <!-- Puedes agregar iconos o enlaces adicionales aquí si lo necesitas -->
+    <link rel="stylesheet" href="{% static 'payments/sucess.css' %}">
+
 {% endblock %}
 
 {% block content %}
-
-    <p> {{ payment }} </p>
-
-    <hr>
-
-    <p class="mt-5" style="background-color: aquamarine;"> 
-        {{ payment_response }}
-    </p>
-
-
 
     <h1>¡Pago realizado con éxito!</h1>
     <p>Gracias por tu compra. Tu pedido ha sido procesado.</p>
 
     <p>Detalles del pago:</p>
+
+
+    <div class="container my-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Detalle Pedidos </h2>
+            </div>
+            <div class="card-body">
+                <!-- Buyer Information -->
+                <h4 class="mb-3">Buyer Information</h4>
+                <p><strong>Name:</strong> {{ order.factura.buyer_name }} {{ order.factura.buyer_last_name }}</p>
+                <p><strong>Email:</strong> {{ order.factura.email }}</p>
+                <p><strong>Phone:</strong> {{ order.factura.cellphone }}</p>
+                <p><strong>DNI:</strong> {{ order.factura.buyer_dni }}</p>
+                
+                <!-- Shipping Information -->
+                <h4 class="mb-3">Shipping Information</h4>
+                <p><strong>Shipping Method:</strong> {{ order.envio.method.name }}</p>
+                {% if order.envio.method.id == 1 %}
+                    <p><strong>buyer_name:</strong> {{ order.envio.buyer_name }}</p>
+                    <p><strong>buyer_dni:</strong> {{ order.envio.buyer_dni }}</p>
+                {% else %}
+                    <p><strong>Address:</strong> {{ order.envio.address }}</p>
+                    <p><strong>City:</strong> {{ order.envio.city }}</p>
+                    <p><strong>Province:</strong> {{ order.envio.province }}</p>
+                    <p><strong>Postal Code:</strong> {{ order.envio.postal_code }}</p>
+                    <p><strong>Details:</strong> {{ order.envio.detail }}</p>
+                {% endif %}
+
+                <!-- Order Summary -->
+                <h4 class="mb-3">Pedido</h4>
+                <p><strong>Order ID:</strong> {{ order.id }}</p>
+                <p><strong>Methodo de Pago:</strong> {{ order.payment.name }}</p>
+                <p><strong>Status:</strong> {{ order.status.name }}</p>
+                <p><strong>Factura Numero:</strong> ${{ order.factura.invoice_number }}</p>
+                <p><strong>Total Items:</strong> ${{ order.factura.total_items }}</p>
+                <p><strong>Costo de Envio:</strong> ${{ order.factura.shipment_cost }}</p>
+                <p><strong>Costo Total:</strong> ${{ order.factura.total_items + order.factura.shipment_cost }}</p>
+
+                <!-- Order Items -->
+                <h4 class="mb-3">Pedido Items</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.products.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.price }}</td>
+                            <td>${{ item.price * item.quantity }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'Home' %}" class="btn btn-secondary">Ir al Home</a>
+                <a href="#" class="btn btn-primary"> Boton </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="separador mt-3 mb-3"> </div>
+
+    <h2> ITEMS </h2>
     <ul>
-        <li>ID de pago: {{ payment_data.id }}</li>
-        <li>Estado del pago: {{ payment_data.status }}</li>
-        <li>Producto(s) comprado(s):</li>
-        <ul>
-            {% for item in payment_data.items %}
-                <li>{{ item.title }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }}</li>
-            {% endfor %}
-        </ul>
+        {% for item in items %}
+            <li>
+                {{ item.title }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }}
+            </li>
+        {% endfor %}
     </ul>
 
+    <div class="separador mt-3 mb-3"> </div>
+
+    <h2> Carrito </h2>
+    <ul>
+        {% for key, product in cart.items %}
+            <li>
+                {{ product.name }} - Cantidad: {{ product.quantity }} - Precio: {{ product.price }}
+            </li>
+        {% endfor %}
+    </ul>
+    
     <!-- Aquí podrías incluir algún icono de éxito -->
     <img src="https://www.mercadopago.com/org-img/MP3/home/logomp3.gif" alt="Pago exitoso">
 
+
+    <div class="separador mt-3 mb-3"> </div>
+    <div class="mt-3 mb-3"> </div>
+    <p> {{ payment }} </p>
+
 {% endblock %}
+
 
 {% block extra_scripts %}
 <!-- Aquí podrías incluir scripts adicionales si los necesitas -->

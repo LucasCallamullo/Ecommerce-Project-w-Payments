@@ -6,6 +6,7 @@ from django.conf import settings
 from django.http import JsonResponse
 
 from payments.utils import confirm_order
+from cart.models import Cart
 
 from payments.utils_for_mp import generate_datetime, get_urls_ngrok
 from payments.utils_for_mp import get_items_from_cart, get_items_with_discount, get_payer_info_from_form
@@ -96,7 +97,10 @@ def success(request):
     
     # para confirmar la orden marcarla como compra realizada
     payer = payment.get("payer", {})
+    
     order = confirm_order(request, payer)
+    
+    cart = Cart.request.user.carrito
     
     contexto = {
         'items': items,
