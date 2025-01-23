@@ -26,7 +26,7 @@
             </div>
             <div class="card-body">
                 <!-- Buyer Information -->
-                <h4 class="mb-3">Buyer Information</h4>
+                <h4 class="mb-3"> Información comprador </h4>
                 <p><strong>Name:</strong> {{ order.factura.buyer_name }} {{ order.factura.buyer_last_name }}</p>
                 <p><strong>Email:</strong> {{ order.factura.email }}</p>
                 <p><strong>Phone:</strong> {{ order.factura.cellphone }}</p>
@@ -107,6 +107,14 @@
             </li>
         {% endfor %}
     </ul>
+    
+    <div class="separador mt-3 mb-3"> </div>
+    
+    <div>  {{ payer }}  </div>
+
+    <div class="separador mt-3 mb-3"> </div>
+
+    <div>  {{ message }}  </div>
     
     <!-- Aquí podrías incluir algún icono de éxito -->
     <img src="https://www.mercadopago.com/org-img/MP3/home/logomp3.gif" alt="Pago exitoso">

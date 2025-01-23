@@ -93,7 +93,7 @@ class Factura(models.Model):
     
     buyer_name = models.CharField(max_length=100, blank=True, null=True)
     buyer_last_name = models.CharField(max_length=100, blank=True, null=True)
-    buyer_dni = models.IntegerField(blank=True, null=True)
+    buyer_dni = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     cellphone = models.CharField(max_length=15, blank=True, null=True)
 
@@ -127,7 +127,8 @@ class Factura(models.Model):
         return f"Factura {self.tipo} - {self.buyer_name} {self.buyer_last_name} - Total: {self.total}"
     
     def save(self, *args, **kwargs):
-        # Generar un número de factura si no existe # Ejemplo: FAC-000001
-        if not self.invoice_number:
-            self.invoice_number = f"FAC-{self.id:06d}"  
         super().save(*args, **kwargs)
+        
+        if not self.invoice_number:
+            self.invoice_number = f"FAC-{self.id:06d}"
+            super().save(*args, **kwargs)

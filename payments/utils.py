@@ -68,7 +68,7 @@ def confirm_order(request, payer):
             cart = Cart.objects.prefetch_related('items__product').get(user=request.user)
             total_cart = sum(float(item.product.price) * item.quantity for item in cart.items.all())
             factura = Factura.objects.create(
-                tipo="B",
+                f_type="B",
                 buyer_name=order_data["name"],
                 buyer_last_name=order_data["last_name"],
                 buyer_dni=order_data["dni"],
@@ -85,7 +85,7 @@ def confirm_order(request, payer):
             payment_id = int(order_data["id_payment"])
             new_order = Order.objects.create(
                 user=request.user,
-                status=OrderStatus.objects.get(id=4),  # Orden completada
+                status=OrderStatus.objects.get(id=2),  # Orden Pendiente
                 payment=PaymentMethod.objects.get(id=payment_id),
                 envio=envio,
                 detail_order=order_data["detail_order"],
@@ -102,9 +102,10 @@ def confirm_order(request, payer):
                 )
                 
             # 
-            return new_order
-
+            message = f"Se creo correctamente la orden: {e}"
+            return new_order, message
+    
+    # Manejar errores y registrar logs si es necesario
     except Exception as e:
-        # Manejar errores y registrar logs si es necesario
-        print(f"Error al confirmar la orden: {e}")
-        return None
+        message = f"Error al confirmar la orden: {e}"
+        return None, message

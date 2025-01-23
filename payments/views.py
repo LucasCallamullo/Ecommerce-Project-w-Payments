@@ -98,7 +98,7 @@ def success(request):
     # para confirmar la orden marcarla como compra realizada
     payer = payment.get("payer", {})
     
-    order = confirm_order(request, payer)
+    order, message = confirm_order(request, payer)
     
     cart = request.user.carrito
     
@@ -106,6 +106,8 @@ def success(request):
         'cart': cart,
         'items': items,
         'order': order,
+        'message': message,
+        'payer': payer,
         'payment': payment,
     }
     
