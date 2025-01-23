@@ -1,19 +1,22 @@
 from django.db import models
 
 # Create your models here.
-
-
 from users.models import CustomUser
 from productos.models import Product
+
 from django.db import transaction
+from django.utils import timezone
 
 
 class Cart(models.Model):
     user = models.OneToOneField('users.CustomUser', on_delete=models.CASCADE, related_name="carrito")
     created_at = models.DateTimeField(auto_now_add=True)
     
+    # auto_now = django lo actualiza en cada etapa que se guarda
+    last_modified = models.DateTimeField(auto_now=True)
     
-    def update_cart_db(self, product=None, action='nada', qty=0):
+    
+    def update_cart_db(self, product=None, action='nada', quantity=0):
         """
         Centraliza todas las actualizaciones del carrito con un método en el mismo modelo.
         Para asegurar la consistencia de la base de datos, se utiliza el método atomic().
@@ -34,7 +37,7 @@ class Cart(models.Model):
         with transaction.atomic():
             if action == 'add':
                 cart_item, created = self.items.get_or_create(product=product)
-                cart_item.quantity = qty
+                cart_item.quantity = quantity
                 cart_item.save()
             
             elif action == 'remove':
@@ -44,13 +47,17 @@ class Cart(models.Model):
                 cart_item = self.items.filter(product=product).first()
                 
                 if cart_item.quantity > 1:
-                    cart_item.quantity -= qty
+                    cart_item.quantity -= quantity
                     cart_item.save()
                 else:
                     cart_item.delete()
             
             elif action == 'clear':
                 self.items.all().delete()
+                
+            # actualizamos para la sincronizacion entre pestañas    
+            self.last_modified = timezone.now()
+            self.save()
 
 
 class CartItem(models.Model):

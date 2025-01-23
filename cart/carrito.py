@@ -1,5 +1,10 @@
+
+
 from cart.models import Cart, CartItem
 from productos.models import Product
+
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 
 class Carrito:
@@ -7,22 +12,30 @@ class Carrito:
         self.request = request
         self.session = request.session
 
-        # Si el carrito ya está en la sesión, lo recuperamos
-        # sino obtendra un dict vacío
         self.carrito = self.session.get("carrito", {})
         self.cart_id = self.session.get("cart_id", None)
+        self.last_modified = self.session.get('last_modified', None)
         
-        # esto se ejecutara la primera vez que este logeado el usuario y nada mas
-        # despues se usara el cart_id en la sesion para cambios
+        # Logica para manejar sincronizacion entre carritos de disintas pestañas, sesiones
         if request.user.is_authenticated:
-            if self.cart_id is None:
-                
-                # Guardamos el cart id en la sesion con la funcion que retorna el id
-                self.cart_id = self.migrate_carrito_to_cart_db(user=request.user)
-                self.session["cart_id"] = self.cart_id
-                self.session.modified = True
             
-        else:
+            # Esto se dara post logeo realmente, porque recien ahi tendra un cart_id
+            if self.cart_id:
+                # recuperramos Cart con el realted_name
+                cart = self.request.user.carrito     
+                
+                # Compara la fecha de la última modificación
+                last_modified = parse_datetime(self.last_modified)
+                if cart.last_modified > last_modified:
+                    self.cart_id = self.migrate_carrito_to_cart_db(cart=cart)
+
+            # Cuando el cart_id is None, solo ocurre una vez antes de logearse
+            else: 
+                # recupera los datos desde la base de datos
+                self.migrate_carrito_to_cart_db(user=request.user)
+
+        # Si no esta autenticado el usuario no manejamos la base de datos
+        else:  # Si se deslogea no accede al Cart que estaba asociado antes
             if self.cart_id is not None:
                 self.cart_id = None
                 self.session["cart_id"] = self.cart_id
@@ -32,24 +45,29 @@ class Carrito:
     # ======================================================================
     #                   Methods n properties
     # ======================================================================
-    def migrate_carrito_to_cart_db(self, user):
+    def migrate_carrito_to_cart_db(self, user=None, cart=None):
         """
-        Migra el carrito de la sesión al carrito de base de datos cuando el usuario se registra.
+            Migra el carrito de la sesión al carrito de base de datos cuando el usuario se registra.
         """
-        # Si ya hay productos en el carrito de la sesión
-        # Se crea o se obtiene el carrito de la base de datos para el usuario
-        cart, created = Cart.objects.get_or_create(user=user)
-        
+        if cart is None:
+            cart, _ = Cart.objects.get_or_create(user=user)
+            # Esto se realiza para lograr la sincronizacion entre distintas pestañas
+            self.session['last_modified'] = timezone.now().isoformat()
+            self.session.modified = True
+            
         # obtenemos un diccionario para combinar con el self.carrito de la sesion si existiera
         new_carrito = self.get_carrito_from_cart(cart)
         
         # combinamos ambos carritos o se deolvera el anterior carrito creado de no existir self.carrito
         self.carrito = self.combine_carritos(cart, new_carrito)
 
-        # Guardamos el carrito actualizado en la sesión
+        # Guardamos el carrito actualizado datos en la sesión
+        self.cart_id = cart.id
+        self.session["cart_id"] = self.cart_id
+        self.session.modified = True
+  
         self.save()
         
-        return cart.id
     
     def combine_carritos(self, cart, new_carrito):
         """
@@ -241,19 +259,28 @@ class Carrito:
     # ======================================================================
     def save(self):
         """
-        Guarda el carrito en la sesión y sincroniza con la base de datos si es necesario.
+            Guarda el carrito en la sesión y sincroniza con la base de datos si es necesario.
         """
         self.session["carrito"] = self.carrito
         self.session.modified = True
         
     
-    def verify_cart(self):
-        # Si no existe el carrito o no pertenece al usuario, retornamos None
+    def handle_cart_to_db(self, product=None, action="", quantity=0):
+        """
+            Metodo del carrito session encargado de administrar las distintas acciones a realizar
+            para el guardado dentro de la base de datos en el modelo de Cart
+        """
         try:
-            cart = Cart.objects.get(id=self.cart_id, user=self.request.user)
+            # Obtener el carrito directamente desde el usuario usando la relación inversa
+            cart = self.request.user.carrito
+            cart.update_cart_db(product=product, action=action, quantity=quantity)
+            
+            # Esto se realiza para lograr la sincronizacion entre distintas pestañas
+            self.session['last_modified'] = timezone.now().isoformat()
+            self.session.modified = True
+            
         except Cart.DoesNotExist:
             return None  
-        return cart
     
 
     def add_product(self, product, qty=1) -> bool:
@@ -284,11 +311,8 @@ class Carrito:
 
         # Actualiza el carrito en la base de datos
         if self.request.user.is_authenticated and self.cart_id:
-            cart = self.verify_cart()
-            
             quantity = self.carrito[product_id_str]["qty"]
-            if cart:
-                cart.update_cart_db(product=product, action='add', qty=quantity)
+            self.handle_cart_to_db(product=product, action='add', qty=quantity)
             
         return True
 
@@ -312,9 +336,7 @@ class Carrito:
         
         # actualizar la base de datos desde el modelo en la app cart
         if self.request.user.is_authenticated and self.cart_id:
-            cart = self.verify_cart()
-            if cart:
-                cart.update_cart_db(product=product, action='substract', qty=qty)
+            self.handle_cart_to_db(product=product, action='substract', quantity=qty)
             
         # guardamos los cambios en el carrito de la session
         self.save()
@@ -335,10 +357,9 @@ class Carrito:
 
         # guardamos los cambios en la base de datos si el usuario es autenticado
         if self.request.user.is_authenticated and self.cart_id:
-            cart = self.verify_cart()
-            if cart:
-                cart.update_cart_db(product=product, action='remove')
+            self.handle_cart_to_db(product=product, action='remove')
             
+        # este retorno nos sirve para los mensajes de las alertas
         return True
 
     
@@ -351,6 +372,4 @@ class Carrito:
         
         # guardamos los cambios en la base de datos si el usuario es autenticado
         if self.request.user.is_authenticated and self.cart_id:
-            cart = self.verify_cart()
-            if cart:
-                cart.update_cart_db(action='clear')
+            self.handle_cart_to_db(action='clear')

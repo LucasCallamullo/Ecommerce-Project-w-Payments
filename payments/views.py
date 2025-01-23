@@ -31,7 +31,7 @@ def payment_view(request):
     items, total_cart = get_items_from_cart(request)
     
     # Aplicar descuento en caso de que exista cuando se habilite el modelo de cupones
-    discount = 20.00
+    discount = 0
     if discount > 0:
         items, total_cart = get_items_with_discount(items, discount, total_cart)
     
@@ -91,7 +91,6 @@ def success(request):
     payment_response = sdk.payment().get(payment_id)
     payment = payment_response["response"]
 
-
     # Accede a la lista de ítems (productos) que fueron comprados
     items = payment.get("additional_info", {}).get("items", [])  # Verifica si los ítems están dentro de "additional_info"
     
@@ -103,7 +102,6 @@ def success(request):
         'items': items,
         'order': order,
         'payment': payment,
-        'payment_response': payment_response,
     }
     
 

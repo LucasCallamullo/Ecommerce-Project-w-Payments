@@ -74,9 +74,7 @@ def get_items_from_cart(request):
     user = request.user
     
     if not request.user.is_authenticated:
-        from users.models import CustomUser
-        user = CustomUser.objects.get(id=1)
-        # return items, total_cart
+        return items, total_cart
 
     # REcuperamos el cart asociado al usuario con prefetch_related para optimizar la consulta
     cart = Cart.objects.prefetch_related('items__product').get(user=user)
