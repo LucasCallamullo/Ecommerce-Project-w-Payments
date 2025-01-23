@@ -100,7 +100,7 @@ def success(request):
     
     order = confirm_order(request, payer)
     
-  
+    cart = request.user.carrito
     
     contexto = {
         'cart': cart,
