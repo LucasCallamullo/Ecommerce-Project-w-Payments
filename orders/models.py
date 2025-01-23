@@ -31,7 +31,7 @@ class OrderItem(models.Model):
     
     @property
     def subtotal(self):
-        return self.quantity * self.price
+        return float(self.quantity * float(self.price))
     
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
@@ -121,7 +121,7 @@ class Factura(models.Model):
 
     @property
     def total(self):
-        return float(self.total_items + self.shipment_cost - self.discount)
+        return float(float(self.total_items) + float(self.shipment_cost) - float(self.discount))
 
     def __str__(self):
         return f"Factura {self.tipo} - {self.buyer_name} {self.buyer_last_name} - Total: {self.total}"
