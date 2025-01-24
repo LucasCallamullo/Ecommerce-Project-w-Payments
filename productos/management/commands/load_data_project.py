@@ -5,10 +5,10 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from productos.models import Product, PCategory, PSubcategory, PBrand, ProductImage
-from home.models import Ecommerce
 
-from scripts.inits.load_users_init import load_users_init
-from scripts.inits.load_orders_init import load_orders_init
+from scripts.inits.load_users import load_users_init
+from scripts.inits.load_orders import load_orders_init
+from scripts.inits.load_ecommerce import load_ecommerce_init
 
 
 # command python manage.py load_data_project
@@ -88,7 +88,7 @@ class Command(BaseCommand):
             image_url2 = clean_value(row.get("image_url2"))
 
             # Recuperar o crear el producto
-            product_obj, _ = Product.objects.get_or_create(
+            product_obj, created = Product.objects.get_or_create(
                 name=name,
                 price=price,
                 stock=stock,
@@ -101,13 +101,20 @@ class Command(BaseCommand):
             )
             
             # agregamos las imagenes url a los productos
+            cont = 0
             if image_url:
                 ProductImage.objects.create(product=product_obj, image_url=image_url)
+                cont += 1
         
             if image_url2:
                 ProductImage.objects.create(product=product_obj, image_url=image_url2)
-            
-            
+                cont += 1
+                
+            if created:
+                print(f'Se creo correctamente el producto {product_obj.name} con {cont} imagenes asociadas.')
+            else:
+                print(f'Se actualizo correctamente el producto {product_obj.name} con {cont} imagenes asociadas.')
+             
         # ================================================================
         # Crear otros datos necesarios para la carga inicial del proyecto
         print("=" * 50)
@@ -118,13 +125,11 @@ class Command(BaseCommand):
         # Esto llama a la funcion en scripts/ para cargar los Users iniciales
         load_users_init()
         
-        # Crear algunos datos iniciales para la tienda unica
-        Ecommerce.objects.get_or_create(
-            name= "Cat Cat Games",
-            wsp_number = "351 543-7689",
-            address = "Calle Falsa 123",
-            cellphone = "351 543-7689",
-            email = "cat_cat_games@gmail.com",
-        )
+        print("=" * 50)
+        # Esto llama a la funcion en scripts/ para cargar los Users iniciales
+        load_ecommerce_init()
+        
+        
+        
         
         

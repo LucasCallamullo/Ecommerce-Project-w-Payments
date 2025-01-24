@@ -3,13 +3,14 @@
 {% load static %}
 
 
-
 <!-- For More CSS Modules -->
 {% block extra_head %}
-
     <title> Home </title>
 
-    <!-- <link href="{ % static 'home/css/base.css' % }" rel="stylesheet">  -->
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+    <link href="{% static 'home/css/home.css' %}" rel="stylesheet">
         
 {% endblock %}
 
@@ -18,13 +19,137 @@
 {% block content %}
 
 
+    <!-- Carousel Headers -->
+    <div class="swiper-container home-header-container">
+        <div class="swiper-wrapper home-header">
+            {% for image in store.headers.all %}
+                <div class="swiper-slide">
+                    <img src="{{ image.image_url }}" alt="{{ image.image_url }}">
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- mostrar los botones de navegación -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div> 
+
+        <!-- mostrar la paginación -->
+        <div class="swiper-pagination"></div>
+    </div>
+ 
+  
 
 
-    <h1 class=""> ID USER: {{ user.id }} </h1>
-    <h1 class="mt-5  px-5"> </h1>
+    <div class="mt-5 container-fluid">
+        
+    {% for category, products in products_by_category.items %}
+        <div class="carousel-title">
+            <div class="c-p-title">
+                <i class="fa fa-heart"></i>
+                <span> {{ category }} </span>
+            </div>
+    
+            <div class="d-flex gap-2 mb-1"> 
+                <!-- Los botones se manejarán con Swiper -->
+                <div class="swiper-button-prev-product" id="prev-{{ forloop.counter }}">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="swiper-button-next-product" id="next-{{ forloop.counter }}">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Contenedor del carrusel Swiper -->
+        <div class="swiper-products" id="swiper-{{ forloop.counter }}">
+            <div class="swiper-wrapper">
+                {% for product in products %}
+                
+                <figure class="swiper-slide carousel-producto-item" data-index="{{ forloop.counter0 }}" onclick="openModal({{ product.id }})">
+                    <img src="{{ product.main_image }}" alt="{{ product.name }}">
+    
+                    <figcaption class="carousel-producto-datos">
+                        <!-- Nombre del producto -->
+                        <h3>{{ product.name }}</h3>
+        
+                        <div class="carousel-producto-info">
+                            <div class="d-flex"> 
+                                <strong>{{ product.stars }}</strong>
+                                <strong class="stars">★</strong>
+                            </div>
+                            <!-- TOP 10 BUTTON SIDE -->
+                            {% if user.is_authenticated %}
+                                <button class="heart-button" onclick="alert('hola {{product.id}}')">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+    
+                        <!-- Categoría y Subcategory -->
+                        <div class="carousel-producto-info">
+                            {% if not product.available or product.stock == 0 %}
+                                <div class="bold-red">No disponible</div>
+                            {% elif product.stock <= 3 %}
+                                <div class="bold-orange">Pocas unidades</div>
+                            {% else %}
+                                <div class="bold-green">Disponible</div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if product.discount %}
+                            <!-- descuento -->
+                            <div class="carousel-producto-info">
+                                <strong>Descuento: </strong>
+                                <div class="d-flex gap-2"> 
+                                    <strong class="bold-red">% {{product.discount}} </strong> 
+                                    <strong class="bold-red"> OFF </strong>
+                                </div>
+                            </div>
+            
+                            <!-- Precios: Normal y Oferta -->
+                            <div class="carousel-producto-info">
+                                <div class="precio-normal"> Normal: </div>
+                                <div class="precio-normal"> ${{ product.price }} </div>
+                            </div>
+    
+                            <!-- Precio con descuento (calculado por JavaScript) -->
+                            <div class="carousel-producto-info">
+                                <div class="bold-red"> Oferta: </div>
+                                <div id="p-price-w-discount" class="bold-red"> 
+                                    ${{ product.calc_discount }}
+                                </div>
+                            </div>
+                        
+                        {% else %}
+    
+                            <div class="carousel-producto-info">
+                                <strong> ${{ product.price }} </strong>
+                            </div>
+                          
+                        {% endif %}
+    
+                        
+                    </figcaption>
+    
+                    <!-- Botón de agregar al carrito -->
+                    <div class="carousel-extender-btn">
+                        <button class="carousel-btn-carrito" data-index="{{product.id}}">
+                            <span>Agregar</span> 
+                            <i class="fas fa-shopping-basket"></i> 
+                        </button>
+                    </div>
+    
+                </figure>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+    
+    </div>
 
 
-    <a class="" href="{% url 'reset_stocks' %}"> Reset stock Reservers </a>
+
+
     
     
 
@@ -35,4 +160,63 @@
 <!-- Cargas archivos .js propios de cada template/vista -->
 {% block extra_scripts %}
     
+
+    <!-- Swiper JS sirve para el carousel -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+        var swiperHeader  = new Swiper('.swiper-container', {
+            loop: true, // Ciclo infinito
+            autoplay: {
+              delay: 2500, // Tiempo de espera entre deslizamientos (en milisegundos)
+              disableOnInteraction: false, // No desactivar autoplay al interactuar
+            },
+            slidesPerView: 1, // Asegura que solo se muestre un slide a la vez
+            spaceBetween: 0, // Espacio entre las imágenes (ajústalo si lo deseas)
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true, // Hacer clic en los puntos de paginación
+            },
+        });
+
+        // ================================================================================
+        //                        Logica del tab de favoritos
+        // ================================================================================
+        // Esta es la forma de realizar un swiper diferente para cada uno como espera swiper js
+        document.querySelectorAll('.swiper-products').forEach((swiperContainer, index) => {
+            const swiper = new Swiper(`#swiper-${index + 1}`, {
+                loop: true,
+                navigation: {
+                    nextEl: `#next-${index + 1}`, // Botón "siguiente" único
+                    prevEl: `#prev-${index + 1}`, // Botón "anterior" único
+                },
+                slidesPerView: 4,
+                spaceBetween: 21,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                grabCursor: true,
+            });
+        });
+        
+        // Reasigna eventos a los botones de incremento
+        
+        document.querySelectorAll('.carousel-btn-carrito').forEach(button => {
+            
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-index');
+                const qty_add = 1;
+                handleCartActions(productId, 'add', qty_add);
+            });
+        });
+        
+        
+
+    </script>
+
 {% endblock %}
