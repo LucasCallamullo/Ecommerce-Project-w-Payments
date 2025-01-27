@@ -85,32 +85,12 @@ Most of the site's functionalities are rendered directly through Django views, p
 
 <br></br>
 
-<h3>💻 Contact Back-End Developer / Full-Stack Developer:</h3>
+### 💻 Contact Back-End Developer / Full-Stack Developer:
 
-<table>
-    <tr>
-        <td style="margin-top: 5px;">
-            <a href="https://github.com/LucasCallamullo" target="_blank">
-                <img src="https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-            </a>
-        </td>
-        <td>
-            <a href="https://www.linkedin.com/in/lucas-callamullo/" target="_blank">
-                <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-            </a>
-        </td>
-        <td>
-            <a href="https://www.youtube.com/@lucas_clases_python" target="_blank">
-                <img src="https://img.shields.io/badge/YouTube%20-%23FF0000.svg?&style=for-the-badge&logo=YouTube&logoColor=white" alt="YouTube">
-            </a>
-        </td>
-        <td colspan="3" style="text-align: center;">
-            <a href="mailto:tucorreo@dominio.com" target="_blank">
-                <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail">
-            </a>
-        </td>
-    </tr>
-</table>
+| ![GitHub Badge](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white) | ![LinkedIn Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white) | ![YouTube Badge](https://img.shields.io/badge/YouTube%20-%23FF0000.svg?&style=for-the-badge&logo=YouTube&logoColor=white) | ![Gmail Badge](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white) |
+|:---:|:---:|:---:|:---:|
+| [GitHub](https://github.com/LucasCallamullo) | [LinkedIn](https://www.linkedin.com/in/lucas-callamullo/) | [YouTube](https://www.youtube.com/@lucas_clases_python) |  [Email](mailto:tucorreo@dominio.com) |
+
 
 
 
