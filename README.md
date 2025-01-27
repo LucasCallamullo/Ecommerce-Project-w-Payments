@@ -78,7 +78,7 @@ Most of the site's functionalities are rendered directly through Django views, p
 [![Documentation ES](https://img.shields.io/badge/Documentation-ES-green)](https://github.com/LucasCallamullo/generic-ecommerce-project/blob/main/README-es.md)
 
 ### Images:
-![]()
+![](blob:https://ar.pinterest.com/74e30a66-5675-4184-b039-a827acca9e3d)
 ![]()
 
 > Some screens of the app
