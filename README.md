@@ -90,7 +90,3 @@ Most of the site's functionalities are rendered directly through Django views, p
 | ![GitHub Badge](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white) | ![LinkedIn Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white) | ![YouTube Badge](https://img.shields.io/badge/YouTube%20-%23FF0000.svg?&style=for-the-badge&logo=YouTube&logoColor=white) | ![Gmail Badge](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white) |
 |:---:|:---:|:---:|:---:|
 | [GitHub](https://github.com/LucasCallamullo) | [LinkedIn](https://www.linkedin.com/in/lucas-callamullo/) | [YouTube](https://www.youtube.com/@lucas_clases_python) |  [Email](mailto:lucascallamullo98@gmail.com) |
-
-
-
-
