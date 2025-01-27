@@ -85,12 +85,33 @@ Most of the site's functionalities are rendered directly through Django views, p
 
 <br></br>
 
-### 💻 Contact Back-End Developer / Full-Stack Developer:
-| [![GitHub Badge](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)](https://github.com/LucasCallamullo) | [![LinkedIn Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lucas-callamullo/) | [![Youtube Badge](https://img.shields.io/badge/YouTube%20-%23FF0000.svg?&style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@lucas_clases_python) |
-|:-:|:-:|:-:|
+<h3>💻 Contact Back-End Developer / Full-Stack Developer:</h3>
+<table>
+    <tr>
+        <td>
+            <a href="https://github.com/LucasCallamullo" target="_blank">
+                <img src="https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+            </a>
+        </td>
+        <td>
+            <a href="https://www.linkedin.com/in/lucas-callamullo/" target="_blank">
+                <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+            </a>
+        </td>
+        <td>
+            <a href="https://www.youtube.com/@lucas_clases_python" target="_blank">
+                <img src="https://img.shields.io/badge/YouTube%20-%23FF0000.svg?&style=for-the-badge&logo=YouTube&logoColor=white" alt="YouTube">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" style="text-align: center;">
+            <a href="mailto:tucorreo@dominio.com" target="_blank">
+                <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail">
+            </a>
+        </td>
+    </tr>
+</table>
 
-<a href="mailto:tucorreo@dominio.com" target="_blank">
-    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail">
-</a>
 
 
