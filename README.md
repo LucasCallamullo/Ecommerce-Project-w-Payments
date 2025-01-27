@@ -89,7 +89,7 @@ Most of the site's functionalities are rendered directly through Django views, p
 
 <table>
     <tr>
-        <td style="display: flex; justify-content: center; align-self: center; align-items: center; text-align: center;">
+        <td style="margin-top: 5px;">
             <a href="https://github.com/LucasCallamullo" target="_blank">
                 <img src="https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
             </a>
