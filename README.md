@@ -86,18 +86,10 @@ Most of the site's functionalities are rendered directly through Django views, p
 <br></br>
 
 <h3>💻 Contact Back-End Developer / Full-Stack Developer:</h3>
-<style> 
-.container-center {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    align-items: center;
-    text-align: center;
-}
-</style>
+
 <table>
     <tr>
-        <td class="container-center">
+        <td style="display: flex; justify-content: center; align-self: center; align-items: center; text-align: center;">
             <a href="https://github.com/LucasCallamullo" target="_blank">
                 <img src="https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
             </a>
