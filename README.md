@@ -103,8 +103,6 @@ Most of the site's functionalities are rendered directly through Django views, p
                 <img src="https://img.shields.io/badge/YouTube%20-%23FF0000.svg?&style=for-the-badge&logo=YouTube&logoColor=white" alt="YouTube">
             </a>
         </td>
-    </tr>
-    <tr>
         <td colspan="3" style="text-align: center;">
             <a href="mailto:tucorreo@dominio.com" target="_blank">
                 <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail">
