@@ -12,16 +12,18 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 | ![Python Badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white) | ![Django Badge](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green) | ![DRF Badge](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white) | ![MySQL Badge](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) | ![Pandas Badge](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white) |
 |:-:|:-:|:-:|:-:|:-:|
 
-
-#### Fornt-End
+- ####  Fornt-End
 | ![HTML Badge](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) | ![JavaScript Badge](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E) | ![CSS Badge](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white) | ![Bootstrap 5 Badge](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white) | 
 |:-:|:-:|:-:|:-:|
 
-
-### 🛠️ Tools 
+- #### Tools 
 | ![Postman Badge](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white) | ![Git Badge](https://img.shields.io/badge/git%20-%23F05033.svg?&style=for-the-badge&logo=git&logoColor=white) | [![GitHub Badge](https://img.shields.io/badge/github%20-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)](https://github.com/LucasCallamullo) | ![DBeaver Badge](https://img.shields.io/badge/dbeaver-382923?style=for-the-badge&logo=dbeaver&logoColor=white)
 |:-:|:-:|:-:|:-:|
 
+- #### Deploy
+| ![Railway Badge](https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white) |
+|:-:|
+Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
 
 #### Features
 * RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
@@ -29,11 +31,6 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 * MySQL Database: Connection and data manipulation through Django's ORM.
 * Deployment: The application is deployed on Railway, ensuring easy access and scalability.
 * Responsive Interface: Adaptive design for different devices using HTML, CSS and Bootstrap 5.
-
-#### Deploy
-| ![Railway Badge](https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white) |
-|:-:|
-Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
 
 <br></br>
 
