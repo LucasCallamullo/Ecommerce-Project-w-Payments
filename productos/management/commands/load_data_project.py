@@ -5,6 +5,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from productos.models import Product, PCategory, PSubcategory, PBrand, ProductImage
+from productos import utils
+from django.utils.text import slugify
 
 from scripts.inits.load_users import load_users_init
 from scripts.inits.load_orders import load_orders_init
@@ -38,6 +40,11 @@ class Command(BaseCommand):
     help += "Por otro lado simplemente se uso diccionarios para crear modelos ejemplos de Store, User, Orders"
         
     def handle(self, *args, **kwargs):
+        
+        products = Product.objects.all()
+        if products.exists():
+            print("Este comando solo era de carga inciial")
+            return         
 
         # Ruta al archivo Excel
         try:
@@ -86,10 +93,16 @@ class Command(BaseCommand):
             description = clean_value(row.get("description"))
             image_url = clean_value(row.get("image_url"))
             image_url2 = clean_value(row.get("image_url2"))
-
+            
+            # Normalizamos el nombre antes de crear el producto
+            normalized_name = utils.normalize_or_None(name)
+            slug = slugify(name)  # obtenemos el slugify del slug
+            
             # Recuperar o crear el producto
-            product_obj, created = Product.objects.get_or_create(
+            product_obj, created = Product.objects.create(
                 name=name,
+                slug=slug,
+                normalized_name=normalized_name,
                 price=price,
                 stock=stock,
                 discount=discount,

@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic', 
     'django.contrib.humanize',
     
+    'rest_framework',
+    
     'home',
     'productos',
     'users',
@@ -208,3 +210,21 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Permite todos los dominios (en producción, puedes especificar solo el dominio de Railway)
 # ALLOWED_HOSTS = ['localhost', 'web-production-8df2.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://generic-ecommerce-project-production.up.railway.app', 'http://localhost']
+
+
+# =======================================================================
+#                        DRF SETTINGS STUFF 
+# =======================================================================
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        
+        # Esto permite ver la API en formato HTML (interfaz de navegador)
+        'rest_framework.renderers.BrowsableAPIRenderer',  
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+}
+
+

@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Efectos de zoom
 window.onload = () => {
     const overlay = document.getElementById('fullscreen-overlay');
-    const productId = parseInt(overlay.dataset.index, 10);
+    const productId = parseInt(overlay.getAttribute('data-index'), 10);
     const imageContainer = document.getElementById('image-container'); // Contenedor que mostrará la imagen
     const zoomButton = document.getElementById('zoom-button');
     const leftArrow = document.querySelector('.left-overlay');
@@ -148,11 +148,13 @@ window.onload = () => {
     let offsetX = 50, offsetY = 50; // Posición inicial del fondo (en porcentaje)
 
     // Consultar el endpoint para obtener las imágenes
-    fetch(`/images/${productId}/images/`)
+    // fetch(`/images/${productId}/images/`)
+    fetch(`/products-images/${productId}/`)
         .then(response => response.json())
         .then(data => {
             if (data.images && data.images.length > 0) {
                 images = data.images;
+                console.log(images)
                 updateBackgroundImage(); // Cargar la primera imagen como fondo
             } else {
                 console.error("No images found for this product.");

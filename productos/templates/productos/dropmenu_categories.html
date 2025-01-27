@@ -20,7 +20,7 @@
     {% for category, subcategories in categories_dropmenu.items %}
         <li class="dropdown-item"">
             <a class="d-flex justify-content-between align-content-center" 
-            href="{% url 'pl_category' cat_slug=category.slug %}">
+            href="{% url 'pl_category' category.slug %}">
                 {{ category.name }}
                 {% if subcategories %}
                     <i class="fas fa-chevron-right justify-content-center align-content-center"></i>
@@ -30,10 +30,10 @@
             <!-- Submenú -->
             {% if subcategories %}
                 <ul class="sub-dropdown-content">
-                    {% for subcategory in subcategories %}
+                    {% for subcat in subcategories %}
                         <li class="dropdown-item">
-                            <a href="{% url 'pl_subcategory' cat_slug=category.slug subcat_slug=subcategory.slug %}">
-                                {{ subcategory.name }}
+                            <a href="{% url 'pl_subcategory' category.slug subcat.slug %}">
+                                {{ subcat.name }}
                             </a>
                         </li>
                     {% endfor %}

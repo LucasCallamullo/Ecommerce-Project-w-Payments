@@ -7,11 +7,8 @@
             <!-- Imagen del Producto -->
             <div class="image-container">
 
-                {% for image in product.images.all %}
-                    {% if image.main_image %}
-                        <img src="{{ image.image_url }}" alt="{{ product.name }}">
-                    {% endif %}
-                {% endfor %}
+                <!-- obtenemos la url de la imagen principal -->
+                <img src="{{ product.main_image }}" alt="{{ product.name }}">
 
                 <!-- Botón de la esquina -->
                 <button class="corner-box">
@@ -35,7 +32,6 @@
 
                 <strong>${{ product.price }}</strong>
 
-                
                 <!-- Botón de agregar al carrito -->
                 <div class="prod-extender-btn">
                     <button class="prod-add-button" data-product-id="{{product.id}}">
@@ -47,4 +43,9 @@
         </figure>
 
     </div>
+
+{% empty %}
+    
+    <h1> The queryset is empty, please search again. </h1>
+
 {% endfor %}

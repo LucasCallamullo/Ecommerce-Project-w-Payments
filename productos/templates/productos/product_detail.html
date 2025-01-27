@@ -22,21 +22,21 @@
             <span> Todos Nuestros Productos </span>
         </button>
         
-        {% if product.category %}
+        {% if category %}
             <button class="btn-paralelogramo px-lg-3"
-            onclick="window.location.href='{% url 'pl_category' product.category.slug %}'">
+            onclick="window.location.href='{% url 'pl_category' category.slug %}'">
                 <span> 
-                    {{ product.category.name }}
+                    {{ category.name }}
                 </span>
             </button>
         {% endif %}
         
 
-        {% if product.subcategory %}
+        {% if subcategory %}
             <button class="btn-paralelogramo px-lg-3"
-            onclick="window.location.href='{% url 'pl_subcategory' product.category.slug product.subcategory.slug %}'">
+            onclick="window.location.href='{% url 'pl_subcategory' category.slug subcategory.slug %}'">
                 <span> 
-                    {{ product.subcategory.name }}
+                    {{ subcategory.name }}
                 </span>
             </button>
         {% endif %}
@@ -52,14 +52,16 @@
             <!-- Contenedor de imagen principal -->
             <div class="prod-main-img-container">
                 <img id=prod-main-image class="prod-image-preview prod-zoomed"
-                    src="{{ main_image.image_url }}" alt="{{ product.name }}">
+                    src="{{ main_image_url }}" alt="{{ product.name }}">
 
                 <!-- Botón de la esquina -->
                 <button class="prod-main-corner-box" id="zoom-button">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
 
-                <!-- Contenedor para la imagen en pantalla completa -->
+                <!-- 
+                Contenedor para la imagen en pantalla completa 
+                -->
                 <div id="fullscreen-overlay" class="fullscreen-overlay px-5 gap-5"
                     data-index="{{product.id}}">
 
@@ -69,8 +71,7 @@
                     </button>
 
                     <!-- Contenedor para la imagen (nuevo contenedor agregado) -->
-                    <div id="image-container" class="p-0 m-0">
-                    </div>
+                    <div id="image-container" class="p-0 m-0"> </div>
 
                     <!-- Flecha derecha -->
                     <button class="arrow-button right-overlay">
@@ -93,23 +94,19 @@
             </figcaption>
         </figure>
         
-
+        <!-- Contenedor de abajo con las imagenes -->
         <div class="prod-small-images-row gap-3 mt-3">
             <figure class="prod-small-image-container">
-                <img class="prod-small-image" src="{{ main_image.image_url }}" alt="{{ product.name }}">
+                <img class="prod-small-image" src="{{ main_image_url }}" alt="{{ product.name }}">
             </figure>
 
-            {% for image in product.images.all %}
-                {% if image.image_url and not image.main_image %}
-                    <!-- El resto de imágenes -->
-                    <figure class="prod-small-image-container" >
-                        
-                        <img class="prod-small-image" src="{{ image.image_url }}" alt="{{ product.name }}">
-                    </figure>
-                {% endif %}
+            {% for image in images_urls %}
+                <!-- El resto de imágenes -->
+                <figure class="prod-small-image-container" >
+                    <img class="prod-small-image" src="{{ image }}" alt="{{ product.name }}">
+                </figure>
             {% endfor %}
         </div>
-
     </div>
 
 

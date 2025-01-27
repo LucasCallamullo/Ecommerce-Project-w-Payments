@@ -2,8 +2,9 @@
 
 let make_filter = false;
 
+
 // ==========================================================================
-//            AJAX PARA LAS TARJETAS QUE SE PRESENTAN en el product_list
+//         AJAX PARA LAS TARJETAS QUE SE PRESENTAN en el product_list
 // ==========================================================================
 function updateProductListFromInput() {
     // Recuperamos los filtros directamente desde el contenedor
@@ -14,9 +15,9 @@ function updateProductListFromInput() {
 
     // Acceder a los filtros directamente (data-category-id --> categoryId, automático camelCase)
     // Se asignan valores por defecto en caso de no existir, utiles para la logica el '0'
-    const categoryId = filters.categoryId || '0';
-    const subCategoryId = filters.subCategoryId || '0';
-    const topQuery = filters.topQuery || '0';
+    const categoryId = filters.categoryId || '';
+    const subCategoryId = filters.subCategoryId || '';
+    const topQuery = filters.topQuery || '';
     const inputNow = searchInput.value;
 
     // para los casos donde se quiera resetear el filtro
@@ -42,7 +43,7 @@ function updateProductListFromInput() {
 
 async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) {
     try {
-        const url = `/search-product/?inputNow=${encodeURIComponent(inputNow)}
+        const url = `/products-search/?inputNow=${encodeURIComponent(inputNow)}
         &topQuery=${encodeURIComponent(topQuery)}&categoryId=${encodeURIComponent(categoryId)}
         &subCategoryId=${encodeURIComponent(subCategoryId)}`.replace(/\s+/g, '');
 
@@ -75,8 +76,7 @@ function productButtonEvents() {
     document.querySelectorAll('.prod-add-button').forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-product-id');
-            const default_qty = 1;
-            handleCartActions(productId, 'add', default_qty); 
+            handleCartActions(productId, 'add', 1); 
         });
     });
 

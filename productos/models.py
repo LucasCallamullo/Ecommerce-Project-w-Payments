@@ -54,6 +54,9 @@ class PSubcategory(models.Model):
 class PBrand(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True, unique=True)
     slug = models.SlugField(max_length=30, unique=True, blank=True, null=True)
+    
+    image = models.ImageField(upload_to='media/brands_logo/', null=True, blank=True)
+    image_url = models.URLField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
@@ -75,7 +78,7 @@ class ProductImage(models.Model):
     # Tabla relacional adicional muchos a uno para almacenar varias imagenes para los productos
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='media/product_images/', null=True, blank=True)
-    image_url = models.URLField(null=True, blank=True)
+    image_url = models.URLField(null=True, blank=True, default="https://back.tiendainval.com/backend/admin/backend/web/archivosDelCliente/items/images/20210108100138no_image_product.png")
     main_image = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -100,8 +103,10 @@ class ProductImage(models.Model):
     
 class Product(models.Model):
     
-    # atributos varios del producto
     name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=120, unique=True, blank=True, null=True)
+    normalized_name = models.CharField(max_length=120, blank=True, null=True)
+    
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=False, null=True, blank=True)
     stock = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -126,20 +131,14 @@ class Product(models.Model):
     # color = models.CharField(max_length=50, null=True, blank=True)
     # size = models.CharField(max_length=50, null=True, blank=True)
     
-    slug = models.SlugField(max_length=120, unique=True, blank=True, null=True)
-
     def save(self, *args, **kwargs):
-        # Genera el slug a partir del nombre
-        if not self.slug and self.name:
-            self.slug = slugify(self.name)
-        
         # Verificar que la subcategoría pertenece a la categoría seleccionada
         if self.subcategory is not None:
             if self.subcategory.category != self.category:
                 raise ValueError(
                     f"La subcategoría '{self.subcategory.name}' no pertenece a la categoría '{self.category.name}'."
                 )
-        # Llamar al método save original
+                
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -171,13 +170,10 @@ class Product(models.Model):
         image_url = None
         if self.images.exists():
             images = self.images.all()
-
             # Intentar obtener la imagen principal
             main_image = images.filter(main_image=True).first()
-
             # Si no hay una imagen principal, obtener la primera imagen
             image_url = main_image.image_url if main_image else images.first().imagen_url
-            
         return image_url
     
     @property

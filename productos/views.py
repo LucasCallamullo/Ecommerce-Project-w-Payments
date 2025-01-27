@@ -1,65 +1,43 @@
-from django.shortcuts import render
+
 
 # Create your views here.
+from django.shortcuts import render, get_object_or_404
+from productos.models import Product, PCategory, PSubcategory
 
-from django.shortcuts import render
-from productos.models import Product, PCategory, PSubcategory, ProductImage
-from django.shortcuts import get_object_or_404
 from django.http import Http404, JsonResponse
-
 from django.template.loader import render_to_string
 
-from django.urls import resolve, reverse
+from productos import utils
 
-def product_detail(request, id=None, slug=None):
-    
-    if not id:
-        raise Http404("El producto no existe o la URL está mal formada.")
-    
-    product = get_object_or_404(Product, id=id)
-    images_qs = product.images.all()
-    
-    # Obtener la imagen principal o una de respaldo en caso de que no exista
-    main_image = images_qs.filter(main_image=True).first()
-    if not main_image:
-        main_image = images_qs.first()
-    
-    context = {
-        'product': product,
-        'main_image': main_image
-    }
-    
-    return render(request, 'productos/product_detail.html', context)
-
-
-def get_product_images(request, product_id):
-    try:
-        product = Product.objects.get(id=product_id)
-        images = [image.image_url for image in product.images.all() if image.image_url]
-        return JsonResponse({'images': images})
-    except Product.DoesNotExist:
-        return JsonResponse({'error': 'Product not found'}, status=404)
-    
 
 def product_list(request, cat_slug=None, subcat_slug=None):
-    # query = request.GET.get('q')
-    productos = Product.objects.all()
-    category = None
-    subcategory = None
-    
-    if cat_slug and not subcat_slug:
-        category = PCategory.objects.filter(slug=cat_slug).first()
-        if category:
-            productos = productos.filter(category=category)
+    """
+    Función destinada al renderizado html por filtros de las categorias y subcategorias si 
+    las pasamos como parametros
 
-    if subcat_slug:
-        category = PCategory.objects.filter(slug=cat_slug).first()
-        subcategory = PSubcategory.objects.filter(slug=subcat_slug).first()
-        if subcategory:
-            productos = productos.filter(subcategory=subcategory)
+    Args:
+        cat_slug (str, optional): Campo Slug de la categoría para filtrar. Defaults to None.
+        subcat_slug (str, optional): Campo Slug de la sub-categoría para filtrar.. Defaults to None.
+    """
+    if not cat_slug and not subcat_slug:
+        # En caso de no recibir parametros es porque se llama a la category directa
+        products = Product.objects.filter(available=True)
+        return render(request, "productos/products_list.html", {'products': products})
+    
+    # La función valida los datos y devuelve el objeto que corresponda para filtrar despues
+    # si no existiera o el request.GET.get is None devolvería None y no afectará al filtrado
+    category = utils.get_model_or_None(PCategory, slug=cat_slug)
+    subcategory = utils.get_model_or_None(PCategory, slug=subcat_slug)
+
+    # obtenemos un queryset filtrado con todos los productos filtrados
+    products = utils.get_products_filters(
+        category=category.id if category else None, 
+        subcategory=subcategory.id if subcategory else None, 
+        empty=True
+    )
 
     context = {
-        'products': productos,
+        'products': products,
         'category': category,
         'subcategory': subcategory
     }
@@ -68,46 +46,52 @@ def product_list(request, cat_slug=None, subcat_slug=None):
 
 
 def product_top_search(request):
+    """
+        Función destinada a realizar en filtro de la barra de busqueda superior
+        
+        # topQuery es el name del input en base.html, casualemente coincide 
+        # con la llamada topQuery desde la side bar en product_list.html
+    """
+    query = request.GET.get('topQuery', '')
+    top_query = utils.normalize_or_None(query) # Normalizamos el top query para comparar
     
-    query = request.GET.get('top_q', '')
-
-    productos = Product.objects.all()
-    productos = productos.filter(name__icontains=query)
+    # obtenemos un queryset filtrado con todos los productos filtrados
+    products = utils.get_products_filters(top_query=top_query, empty=True)
     
     context = {
-        'products': productos,
+        'products': products,
         'query': query
     }
-    
     return render(request, 'productos/products_list.html', context)
 
 
-def search_product_q(request):
-    top_query = request.GET.get('topQuery', '0')
-    category_id = int(request.GET.get('categoryId', '0'))
-    sub_category_id = int(request.GET.get('subCategoryId', '0'))
-    inputNow = request.GET.get('inputNow', '0')
+def product_detail(request, id=None, slug=None):
+    """_summary_
+
+    Args:
+        id (int, optional): ID del producto para buscar y mostrar su detalle. Defaults to None.
+        slug (str, optional): realmente no se utiliza es solo para la url. Defaults to None.
+
+    Raises:
+        Http404: Error asignado en caso de no pasar un ID
+    """
+    if not id:
+        raise Http404("El producto no existe o la URL está mal formada.")
+    product = get_object_or_404(Product, id=id)
     
-    products = Product.objects.all()
-    
-    if category_id and not sub_category_id:
-        products = products.filter(category=category_id)
-    
-    if sub_category_id:
-        products = products.filter(category=category_id, subcategory=sub_category_id)
-        
-    if top_query != '0':
-        products = products.filter(name__icontains=top_query)
-        
-    if inputNow != '0': 
-        products = products.filter(name__icontains=inputNow)
-    
-    context = {'products': products}
-    html_cards = render_to_string('productos/products_list_cards.html', context)
-    
-    return JsonResponse({
-        'html_cards': html_cards
-    })
+    # Obtenemos todos los datos necesarios a partir del producto 
+    category = product.category
+    subcategory = product.subcategory
+    main_image = product.main_image
+    images_urls = [image.image_url for image in product.images.filter(main_image=False)]
+    context = {
+        'product': product,
+        'main_image_url': main_image,
+        'images_urls': images_urls,
+        'category': category,
+        'subcategory': subcategory,
+    }
+    return render(request, 'productos/product_detail.html', context)
 
 
 from django.db.models import F
@@ -123,32 +107,3 @@ def reset_stocks(request):
 
     # Mensaje de confirmación para el usuario (si es necesario)
     return render(request, 'home/home.html')
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-def producto_category(request, category_id):
-    category = get_object_or_404(PCategory, id=category_id)
-    
-    productos = Product.objects.filter(category=category).select_related('category')
-    
-    context = {
-        'category': category,
-        'products': productos
-    }
-    
-    return render(request, "productos/products_category.html", context)
