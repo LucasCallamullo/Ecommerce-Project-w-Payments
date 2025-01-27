@@ -80,8 +80,7 @@ Most of the site's functionalities are rendered directly through Django views, p
 ### Images:
 ![](https://media.discordapp.net/attachments/1028131678209720431/1333499973337350235/image.png?ex=67991e20&is=6797cca0&hm=5954c4aae4a0b55d03b6aec65e5ea2760162838de60435e6b13e6f01962b5677&=&format=webp&quality=lossless&width=768&height=388)
 
-![]()
-
+![](https://media.discordapp.net/attachments/1028131678209720431/1333500687346176030/image.png?ex=67991ecb&is=6797cd4b&hm=7cef51f2987d2c1613b28c292bbf9bfc2c842e8333803e91024084677d86b3a1&=&format=webp&quality=lossless&width=768&height=390)
 > Some screens of the app
 
 <br></br>
