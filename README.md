@@ -24,7 +24,7 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 - #### Deploy
 | ![Railway Badge](https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white) |
 |:-:|
-Deploy On Railway: https://generic-ecommerce-project-production.up.railway.app
+Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
 #### Features
 * RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
