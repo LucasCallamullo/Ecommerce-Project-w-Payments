@@ -36,9 +36,9 @@ def get_products_filters(available=True, category=None, subcategory=None, top_qu
     if category: 
         products = products.filter(category=category)
         
-        # Filtrar por subcategoría si existe
-        if subcategory:
-            products = products.filter(subcategory=subcategory)
+    # Filtrar por subcategoría si existe
+    if subcategory:
+        products = products.filter(subcategory=subcategory)
             
     # Filtrar por consulta de búsqueda (top_query)
     if top_query:

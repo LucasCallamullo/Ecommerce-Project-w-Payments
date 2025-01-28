@@ -46,6 +46,15 @@ class ProductList(APIView):
         # si no existiera o el request.GET.get is None devolvería None y no afectará al filtrado
         category = utils.get_model_or_None(PCategory, id=category_id)
         subcategory = utils.get_model_or_None(PSubcategory, id=subcategory_id)
+        
+        # This is for some bad request without category or subcategorys
+        if category_id and not category:
+            response_data = {'message': f'No se encontraron productos para la category ID: {category_id}'}
+            return Response(response_data, status=status.HTTP_404_NOT_FOUND)
+            
+        if subcategory_id and not subcategory:
+            response_data = {'message': f'No se encontraron productos para la subcategory ID: {subcategory_id}'}
+            return Response(response_data, status=status.HTTP_404_NOT_FOUND)
 
         # Obtenemos un queryset filtrado par las variables que mandamos
         products = utils.get_products_filters(
@@ -97,6 +106,8 @@ class ProductUpdateCardsQuery(APIView):
         # recuperamos el queryset filtrado por los datos que tenemos
         category = utils.get_model_or_None(PCategory, category_id)
         subcategory = utils.get_model_or_None(PCategory, subcategory_id)
+
+
         products = utils.get_products_filters(
             category = category.id if category else None, 
             subcategory = subcategory.id if subcategory else None,

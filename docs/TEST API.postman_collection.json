@@ -1,0 +1,291 @@
+{
+	"info": {
+		"_postman_id": "4dc94430-8e66-4522-8134-a791a862ea25",
+		"name": "TEST API",
+		"description": "Some of the endpoints used according to their corresponding app, or used globally in the project.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41618970"
+	},
+	"item": [
+		{
+			"name": "Cart Items API",
+			"item": [
+				{
+					"name": "get_carrito",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cart-get/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart-get",
+								""
+							]
+						},
+						"description": "### **Add Item to Cart**\n\nThis endpoint recover the user's shopping cart.\n\n- **Response:**\n    \n    - **200 OK**: The product was successfully added to the cart."
+					},
+					"response": []
+				},
+				{
+					"name": "add-product-cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"productId\": \"2\",\r\n  \"quantity\": \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cart-add/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart-add",
+								""
+							]
+						},
+						"description": "### **Add Item to Cart**\n\nThis endpoint adds a product to the user's shopping cart.\n\n- **Response:**\n    \n    - **200 OK**: The product was successfully added to the cart.\n        \n        - **When it occurs**:\n            \n            - The `productId` exists and is available in the database.\n                \n            - The `quantity` is a valid positive integer and is less than the stock.\n                \n            - The cart is updated successfully (either in the session or in the database, depending on authentication).\n                \n    - **400 Bad Request:** Indicates that the request could not be processed due to invalid input.\n        \n        - **When it occurs**:\n            \n            - The `productId` does not exist in the database.\n                \n            - The `quantity` is missing, zero, or a non-integer value."
+					},
+					"response": []
+				},
+				{
+					"name": "subtract-product-cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"productId\": \"2\",\r\n  \"quantity\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cart-subtract/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart-subtract",
+								""
+							]
+						},
+						"description": "This endpoint subtract a product to the user's shopping cart. If the subtracted quantity brings the quantity of the product in the cart to zero, remove the item from the cart.\n\n- **Response:**\n    \n    - **200 OK**: The product was successfully added to the cart.\n        \n        - **When it occurs**:\n            \n            - The `productId` exists and is available in the database and the cart.\n                \n            - The `quantity` is a valid positive integer.\n                \n            - The cart is updated successfully (either in the session or in the database, depending on authentication).\n                \n    - **400 Bad Request:** Indicates that the request could not be processed due to invalid input.\n        \n        - **When it occurs**:\n            \n            - The `productId` does not exist in the database or in the cart.\n                \n            - The `quantity` is missing, zero, or a non-integer value."
+					},
+					"response": []
+				},
+				{
+					"name": "delete-product-cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"productId\": \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cart-delete/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cart-delete",
+								""
+							]
+						},
+						"description": "This endpoint delete a product to the user's shopping cart.\n\n- **Response:**\n    \n    - **200 OK**: The product was successfully added to the cart.\n        \n        - **When it occurs**:\n            \n            - The `productId` exists and is available in the database and the cart.\n                \n            - The cart is updated successfully (either in the session or in the database, depending on authentication).\n                \n    - **400 Bad Request:** Indicates that the request could not be processed due to invalid input.\n        \n        - **When it occurs**:\n            \n            - The `productId` does not exist in the database or in the cart."
+					},
+					"response": []
+				}
+			],
+			"description": "- **Session Cart and User Cart Synchronization**\n    \n    - **Session-based cart**: Temporary and tied to the user's session.\n        \n    - **User-associated cart**: Persistent and linked to the authenticated user's account in the database.\n        \n- **Synchronization Behavior**\n    \n    - When a user logs in, the session cart is **merged** with the user-associated cart in the database.\n        \n    - After merging, the session cart is cleared, and the user operates only with the database cart.\n        \n- **Why Synchronization Matters**\n    \n    - Ensures **data consistency**: Prevents loss of items when transitioning between session-based and authenticated states.\n        \n    - Provides a **seamless user experience**: Users can add items to their cart while logged out and find them in their account after logging in.\n        \n\n### **Example Synchronization Flow**\n\n1. A user adds products to the cart while not logged in.\n    \n2. The session cart contains:\n    \n    1. {  \n        \"items\": \\[  \n        { \"productId\": \"1\", \"quantity\": \"2\" },  \n        { \"productId\": \"3\", \"quantity\": \"1\" }  \n        \\]  \n        }\n        \n3. The user logs in.\n    \n4. The API merges the session cart with the database cart:\n    \n    1. If the product already exists in the database cart, the quantities are combined.\n        \n    2. Otherwise, the product is added to the database cart.\n        \n5. After login, the database cart looks like:\n    \n    1. {  \n        \"items\": \\[  \n        { \"productId\": \"1\", \"quantity\": \"3\" },  \n        { \"productId\": \"3\", \"quantity\": \"1\" },  \n        { \"productId\": \"2\", \"quantity\": \"1\" }  \n        \\]  \n        }\n        \n\n### Response Body Example:\n\n- **`color`** (string):\n    \n    - Indicates the color of the interactive AJAX alert. Typically used to represent the type of message:`\"green\"` for success.`\"red\"` for errors.`\"yellow\"` for warnings.\n        \n- **`message`** (string):  \n    A user-friendly message to display in the alert. Provides feedback about the operation (e.g., \"Product added successfully\").\n    \n- **`carrito`** (dict):  \n    Contains the updated details of the shopping cart. Includes:\n    \n    - **`items`** (dict):  \n        A list of items currently in the cart. Each item includes:\n        \n        - {  \n            \"id\": \"2\",  \n            \"name\": \"Wireless Mouse\",  \n            \"image\": \"[http://example.jpg/\"](http://example.jpg/),  \n            \"qty\": 2,  \n            \"price\": 15.99  \n            }\n            \n- **`total`** (float):  \n    The total price of all items in the cart after the operation.\n    \n- **`qty_total`** (integer):  \n    The total number of items in the cart (sum of all quantities).\n    \n\nThe synchronization occurs automatically with the following endpoints"
+		},
+		{
+			"name": "Products Management API",
+			"item": [
+				{
+					"name": "product-list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products-filter/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products-filter",
+								""
+							]
+						},
+						"description": "Get the all products in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "product-filter-name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products-filter/?topQuery=redra",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products-filter",
+								""
+							],
+							"query": [
+								{
+									"key": "topQuery",
+									"value": "redra"
+								}
+							]
+						},
+						"description": "Retrieve all products from the database based on optional filters such as category, subcategory, and topQuery.\n\n#### **Query Parameters:**\n\nThe following query parameters can be sent as part of the request to filter the results:\n\n- **`category`** (int):\n    \n    - Filters products by their main category id (e.g., \"1\").\n        \n- **`subcategory`** (int):\n    \n    - Filters products by their subcategory id (e.g., \"1\"). You can optionally use the `category` with the subcategory but the values ​​must match, since a subcategory belongs to a`category`.\n        \n- **`topQuery`** (string):\n    \n    - Searches for products using a keyword complete or incomplete (e.g., \"wireless\", \"wire\"). Useful for general search functionality.\n        \n- **Response:**\n    \n    - **200 OK**: The products was successfully filters without bad query params.\n        \n    - **400 Bad Request:** Indicates that the request could not be processed because some query params do not respect their value, such as the category id or subcategory id not being integers or not existing in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "product-filter-categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products-filter/?category=1&subcategory=2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products-filter",
+								""
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "1"
+								},
+								{
+									"key": "subcategory",
+									"value": "2"
+								}
+							]
+						},
+						"description": "#### Retrieve all products from the database based on optional filters such as category, subcategory, and topQuery.**\n\nQuery Parameters:**\n\nThe following query parameters can be sent as part of the request to filter the results:\n\n- **`category`** (int):\n    \n    - Filters products by their main category id (e.g., \"1\").\n        \n- **`subcategory`** (int):\n    \n    - Filters products by their subcategory id (e.g., \"1\"). You can optionally use the `category` with the subcategory but the values ​​must match, since a subcategory belongs to a`category`.\n        \n- **`topQuery`** (string):\n    \n    - Searches for products using a keyword complete or incomplete (e.g., \"wireless\", \"wire\"). Useful for general search functionality.\n        \n- **Response:**\n    \n    - **200 OK**: The products was successfully filters without bad query params.\n        \n    - **400 Bad Request:** Indicates that the request could not be processed because some query params do not respect their value, such as the category id or subcategory id not being integers or not existing in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "product-all-images",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products-images/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products-images",
+								"2"
+							]
+						},
+						"description": "This is use for recover all images urls asocietad to a product for show or use in a template or interactive actions if you need it"
+					},
+					"response": []
+				},
+				{
+					"name": "container-update-ajax",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products-search/?inputNow=logi",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products-search",
+								""
+							],
+							"query": [
+								{
+									"key": "inputNow",
+									"value": "logi"
+								}
+							]
+						},
+						"description": "This endpoint retrieves products based on filters (e.g., category, subcategory, or topQuery) and returns a rendered HTML block to dynamically update the front-end.\n\nThis params obteneid for previous list of filtereds products:\n\n- **Query Parameters:**\n    \n    - **`category`** (id): Filters products by category.\n        \n    - **`subcategory`** (id): Filters products by subcategory.\n        \n    - **`topQuery`** (string): Searches for products using a keyword.\n        \n\n**`inputNow`** (string): This parameter is to filter the previous filtered list and return the rendered html to modify it dynamically with ajax.\n\n- **Responses**\n    \n    - **`200 OK:`** HTML block rendered successfully.\n        \n    - **`400 Bad Request`**: Invalid query parameters.\n        \n\n#### **Notes:**\n\n- The response is designed to replace a specific part of the front-end dynamically via AJAX."
+					},
+					"response": []
+				}
+			],
+			"description": "This API handles product-related requests, allowing you to retrieve information needed to dynamically update certain parts of the page.  \n\n- The endpoints in this section are used to:\n    \n    - Get the list of available products, including details such as name, price, stock, and category.\n        \n    - Retrieve specific product information, useful for displaying real-time details or performing actions such as adding to cart.\n        \n    - Dynamically update interface elements, such as product lists or filters, without having to reload the page."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}
