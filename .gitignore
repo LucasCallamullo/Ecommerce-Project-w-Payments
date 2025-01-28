@@ -21,3 +21,6 @@ db.sqlite3
 
 # archivo de entorno .env no subir posee keys
 .env
+
+# archivo de pruebas
+proof.http

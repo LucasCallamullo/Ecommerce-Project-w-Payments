@@ -191,7 +191,10 @@ class Carrito:
 
     
     def stock_or_available(self, product, qty):
-        """_summary_
+        """
+            Este metodo nos sirve para verificar la disponibilidad de un producto que se
+            agrega al carrito 
+            tambien al carrito
 
         Args:
             producto (Product): modelo de la app Productos 
@@ -199,7 +202,7 @@ class Carrito:
 
         Returns:
             bool: que nos sirve para saber si podemos realizar una accion que amerite la respuesta en
-             True de este metodo
+                 True de este metodo
         """
         stock = product.stock if product.available else 0
         
@@ -330,13 +333,13 @@ class Carrito:
             self.carrito[product_id_str]["qty"] -= qty
             delete_item = False
         else:
-            # Opcionalmente, podemos eliminar el producto si la cantidad llega a 0
+            # eliminar el producto si la cantidad llega a 0
             del self.carrito[product_id_str]
             delete_item = True
         
         # actualizar la base de datos desde el modelo en la app cart
         if self.request.user.is_authenticated and self.cart_id:
-            self.handle_cart_to_db(product=product, action='substract', quantity=qty)
+            self.handle_cart_to_db(product=product, action='subtract', quantity=qty)
             
         # guardamos los cambios en el carrito de la session
         self.save()
@@ -358,9 +361,6 @@ class Carrito:
         # guardamos los cambios en la base de datos si el usuario es autenticado
         if self.request.user.is_authenticated and self.cart_id:
             self.handle_cart_to_db(product=product, action='remove')
-            
-        # este retorno nos sirve para los mensajes de las alertas
-        return True
 
     
     def clear(self):

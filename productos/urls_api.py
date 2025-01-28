@@ -7,11 +7,7 @@ from productos.views_api import *
 # ==============================================================================
 #                        DRF API ENDPOINTS
 # ==============================================================================
-""" 
-NOTE for NAME URL on dtf we use -
-NOTE URL PREFIX BASE = 'api/products'
-NOTE use ?category_id= ?subcategory_id
-"""
+# NOTE for NAME URL on dtf we use -
 
 urlpatterns = [
     

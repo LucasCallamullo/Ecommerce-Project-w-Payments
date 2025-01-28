@@ -43,7 +43,7 @@ class Cart(models.Model):
             elif action == 'remove':
                 self.items.filter(product=product).delete()
             
-            elif action == 'substract':
+            elif action == 'subtract':
                 cart_item = self.items.filter(product=product).first()
                 
                 if cart_item.quantity > 1:

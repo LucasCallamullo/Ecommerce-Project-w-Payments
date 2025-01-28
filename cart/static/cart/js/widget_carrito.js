@@ -22,24 +22,42 @@ document.getElementById('overlay').addEventListener('click', function() {
 /* ==========================================================================================
                     Handle_Function para controlar los distintos eventos
 ========================================================================================== */
-async function handleCartActions(productId, action, value=1) {
+async function handleCartActions(productId, action, value = 1) {
     try {
-        // Verificamos si estamos en la página del carrito antes de mostrar el carrito y overlay
+        // Verificamos si estamos en la página del carrito
         const currentPage = window.location.pathname;
-        const cart_view = ( currentPage == '/ver-carrito/' );
+        const cartView = (currentPage === '/ver-carrito/');
 
-        const response = await fetch('/carrito/update/', {
-            method: 'POST',     // Especifica que el método de la solicitud es POST
+        let endpoint = ''; // Endpoint por defecto
+        let bodyParams = {
+            'productId': productId,
+            'quantity': value,
+            'cartView': cartView ? 'true' : 'false'
+        };
+
+        // Depend of the action we can call some endpoint
+        switch (action) {
+            case 'add':
+                endpoint = '/carrito/add/';
+                break;
+            case 'subtract':
+                endpoint = '/carrito/subtract/';
+                break;
+            case 'remove':
+                endpoint = '/carrito/remove/';
+                break;
+            default:
+                throw new Error('Acción desconocida');
+        }
+
+        // Se realiza el fetch según el endpoint de la acción
+        const response = await fetch(endpoint, {
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded', // Indica el tipo de contenido de los datos enviados
-                'X-CSRFToken': getCookie('csrftoken') // Añade el token CSRF a los encabezados para la seguridad
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
             },
-            body: new URLSearchParams({
-                'producto_id': productId, // Envía el ID del producto como parte del cuerpo de la solicitud
-                'action': action,    // 'add', 'less', 'remove'
-                'value': value,    // value for quantity
-                'cart_view': cart_view ? 'true':'false'   // cart_view for cart_view update
-            })
+            body: new URLSearchParams(bodyParams)
         });
 
         if (!response.ok) {
@@ -47,33 +65,31 @@ async function handleCartActions(productId, action, value=1) {
         }
 
         const data = await response.json();
-        
-        // Muestra una alerta con el mensaje del servidor
-        openAlert(data.message, data.color, 1000);
 
-        // Si no hay stock suficiente, termina aquí
-        if (!data.flag_stock) return;
+        // Handle interactive alert // remember, all responses have this data
+        openAlert(data.message, data.color, 1000);    
 
-        // Actualiza la vista del WDIGET carrito con los datos más recientes
+        if (!data.flag_custom) return;    // This is a flag for verify some issues
+
+        // This function update content with html responses
         updateCart(data);
 
-        // Muestra el carrito y el overlay si no estas en la pagina del carrito
-        if ( !cart_view ) {
+        // show the cart widget if you dont are in the cart-page-view
+        if ( !cartView ) {
             document.getElementById('cart-container').classList.add('show');
             document.getElementById('overlay').classList.add('show');
         }
 
-        // Actualiza la VIEW del carrito con los datos más recientes
-        // typeof == solo ejecuta la funcion si esta definida en mi contexto actual
-        if (cart_view && typeof updateCartView === 'function') {
+        // if you are in the cart-view-page update the view
+        // typeof == only use the function if is define in my current context
+        if (cartView && typeof updateCartView === 'function') {
             updateCartView(data);
         }
 
     } catch (error) {
-        console.error('Error:', error); // Maneja y muestra cualquier error en la consola
+        console.error('Error:', error);
     }
 }
-
 
 
 /* ==========================================================================================
@@ -104,10 +120,10 @@ function formatNumberWithCommas(number) {
     return parts.join(".");
 }
 
-/* ==========================================================================================
-                    Función para asignar eventos a los botones
-========================================================================================== */
 
+/* ==========================================================================================
+                Función para asignar eventos a los botones
+========================================================================================== */
 function assignButtonEvents() {
     // Reasigna eventos a los botones de incremento
     document.querySelectorAll('.cart-item-btn-plus').forEach(button => {
@@ -123,7 +139,7 @@ function assignButtonEvents() {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-index');
             const qty_substract = 1;
-            handleCartActions(productId, 'less', qty_substract);
+            handleCartActions(productId, 'subtract', qty_substract);
         });
     });
 
@@ -139,8 +155,6 @@ function assignButtonEvents() {
 function handleRemove(itemId) {
     const item = document.getElementById(itemId).closest('.cart-item');
     item.remove();
-    // Lógica para eliminar el ítem del carrito
-    // alert('Ítem eliminado');
 }
 
 // Reasignar eventos al cargar la pagina

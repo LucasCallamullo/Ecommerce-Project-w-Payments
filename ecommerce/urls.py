@@ -37,4 +37,6 @@ urlpatterns = [
     
     # DRF API
     path('', include("productos.urls_api")),
+    
+    path('', include("cart.urls_api")),
 ]
