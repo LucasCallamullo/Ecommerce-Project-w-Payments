@@ -35,21 +35,10 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
 <br></br>
 
-## API Main Endpoints
+## Postman Collection - API Endpoints
 
-- **POST /carrito/update/**: AJAX endpoint to manage cart actions (add, reduce, remove products). Returns rendered HTML if successful; otherwise, it shows warning messages to the user such as out of stock, product added, or product removed. The request must include the following details in the body:
-  - **Request body data:**
-    - `producto_id` (int): ID of the product to add.
-    - `value` (int): Quantity of the product.
-    - `action` (str): Action to perform (`add`, `less`, `remove`).
-    - `cart_view` (str): Indicates if the user is on the cart view (`true`, `false`).
+You can access the Postman collection using the following public link: [Postman Collection](https://documenter.getpostman.com/view/41618970/2sAYQiAnKz).
 
-- **GET /search-product/**: AJAX endpoint to filter products by name, category, subcategory, or previous search query. Responds with HTML to dynamically update the user interface. Filter parameters are retrieved using the GET method.
-  - **URL parameters:**
-    - `topQuery` (str): Previous search string for products.
-    - `categoryId` (int): Category ID to filter by.
-    - `subCategoryId` (int): Subcategory ID to filter by.
-    - `inputNow` (str): Current input for real-time search (activated with 3 or more letters).
 
 ## Other Functionalities
 Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
