@@ -10,7 +10,7 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 
 ### Technologies
 - #### Back-End
-| ![Python Badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white) | ![Django Badge](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green) | ![DRF Badge](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white) | ![MySQL Badge](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) | ![Pandas Badge](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white) |
+| ![Python Badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)(#features-id) | ![Django Badge](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green) | ![DRF Badge](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white) | ![MySQL Badge](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) | ![Pandas Badge](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white) |
 |:-:|:-:|:-:|:-:|:-:|
 
 - ####  Fornt-End
@@ -27,6 +27,7 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
 #### Features
+<a id="features-id"></a>
 * RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
 * Real-Time Updates: Utilization of AJAX for a seamless user experience, particularly in cart or login actions within the app.
 * MySQL Database: Connection and data manipulation through Django's ORM.
@@ -34,7 +35,7 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 * Responsive Interface: Adaptive design for different devices using HTML, CSS and Bootstrap 5.
 
 <br></br>
-
+<a id="postman-id"></a>
 ### API Endpoints - Postman Collection 
 * You can access the Postman collection using the following public link: [Postman Collection](https://documenter.getpostman.com/view/41618970/2sAYQiAnKz).
 * (Optional) You can import the Postman collection and envoirments from the folder docs/
