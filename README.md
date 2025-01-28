@@ -42,10 +42,10 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 * (Optional) You can import the Postman collection and envoirments from the folder docs/
 
 <br></br>
-## Other Functionalities
+### Other Functionalities
 Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
 
-## Installation and Setup
+### Installation and Setup
 1. **Clone the repository:**:
    ```bash
    git clone https://github.com/LucasCallamullo/generic-ecommerce-project.git
