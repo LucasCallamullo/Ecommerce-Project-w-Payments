@@ -37,7 +37,8 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
 ## Postman Collection - API Endpoints
 
-You can access the Postman collection using the following public link: [Postman Collection](https://documenter.getpostman.com/view/41618970/2sAYQiAnKz).
+* You can access the Postman collection using the following public link: [Postman Collection](https://documenter.getpostman.com/view/41618970/2sAYQiAnKz).
+* (Optional) You can import the Postman collection and envoirments from the folder docs/
 
 
 ## Other Functionalities
