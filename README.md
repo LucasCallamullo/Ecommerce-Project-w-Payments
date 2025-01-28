@@ -35,11 +35,11 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
 <br></br>
 
-## Postman Collection - API Endpoints
-
+### API Endpoints - Postman Collection 
 * You can access the Postman collection using the following public link: [Postman Collection](https://documenter.getpostman.com/view/41618970/2sAYQiAnKz).
 * (Optional) You can import the Postman collection and envoirments from the folder docs/
 
+<br></br>
 
 ## Other Functionalities
 Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
