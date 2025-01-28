@@ -29,11 +29,21 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 <br></br>
 ### Features
 <a id="features-id"></a>
-* RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
-* Real-Time Updates: Utilization of AJAX for a seamless user experience, particularly in cart or login actions within the app.
-* MySQL Database: Connection and data manipulation through Django's ORM.
-* Deployment: The application is deployed on Railway, ensuring easy access and scalability.
-* Responsive Interface: Adaptive design for different devices using HTML, CSS and Bootstrap 5.
+* **Django Web Application**: Utilizes Django’s architecture to handle server-side rendering, dynamic content loading, and data filtering through internal endpoints.
+
+* **Django Rest Framework (DRF)**: Provides scalable JSON-based API endpoints, enabling future expansion for client-side rendering and interactivity.
+
+* **MySQL Database**: Managed through Django's ORM, with efficient database handling tools like DBeaver for easy management.
+
+* **AJAX with Vanilla JavaScript**: Implements real-time page updates for dynamic content replacement (e.g., cart updates, product filters) via server-rendered HTML.
+
+* **Responsive Frontend**: Built with HTML, CSS, Bootstrap 5, and Swiper.js for improved visual interaction and mobile-friendly design.
+
+* **Deployment on Railway**: Deployed for easy access and scalability, with proper configuration for production deployment.
+
+* **Payment Integration**: Mercado Pago API integration for secure payment processing.
+
+* **Bulk Product Import with Pandas**: Uses Pandas to import large product datasets from Excel, streamlining bulk data entry.
 
 <br></br>
 <a id="postman-id"></a>
