@@ -26,7 +26,8 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 |:-:|
 Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
-#### Features
+<br></br>
+### Features
 <a id="features-id"></a>
 * RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
 * Real-Time Updates: Utilization of AJAX for a seamless user experience, particularly in cart or login actions within the app.
@@ -41,7 +42,6 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 * (Optional) You can import the Postman collection and envoirments from the folder docs/
 
 <br></br>
-
 ## Other Functionalities
 Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
 
