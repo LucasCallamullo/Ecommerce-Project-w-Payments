@@ -52,8 +52,6 @@ Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 * (Optional) You can import the Postman collection and envoirments from the folder docs/
 
 <br></br>
-### Other Functionalities
-Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
 
 ### Installation and Setup
 1. **Clone the repository:**:
