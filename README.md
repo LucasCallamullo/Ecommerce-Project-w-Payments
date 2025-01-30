@@ -10,51 +10,50 @@ This project is a fully functional Ecommerce WebApp developed with Django for th
 
 ### Technologies
 - #### Back-End
-| ![Python Badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white) | ![Django Badge](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green) | ![DRF Badge](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white) | ![MySQL Badge](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) | ![Pandas Badge](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white) |
+| [![Python Badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)](#features-id) | [![Django Badge](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)](#features-id) | [![DRF Badge](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white)](#features-id) | [![MySQL Badge](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)](#features-id) | [![Pandas Badge](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)](#features-id) |
 |:-:|:-:|:-:|:-:|:-:|
 
 - ####  Fornt-End
-| ![HTML Badge](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) | ![JavaScript Badge](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E) | ![CSS Badge](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white) | ![Bootstrap 5 Badge](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white) | 
+| [![HTML Badge](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](#features-id) | [![JavaScript Badge](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)](#features-id) | [![CSS Badge](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](#features-id) | [![Bootstrap 5 Badge](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](#features-id) | 
 |:-:|:-:|:-:|:-:|
 
 - #### Tools 
-| ![Postman Badge](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white) | ![Git Badge](https://img.shields.io/badge/git%20-%23F05033.svg?&style=for-the-badge&logo=git&logoColor=white) | [![GitHub Badge](https://img.shields.io/badge/github%20-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)](https://github.com/LucasCallamullo) | ![DBeaver Badge](https://img.shields.io/badge/dbeaver-382923?style=for-the-badge&logo=dbeaver&logoColor=white)
+| [![Postman Badge](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white)](#postman-id) | [![Git Badge](https://img.shields.io/badge/git%20-%23F05033.svg?&style=for-the-badge&logo=git&logoColor=white)](#features-id) | [![GitHub Badge](https://img.shields.io/badge/github%20-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)](https://github.com/LucasCallamullo) | [![DBeaver Badge](https://img.shields.io/badge/dbeaver-382923?style=for-the-badge&logo=dbeaver&logoColor=white)](#features-id)
 |:-:|:-:|:-:|:-:|
 
 - #### Deploy
-| ![Railway Badge](https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white) |
+| [![Railway Badge](https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white)](https://generic-ecommerce-project-production.up.railway.app) |
 |:-:|
 Deployed to Railway: https://generic-ecommerce-project-production.up.railway.app
 
-#### Features
-* RESTful API: Implemented with Django to handle all CRUD operations for cart, products, and users.
-* Real-Time Updates: Utilization of AJAX for a seamless user experience, particularly in cart or login actions within the app.
-* MySQL Database: Connection and data manipulation through Django's ORM.
-* Deployment: The application is deployed on Railway, ensuring easy access and scalability.
-* Responsive Interface: Adaptive design for different devices using HTML, CSS and Bootstrap 5.
+<br></br>
+### Features
+<a id="features-id"></a>
+* **Django Web Application**: Utilizes Django’s architecture to handle server-side rendering, dynamic content loading, and data filtering through internal endpoints.
+
+* **Django Rest Framework (DRF)**: Provides scalable JSON-based API endpoints, enabling future expansion for client-side rendering and interactivity.
+
+* **MySQL Database**: Managed through Django's ORM, with efficient database handling tools like DBeaver for easy management.
+
+* **AJAX with Vanilla JavaScript**: Implements real-time page updates for dynamic content replacement (e.g., cart updates, product filters) via server-rendered HTML.
+
+* **Responsive Frontend**: Built with HTML, CSS, Bootstrap 5, and Swiper.js for improved visual interaction and mobile-friendly design.
+
+* **Deployment on Railway**: Deployed for easy access and scalability, with proper configuration for production deployment.
+
+* **Payment Integration**: Mercado Pago API integration for secure payment processing.
+
+* **Bulk Product Import with Pandas**: Uses Pandas to import large product datasets from Excel, streamlining bulk data entry.
+
+<br></br>
+<a id="postman-id"></a>
+### API Endpoints - Postman Collection 
+* You can access the Postman collection using the following public link: [Postman Collection](https://documenter.getpostman.com/view/41618970/2sAYQiAnKz).
+* (Optional) You can import the Postman collection and envoirments from the folder docs/
 
 <br></br>
 
-## API Main Endpoints
-
-- **POST /carrito/update/**: AJAX endpoint to manage cart actions (add, reduce, remove products). Returns rendered HTML if successful; otherwise, it shows warning messages to the user such as out of stock, product added, or product removed. The request must include the following details in the body:
-  - **Request body data:**
-    - `producto_id` (int): ID of the product to add.
-    - `value` (int): Quantity of the product.
-    - `action` (str): Action to perform (`add`, `less`, `remove`).
-    - `cart_view` (str): Indicates if the user is on the cart view (`true`, `false`).
-
-- **GET /search-product/**: AJAX endpoint to filter products by name, category, subcategory, or previous search query. Responds with HTML to dynamically update the user interface. Filter parameters are retrieved using the GET method.
-  - **URL parameters:**
-    - `topQuery` (str): Previous search string for products.
-    - `categoryId` (int): Category ID to filter by.
-    - `subCategoryId` (int): Subcategory ID to filter by.
-    - `inputNow` (str): Current input for real-time search (activated with 3 or more letters).
-
-## Other Functionalities
-Most of the site's functionalities are rendered directly through Django views, providing a seamless and uninterrupted user experience. CRUD operations for products and users are handled through these views.
-
-## Installation and Setup
+### Installation and Setup
 1. **Clone the repository:**:
    ```bash
    git clone https://github.com/LucasCallamullo/generic-ecommerce-project.git
