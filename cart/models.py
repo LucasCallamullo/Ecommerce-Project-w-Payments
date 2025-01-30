@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from users.models import CustomUser
-from productos.models import Product
+from products.models import Product
 
 from django.db import transaction
 from django.utils import timezone
@@ -62,7 +62,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey("productos.Product", on_delete=models.CASCADE)
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     quantity  = models.PositiveIntegerField(default=1)
     
     class Meta:

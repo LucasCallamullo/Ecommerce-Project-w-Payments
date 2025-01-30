@@ -9,7 +9,6 @@ from django.contrib.auth.models import BaseUserManager
 # DRF n JWT stuff
 from datetime import timedelta
 from django.conf import settings
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # Custom User Manager que se encarga de la creación de usuarios y superusuarios

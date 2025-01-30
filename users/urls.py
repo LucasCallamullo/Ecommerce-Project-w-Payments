@@ -4,8 +4,6 @@ from django.urls import path
 from users import views
 
 
-
-
 urlpatterns = [
     path('register_user/', views.register_user, name='register_user'),
     
@@ -17,4 +15,3 @@ urlpatterns = [
     
     path('profile/<str:tab_name>/', views.profile_tab, name='profile_tab'),
 ]
-

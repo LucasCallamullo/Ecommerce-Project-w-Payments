@@ -24,7 +24,7 @@ urlpatterns = [
     
     path('', include("home.urls")),
     
-    path('', include("productos.urls")),
+    path('', include("products.urls")),
     
     path('', include("cart.urls")),
     
@@ -36,7 +36,7 @@ urlpatterns = [
     
     
     # DRF API
-    path('', include("productos.urls_api")),
+    path('', include("products.urls_api")),
     
     path('', include("cart.urls_api")),
 ]

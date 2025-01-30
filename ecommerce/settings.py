@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     # My apps
     'home',
     'users',
+    'products',
     'cart',
     'orders',
     'payments',
@@ -145,7 +146,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 
                 # This is my custom context_processors
-                'productos.context_processors.get_categories_n_subcats',
+                'products.context_processors.get_categories_n_subcats',
                 'home.context_processors.get_ecommerce_data',
                 'cart.context_processors.carrito_total',
                 # 'users.context_processors.widget_register_form',

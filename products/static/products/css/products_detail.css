@@ -1,0 +1,379 @@
+
+
+/* Contenedor principal */
+#prod-container {
+    width: 100%;
+    height: 450px; /* Altura fija para distribuir correctamente */
+    display: flex;
+    flex-direction: column; /* Asegura que los hijos se distribuyan en columnas */
+    border: 2px solid var(--text-secondary);
+    background-color: var(--bg-primary);
+}
+
+/* Contenedor de imagen */
+.prod-main-img-container {
+    flex: 9; /* Ocupa el 90% del contenedor */
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.prod-main-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;   /* o cover probar */
+    background-color: var(--bg-primary);
+}
+
+/* Botón de la esquina superior derecha */
+.prod-main-corner-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    border: none;
+}
+
+.prod-main-corner-box i {
+    font-size: var(--font-xl);
+}
+
+.prod-main-corner-box:hover {
+    background-color: var(--bg-secondary);
+}
+
+/* Contenedor de flechas */
+#prod-container figcaption {
+    flex: 1; /* Ocupa el 10% del contenedor */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10px;
+    background-color: var(--bg-primary);
+}
+
+/* Botones de flechas */
+.arrow-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.arrow-button:hover {
+    background-color: var(--bg-hover);
+}
+
+.arrow-button.left {
+    margin-left: 10px;
+}
+
+.arrow-button.right {
+    margin-right: 10px;
+}
+
+
+/* columna de imagenes sobre puestas */
+.prod-small-images-row {
+    display: flex;
+    flex-direction: row;
+    width: 85%;
+}
+
+.prod-small-image-container {
+    width: 25%;
+    max-width: 25%;
+    height: 120px;
+    max-height: 120px;
+    background-color: var(--bg-primary);
+    display: flex; /* Centra el contenido dentro del contenedor */
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+
+    border: 2px solid transparent; /* Borde inicial transparente */
+    transition: border-color 0.3s ease; /* Animación para el borde */
+}
+
+.prod-small-image {
+    width: 100%;
+    max-height: 100%;
+    background-size: contain; /* Asegura que la imagen llene el espacio */
+    background-position: center; /* Centra la imagen */
+    border: none;
+    background-color: var(--bg-primary);
+    cursor: pointer; /* Indica que son interactuables */
+}
+
+.prod-small-image-container:hover {
+    border-color: var(--text-primary); /* Cambia el borde al pasar el mouse */
+}
+
+.prod-small-image-container.active {
+    border-color: var(--text-primary);
+    transform: scale(1.01);
+    transition: transform 0.1s ease
+}
+
+
+/* Flechas de navegación en el overlay */
+.arrow-button.left-overlay,
+.arrow-button.right-overlay {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 2;
+}
+
+.arrow-button.left-overlay {
+    left: 20px;
+}
+
+.arrow-button.right-overlay {
+    right: 20px;
+}
+
+/* Asegúrate de que el contenedor tenga un tamaño y sea relativo para contener la imagen */
+#image-container {
+    position: relative;
+    overflow: hidden; /* Esto oculta cualquier parte de la imagen que se desplace fuera del contenedor */
+    width: 50%;
+    max-width: 80%;
+    height: 70vh;
+    max-height: 70vh;
+    display: flex; /* Usamos flexbox para centrar la imagen */
+    justify-content: center; /* Centra la imagen horizontalmente */
+    align-items: center; /* Centra la imagen verticalmente */
+
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="black" stroke-width="3" fill="white" /><line x1="15" y1="25" x2="35" y2="25" stroke="black" stroke-width="3"/><line x1="25" y1="15" x2="25" y2="35" stroke="black" stroke-width="3"/></svg>') 16 16, auto;
+}
+
+#image-container.zoom-in-cursor {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="black" stroke-width="3" fill="white" /><line x1="15" y1="25" x2="35" y2="25" stroke="black" stroke-width="3"/><line x1="25" y1="15" x2="25" y2="35" stroke="black" stroke-width="3"/></svg>') 16 16, auto;
+}
+
+#image-container.zoom-out-cursor {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="black" stroke-width="3" fill="white" /><line x1="15" y1="25" x2="35" y2="25" stroke="black" stroke-width="3"/></svg>') 16 16, auto;
+}
+
+
+/* Fondo oscuro */
+.fullscreen-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+
+/*
+        Product card info stuff - SECOND COLUMN
+*/
+.product-info {
+    background-color: var(--bg-primary); /* Fondo gris claro para el contenedor */
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en columna */
+}
+
+.product-info p {
+    color: var(--text-secondary); 
+    font-size: var(--font-small);
+    margin: 0;
+    padding: 0;
+}
+
+.product-info span {
+    color: var(--text-secondary); 
+    font-size: var(--font-small);
+    margin: 0;
+    padding: 0;
+}
+
+.product-info .brand-value {
+    color: var(--main-color) !important; /* Especificidad aumentada */
+}
+
+/* payment stuff */
+.payment-info-box {
+    border: 2px solid #ddd; /* Borde gris claro alrededor del recuadro */
+    background-color: var(--bg-primary);
+    padding: 5px; /* Espaciado interno */
+    max-width: 95%; /* Ancho máximo del recuadro */
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+}
+
+.payment-info-content {
+    display: flex;
+    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+}
+
+.payment-icon img {
+    width: 50px; /* Ajusta el tamaño del icono */
+    height: auto;
+    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+}
+
+
+.payment-logo img {
+    max-width: 50%; /* Ajusta la imagen al ancho del contenedor */
+    height: auto;
+}
+
+
+
+/*
+            TERCERA COLUMNA - columnar precio
+*/
+.payment-container {
+    border-left: 2px solid var(--main-color);
+}
+
+.payment-child-container {
+    width: 100%;
+    padding: 5%;
+    background-color: var(--bg-primary);
+    display: grid;
+    grid-template-rows: auto auto; /* Dos filas automáticas */
+    text-align: left; /* Asegura que el span esté alineado a la izquierda */
+}
+
+.price-tag {
+    font-size: var(--font-xl); /* Tamaño de fuente del texto */
+    font-weight: bold; /* Texto en negrita */
+    text-align: center;
+}
+
+.payment-child-container span {
+    color: var(--text-primary);
+    font-size: var(--font-x-small);
+    font-weight: bold;
+    padding: 2%;
+}
+
+.bank-child-container {
+    width: 100%;
+    background-color: var(--bg-primary);
+    display: grid;
+    grid-template-rows: auto auto; /* Dos filas automáticas */
+    text-align: left;
+    border: 2px solid var(--text-primary); /* Borde del recuadro */
+}
+
+.bank-child-container span {
+    color: var(--text-primary);
+    font-size: var(--font-x-small);
+    font-weight: bold;
+    padding: 2%;
+}
+
+.bank-child-container img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* Contenedor interno para los botones y el input */
+.quantity-container-detail {
+    display: flex; /* Flexbox para los botones y el input */
+    align-items: center; /* Alineación vertical centrada */
+    border: 2px solid var(--text-primary);
+    transition: border-color 0.3s;
+    height: 50px;
+}
+
+/* Botones de incremento y decremento */
+.prod-btn-qty {
+    color: var(--text-secondary);
+    font-size: var(--font-medium);
+    font-weight: bold;
+    width: 30%;
+    max-width: 30%;
+    height: 100%;
+    padding: 1%;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Efecto hover en los botones */
+.prod-btn-qty:hover {
+    color: var(--text-primary); /* Cambia el color del texto */
+    font-size: var(--font-medium);
+}
+
+/* Botón al hacer clic */
+.prod-btn-qty:active {
+    background-color: var(--bg-primary);
+    transform: scale(0.95); /* Simula un efecto de presionado */
+    border: none;
+}
+
+/* Campo de entrada (input) */
+.quantity-container-detail:focus-within {
+    border-color: var(--focus-color); /* Cambia el color del borde cuando el input está enfocado */
+}
+
+
+.prod-input-qty {
+    text-align: center; /* Texto centrado */
+    font-size: var(--font-small);
+    color: var(--text-primary);
+    border: none;
+    outline: none;
+    width: 40%;
+    height: 100%;
+    max-width: 40%;
+    background-color: transparent;
+}
+/* button to add to cart */
+.btn-add-item {
+    color: #ffffff;
+    background-color: var(--main-color);
+    font-size: var(--font-normal);
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    border: none; /* Elimina el borde */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-add-item:hover {
+    background-color: var(--text-secondary)
+}
+
+.btn-add-item:active {
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}

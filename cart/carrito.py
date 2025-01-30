@@ -1,7 +1,7 @@
 
 
 from cart.models import Cart, CartItem
-from productos.models import Product
+from products.models import Product
 
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime

@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 from cart.carrito import Carrito
 from cart.utils import get_render_htmls
-from productos.models import Product
+from products.models import Product
 
 
 def add_product(request):

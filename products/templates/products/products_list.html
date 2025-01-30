@@ -1,0 +1,128 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+
+<!-- For More CSS Modules -->
+{% block extra_head %}
+    <title> Producto Categorias </title>
+    <link href="{% static 'products/css/products_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+<!-- Contenido principal de la pagina -->
+
+{% block content %}
+
+<div class="d-flex mt-3 mb-4 gap-3">
+    <!-- Se utiliza para agregar mas botones en este container -->
+    <button class="btn-paralelogramo px-3"
+    onclick="window.location.href='{% url 'product_list' %}'">
+        <span> No Filters </span>
+    </button>
+
+    <!-- Se utiliza para agregar mas botones en este container -->
+    {% if category %}
+        <button class="btn-paralelogramo px-3"
+        onclick="window.location.href='{% url 'pl_category' cat_slug=category.slug %}'">
+            <span> {{ category.name }} </span>
+        </button>
+    {% endif %}
+
+    {% if subcategory %}
+        <button class="btn-paralelogramo px-3"
+        onclick="window.location.href='{% url 'pl_subcategory' cat_slug=category.slug subcat_slug=subcategory.slug %}'">
+            <span> {{ subcategory.name }} </span>
+        </button>
+    {% endif %}
+
+    {% if query %}
+        <button class="btn-paralelogramo px-3">
+            <span> Resultados de la busqueda: '{{ query }}'' </span>
+        </button>
+    {% endif %}
+
+</div>
+
+<div class="d-flex">
+    <div class="d-none d-lg-block col-lg-3">
+        
+        <!-- TOP 10 BUTTON SIDE -->
+        <button class="btn-top-10 d-flex mb-3">
+            <i class="fa fa-star px-2"></i>Top 10
+        </button>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2> Filtros </h2>
+
+            <div id="filters" 
+                data-category-id="{{category.id}}" 
+                data-sub-category-id="{{subcategory.id}}" 
+                data-top-query="{{query}}">
+            </div>
+
+            <hr>
+            <!-- Search Form Categories -->
+            <div class="sidebar-search">
+                <form id="search-form" class="form-group">
+                    <!-- Datos de las categorias para pasar y filtrar -->
+                    <input type="text" id="search-input" class="form-control"
+                        placeholder="Search..." oninput="updateProductListFromInput()">
+                </form>
+            </div>
+
+            <hr>
+            <!-- Categories will be inserted here -->
+            <div class="mt-3 sidebar-categories">
+                <!-- Top button on side bar -->
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'product_list' %}"><strong>Todas las Categorias</strong></a></li>
+            
+                    <!-- Cat = Category, sub_cats = Sub Category ; Se pasa del context Processor-->
+                    {% for cat, sub_cats in categories_dropmenu.items %}
+                    <li>
+                        <a href="{% url 'pl_category' cat_slug=cat.slug %}"><strong>{{ cat.name }}</strong></a>
+                        
+                        <!-- Submenú with SubCategories -->
+                        {% if sub_cats %}
+                        <ul class="list-unstyled">
+                            {% for sub_cat in sub_cats %}
+                                <li class="ms-4">
+                                    <a href="{% url 'pl_subcategory' cat_slug=cat.slug subcat_slug=sub_cat.slug %}">
+                                        {{ sub_cat.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- More content ? ¡ -->
+
+        </div>
+    </div>
+
+
+    <!-- SEPARADOR MAIN_CONTENT -->
+    <!-- Main Content -->
+    <div class="col-lg-9 col-12 mt-3">
+        <!-- Donde mostramos los resultados de AJAX Request -->
+        <div id="search-results" class="row w-100 gap-0">
+            {% include "products/products_list_cards.html" %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+    <!-- JavaScript for Product Page -->
+    <script src="{% static 'products/js/product_list.js' %}"></script>
+{% endblock %}
+

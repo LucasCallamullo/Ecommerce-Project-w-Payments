@@ -5,35 +5,21 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 
 
 from users.forms import CreateUserForm, WidgetLoginForm, EditUserForm
-from productos.models import Product
+# from productos.models import Product
 
 # This is for edit form
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 
 from django.utils.html import escape
-from django.urls import reverse
 
 
+from products.models import Product
 
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
-
-
-
-
-
-from users.decorators import jwt_required
-
-@jwt_required
 def profile_page(request):
     user = request.user
     proucts = Product.objects.all()
@@ -50,6 +36,7 @@ def profile_tab(request, tab_name):
     
     products = Product.objects.all()
     products = products.filter(category=1)
+
     context = { 'products': products }
     
     if tab_name == 'first-tab':

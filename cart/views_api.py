@@ -1,10 +1,12 @@
+
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from cart.carrito import Carrito
 from cart.utils import get_render_htmls
-from productos.models import Product
+from products.models import Product
 
 
 from rest_framework.permissions import AllowAny

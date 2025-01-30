@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from users.models import CustomUser
-from productos.models import Product
+from products.models import Product
 
 
 def home(request):

@@ -3,7 +3,7 @@ from django.test import TestCase
 # Create your tests here.
 from cart.carrito import Carrito
 from cart.models import Cart, CartItem
-from productos.models import Product
+from products.models import Product
 from django.contrib.auth import get_user_model
 
 
