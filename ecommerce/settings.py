@@ -70,11 +70,6 @@ except environ.ImproperlyConfigured:
         }
     }
 # =====================================================================================
-
-# this is for deployment
-ALLOWED_HOSTS = ['127.0.0.1', 'https://generic-ecommerce-project-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://generic-ecommerce-project-production.up.railway.app', 'http://localhost']
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -212,3 +207,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Add for deploy to use "Whitenoise"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# this is for deployment
+ALLOWED_HOSTS = ['127.0.0.1', 'https://project-ecommerce-w-payments.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://project-ecommerce-w-payments.up.railway.app', 'http://localhost']
