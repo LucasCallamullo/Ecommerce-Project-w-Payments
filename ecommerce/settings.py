@@ -18,37 +18,62 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Registrar pymysql como controlador de MySQL
+
+# =====================================================================================
+#             EVERYTHING RELATED TO ENVIRONMENTAL VARIABLES n DB
+# =====================================================================================
+# Register pymysql as MySQL driver
 import pymysql
 pymysql.install_as_MySQLdb()
 
-# =====================================================================================
-#                         TOD¿ LO RELACIONADOS CON VARIABLES DE ENTORNO
-# =====================================================================================
 import environ, os
+env = environ.Env()    # Init the environment
 
-# Inicializar el entorno
-env = environ.Env()
-
-# Configurar las claves de Mercado Pago
 try:
+    # In local we use environ to bring keys from the .env file, in "Railway" this does not work
+    # as such and we must use the "except" block to configure correctly with the environment variables
+    # that are added in the "Railway" panel
     environ.Env.read_env()
-    # Intentar cargar las claves con environ
     MERCADO_PAGO_PUBLIC_KEY = env('MERCADO_PAGO_PUBLIC_KEY')
     MERCADO_PAGO_ACCESS_TOKEN = env('MERCADO_PAGO_ACCESS_TOKEN')
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = env('SECRET_KEY')
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = env('DEBUG')
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': env('MYSQL_DATABASE'),
+            'USER': env('MYSQL_USER'),
+            'PASSWORD': env('MYSQL_PASSWORD'),
+            'HOST': env('MYSQL_HOST'),
+            'PORT': env('MYSQL_PORT'),
+        }
+    }
 
 except environ.ImproperlyConfigured:
-    # Si falla con environ, usar os.getenv como respaldo
+    # This is for deploy on railway
     MERCADO_PAGO_PUBLIC_KEY = os.getenv('MERCADO_PAGO_PUBLIC_KEY', 'default_public_key')
     MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MERCADO_PAGO_ACCESS_TOKEN', 'default_access_token')
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
     SECRET_KEY = os.getenv('DEBUG', True)
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('MYSQL_DATABASE', 'default_database'),
+            'USER': os.getenv('MYSQL_USER', 'default_user'),
+            'PASSWORD': os.getenv('MYSQL_PASSWORD', 'default_password'),
+            'HOST': os.getenv('MYSQL_HOST', 'localhost'),
+            'PORT': os.getenv('MYSQL_PORT', '3306'),
+        }
+    }
+# =====================================================================================
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
+# this is for deployment
+ALLOWED_HOSTS = ['127.0.0.1', 'https://generic-ecommerce-project-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://generic-ecommerce-project-production.up.railway.app', 'http://localhost']
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,18 +84,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # para deploy
-    'whitenoise.runserver_nostatic', 
-    'django.contrib.humanize',
+    # for deploy
+    'whitenoise.runserver_nostatic',
     
-    'rest_framework',
-    
+    # My apps
     'home',
-    'productos',
     'users',
     'cart',
     'orders',
     'payments',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +106,29 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+# =======================================================================
+#                        DRF SETTINGS STUFF 
+# =======================================================================
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        # This allows you to view the API in HTML format (browser interface)
+        'rest_framework.renderers.BrowsableAPIRenderer',  
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    
+    # Esto es para usar drf con jwt (json web token)
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
+# ====================================================================
+
 
 ROOT_URLCONF = 'ecommerce.urls'
 
@@ -98,11 +144,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 
-                # mis context processor personalizados
+                # This is my custom context_processors
                 'productos.context_processors.get_categories_n_subcats',
                 'home.context_processors.get_ecommerce_data',
                 'cart.context_processors.carrito_total',
-                'users.context_processors.widget_register_form',
+                # 'users.context_processors.widget_register_form',
             ],
         },
     },
@@ -110,50 +156,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-try:
-    # Intentar cargar las variables de entorno desde el archivo .env con environ
-    environ.Env.read_env()
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': env('MYSQL_DATABASE'),
-            'USER': env('MYSQL_USER'),
-            'PASSWORD': env('MYSQL_PASSWORD'),
-            'HOST': env('MYSQL_HOST'),
-            'PORT': env('MYSQL_PORT'),
-        }
-    }
-
-except environ.ImproperlyConfigured:
-    # Si falla con environ, usar os.getenv como respaldo
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('MYSQL_DATABASE', 'default_database'),
-            'USER': os.getenv('MYSQL_USER', 'default_user'),
-            'PASSWORD': os.getenv('MYSQL_PASSWORD', 'default_password'),
-            'HOST': os.getenv('MYSQL_HOST', 'localhost'),
-            'PORT': os.getenv('MYSQL_PORT', '3306'),
-        }
-    }
-""" 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-"""
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -166,8 +174,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# para usar nuestro modelo personalizado de user
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'    # NOTE custom user for appWeb
 
 """ 
 Esto estaba antes en AUTH_PASSWORD_VALIDATORS = [
@@ -201,30 +208,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# agregados para el dploy con whitenoise
+# Add for deploy to use "Whitenoise"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# Permite todos los dominios (en producción, puedes especificar solo el dominio de Railway)
-# ALLOWED_HOSTS = ['localhost', 'web-production-8df2.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://generic-ecommerce-project-production.up.railway.app', 'http://localhost']
-
-
-# =======================================================================
-#                        DRF SETTINGS STUFF 
-# =======================================================================
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        
-        # Esto permite ver la API en formato HTML (interfaz de navegador)
-        'rest_framework.renderers.BrowsableAPIRenderer',  
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    ),
-}
-
-

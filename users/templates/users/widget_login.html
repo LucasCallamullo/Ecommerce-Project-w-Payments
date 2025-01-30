@@ -1,6 +1,9 @@
+
+
 <button class="btn btn-header" id="user-button" aria-haspopup="true" aria-expanded="false" aria-label="User Menu">
     <i class="fas fa-user"></i>
 </button>
+
 
 <!-- Contenido del dropdown -->
 <div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
@@ -26,24 +29,24 @@
 
     {% else %}
     
-        <form id=widget-register-form method="POST" action="{% url 'register_widget' %}" class="widget-register-form">
-            {% csrf_token %}
-        
+        <form id="widget-register-form" class="widget-register-form" action="{% url 'widget-login' %}">
             <!-- Campo de Email -->
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                {{ widget_form.email }}
+                <label for="email" class="form-label">    Email    </label>
+                <input type="email" id="w-email" name="w-email" class="form-control" required>
             </div>
-
+        
             <!-- Campo de Password -->
             <div class="mb-3">
-                <label for="user-password" class="form-label">Password</label>
-                {{ widget_form.password }}
+                <label for="password" class="form-label">    Password    </label>
+                <input type="password" id="w-password" name="w-password" class="form-control" required>
             </div>
-
+        
             <!-- Botón de Login -->
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <button type="submit" class="btn btn-primary w-100">    Login    </button>
         </form>
+            
+        
         <hr>
 
         <!-- Botón de Registro -->

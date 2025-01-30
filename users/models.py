@@ -6,6 +6,11 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 
+# DRF n JWT stuff
+from datetime import timedelta
+from django.conf import settings
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 # Custom User Manager que se encarga de la creación de usuarios y superusuarios
 class CustomUserManager(BaseUserManager):
@@ -98,6 +103,21 @@ class CustomUser(AbstractUser):
     # Se asigna el CustomUserManager para gestionar la creación de usuarios
     objects = CustomUserManager()
 
+    # Método para representar el usuario como una cadena (usando el email)
+    def __str__(self):
+        return self.email  # Devuelve el correo electrónico como representación del usuario
+    
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        }
+
+    
+    
+    # BORRAR EVENTUALMENTE
+    
     # Método de validación para el email
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -108,7 +128,3 @@ class CustomUser(AbstractUser):
             # Si el email no es válido, se lanza una excepción de validación
             raise ValidationError("Invalid email address")
         return email
-
-    # Método para representar el usuario como una cadena (usando el email)
-    def __str__(self):
-        return self.email  # Devuelve el correo electrónico como representación del usuario

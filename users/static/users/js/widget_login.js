@@ -99,12 +99,75 @@ function validFormsWithAlerts(form) {
     });
 }
 
+// ========================================================================
+//           Validación generica de formularios con alertas de user
+// ========================================================================
+function loginUser(form, widget = true) {
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault(); // Evitamos el envío del formulario por defecto
 
+        // Identificar los campos de email y contraseña según el formulario
+        let emailID = widget ? "w-email" : "email";
+        let passID = widget ? "w-password" : "password";
+        let emailInput = document.getElementById(emailID);
+        let passInput = document.getElementById(passID);
+
+        const formData = {
+            email: emailInput ? emailInput.value : "",
+            password: passInput ? passInput.value : "",
+        };
+
+        try {
+            // Mandamos los datos como POST al servidor usando la URL del formulario
+            const response = await fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData), // Convierte los datos del formulario a JSON
+                credentials: "include", // IMPORTANTE si usas cookies para autenticación
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor.");
+            }
+
+            const data = await response.json(); // Procesa la respuesta como JSON
+
+            if (data.tokens) {
+                
+                // También guardar en cookies (pero idealmente debería hacerse en el backend)
+                // document.cookie = `access_token=${data.tokens.access}; path=/; HttpOnly=true`;
+
+                openAlert("Login exitoso!", "green", 1000);
+
+                // Redirigir a otra página después de un breve delay
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 1000);
+
+            } else {
+                openAlert("Error: " + (data.detail || "No se recibieron tokens"), "red", 2000);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            openAlert("Error al procesar la solicitud. Intenta nuevamente.", "red", 2000);
+        }
+    });
+}
+
+
+// Capturamos el evento del envío de datos al formulario
 document.addEventListener('DOMContentLoaded', () => {
-    // obtener el formulario y mandar a validarlo
     const form = document.getElementById('widget-register-form');
-    validFormsWithAlerts(form)
+    if (form) {
+        loginUser(form);
+    } else {
+        console.error("Formulario no encontrado.");
+    }
 });
+
+
 
 
 // Esta funcion es para cambiar lo que se muestra una vez que esta logeado

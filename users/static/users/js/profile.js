@@ -40,15 +40,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await response.json();
                 
                 // cargar los scripts propios del html que vienen desde la respuesta json
-                data.scripts.forEach(scriptSrc => {
-
-                    const script = document.createElement('script');
-                    script.src = scriptSrc;
-                    script.defer = true;
-                    script.onload = () => onloadEventsTabs(dataContent);
-                    document.body.appendChild(script);
-
-                });
+                if (data.scripts) {
+                    data.scripts.forEach(scriptSrc => {
+                        const script = document.createElement('script');
+                        script.src = scriptSrc;
+                        script.defer = true;
+                        script.onload = () => onloadEventsTabs(dataContent);
+                        document.body.appendChild(script);
+                    });
+                }
 
                 // Inserta el contenido HTML en el div
                 contentDiv.innerHTML = data.html;

@@ -1,6 +1,7 @@
-from django.shortcuts import render
+
 
 # Create your views here.
+from django.shortcuts import render
 from django.shortcuts import redirect
 
 from django.contrib.auth import login, logout, authenticate
@@ -20,7 +21,19 @@ from django.urls import reverse
 
 
 
-@login_required
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
+
+
+
+
+from users.decorators import jwt_required
+
+@jwt_required
 def profile_page(request):
     user = request.user
     proucts = Product.objects.all()
@@ -32,7 +45,7 @@ def profile_page(request):
     return render(request, 'users/profile.html', contexto)
 
 
-@login_required
+
 def profile_tab(request, tab_name):
     
     products = Product.objects.all()
@@ -41,7 +54,8 @@ def profile_tab(request, tab_name):
     
     if tab_name == 'first-tab':
         html_content = render_to_string('users/tabs/pedidos.html', context)
-        scripts = ['/static/js/pedidos.js']  # Ruta al script
+        scripts = None
+        # scripts = ['/static/js/pedidos.js']  # Ruta al script
         return JsonResponse({'html': html_content, 'scripts': scripts})
 
     if tab_name == 'second-tab':
