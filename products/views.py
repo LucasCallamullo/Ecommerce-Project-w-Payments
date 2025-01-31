@@ -22,7 +22,7 @@ def product_list(request, cat_slug=None, subcat_slug=None):
         # En caso de no recibir parametros es porque se llama a la category directa
         products = Product.objects.filter(available=True)
         return render(request, "products/products_list.html", {'products': products})
-    
+
     # La función valida los datos y devuelve el objeto que corresponda para filtrar despues
     # si no existiera o el request.GET.get is None devolvería None y no afectará al filtrado
     category = utils.get_model_or_None(PCategory, slug=cat_slug)
@@ -40,7 +40,7 @@ def product_list(request, cat_slug=None, subcat_slug=None):
         'category': category,
         'subcategory': subcategory
     }
-    
+
     return render(request, "products/products_list.html", context)
 
 
@@ -76,6 +76,7 @@ def product_detail(request, id=None, slug=None):
     """
     if not id:
         raise Http404("El producto no existe o la URL está mal formada.")
+    
     product = get_object_or_404(Product, id=id)
     
     # Obtenemos todos los datos necesarios a partir del producto 
