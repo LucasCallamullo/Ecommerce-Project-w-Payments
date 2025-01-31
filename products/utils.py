@@ -2,50 +2,47 @@
 
 from products.models import Product
 
-
-# ============================================================================
+# ============================================================================ 
 #                       Filter product stuff
-# ============================================================================
+# ============================================================================ 
 def get_products_filters(available=True, category=None, subcategory=None, top_query=None, empty=False):
     """
-    Filtra los productos según los parámetros proporcionados.
+    Filters products based on the provided parameters.
     
     Args:
         available (bool, optional): 
-            Obtiene el queryset inicial según la disponibilidad. Defaults to True.
+            Filters the initial queryset based on availability. Defaults to True.
         category (ID PCategory, optional): 
-            Objeto utilizado para filtrar opcionalmente en caso de existir. Defaults to None.
+            Object used for optional filtering if it exists. Defaults to None.
         subcategory (ID PSubcategory, optional): 
-            Objeto utilizado para filtrar opcionalmente en caso de existir. Defaults to None.   
+            Object used for optional filtering if it exists. Defaults to None.
+        top_query (str, optional):
+            Search query that comes from the top search bar.
         empty (bool, optional): 
-            Nos sirve para indicar que podemos devolver un queryset vacío en caso de no tener 
-            filtros pasados correctamente como parámetro.
-        top_query(str, optional):
-            Query search que viene desde la barra de búsqueda superior.
+            Indicates whether an empty queryset can be returned if no filters are passed 
+            correctly as parameters.
+        
     Return:
-        QuerySet Product: Products filtrados si hubiera coincidencias o queryset vacío.
+        QuerySet Product: Filtered products if there are matches or an empty queryset.
     """
-    # Filtrar productos por disponibilidad
+    # Filter products by availability
     products = Product.objects.filter(available=available) if available else Product.objects.all()
     
-    # Si no hay categoría, subcategoría y no hay top_query, devolver queryset vacío
-    if empty and not category and not top_query:
+    # If there's no category, subcategory, and no top_query, return an empty queryset
+    if empty and not category and not top_query and not subcategory:
         return Product.objects.none()
     
-    # Filtrar por categoría si existe
     if category: 
         products = products.filter(category=category)
         
-    # Filtrar por subcategoría si existe
     if subcategory:
         products = products.filter(subcategory=subcategory)
             
-    # Filtrar por consulta de búsqueda (top_query)
     if top_query:
-        # Separar la consulta en palabras individuales
+        # Split the query into individual words
         query_words = top_query.split()
 
-        # Realizar una búsqueda para cada palabra en el nombre del producto
+        # Perform a search for each word in the product name
         for word in query_words:
             products = products.filter(normalized_name__icontains=word)
     
@@ -54,20 +51,20 @@ def get_products_filters(available=True, category=None, subcategory=None, top_qu
 
 def get_model_or_None(object_model, id=None, slug=None):
     """
-        Obtiene un modelo de la base de datos según su ID, si el ID es válido.
+        Retrieves a model from the database by its ID, if the ID is valid.
 
     Args:
         object_model (object): 
-            El modelo de la db del cual obtener el objeto
+            The database model from which to get the object
             
         id (str, optional): 
-            El ID del objeto que se busca.
+            The ID of the object to search for.
             
         slug (str, optional):
-            El slug del objeto a buscar
+            The slug of the object to search for.
 
     Returns:
-        object: el modelo si se encuentra, de lo contrario, return None.
+        object: The model if found, otherwise returns None.
     """
     if not id and not slug:
         return None
@@ -86,23 +83,23 @@ def get_model_or_None(object_model, id=None, slug=None):
 import unicodedata
 import re
 def normalize_or_None(text):
-    # Verificamos si el texto es None o vacío
+    # Check if the text is None or empty
     if not text:
         return None
     
-    # Reemplazamos los signos de adición '+' por espacios
+    # Replace plus signs '+' with spaces
     text = text.replace('+', ' ')
     
-    # Eliminar acentos
+    # Remove accents
     text_without_accents = ''.join(
         c for c in unicodedata.normalize('NFD', text)
         if unicodedata.category(c) != 'Mn'
     )
 
-    # Eliminar caracteres especiales
+    # Remove special characters
     text_normalized = re.sub(r'[^\w\s]', '', text_without_accents).strip()
 
-    # Reducir múltiples espacios a uno solo
+    # Reduce multiple spaces to a single one
     text_normalized = re.sub(r'\s+', ' ', text_normalized)
 
     return text_normalized

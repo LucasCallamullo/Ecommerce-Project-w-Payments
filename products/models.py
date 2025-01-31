@@ -1,6 +1,3 @@
-
-
-# Create your models here.
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils.text import slugify
@@ -11,11 +8,11 @@ class PCategory(models.Model):
     slug = models.SlugField(max_length=30, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
+        # Only generate slug if 'name' has a value, otherwise save it as null for future queries
         if self.name: 
             if not self.slug or self.slug == str(self.id):
                 self.slug = slugify(self.name)
-                # Asegurarse de que el slug sea único
+                # Ensure the slug is unique
                 while PCategory.objects.filter(slug=self.slug).exists():
                     self.slug = slugify(self.name + str(self.id))
         else:
@@ -32,11 +29,11 @@ class PSubcategory(models.Model):
     slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
+        # Only generate slug if 'name' has a value, otherwise save it as null for future queries
         if self.name: 
             if not self.slug or self.slug == str(self.id):
                 self.slug = slugify(self.name)
-                # Asegurarse de que el slug sea único
+                # Ensure the slug is unique
                 while PSubcategory.objects.filter(slug=self.slug).exists():
                     self.slug = slugify(self.name + str(self.id))
         else:
@@ -60,11 +57,11 @@ class PBrand(models.Model):
     image_url = models.URLField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # Solo generar slug si 'name' tiene un valor, sino lo guarda como null para futuras consultas
+        # Only generate slug if 'name' has a value, otherwise save it as null for future queries
         if self.name: 
             if not self.slug or self.slug == str(self.id):
                 self.slug = slugify(self.name)
-                # Asegurarse de que el slug sea único
+                # Ensure the slug is unique
                 while PBrand.objects.filter(slug=self.slug).exists():
                     self.slug = slugify(self.name + str(self.id))
         else:
@@ -74,24 +71,24 @@ class PBrand(models.Model):
     def __str__(self):
         return self.name
     
-    
+
 class ProductImage(models.Model):
-    # Tabla relacional adicional muchos a uno para almacenar varias imagenes para los productos
+    # Additional many-to-one relationship table to store multiple images for products
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='media/product_images/', null=True, blank=True)
     image_url = models.URLField(null=True, blank=True, default="https://back.tiendainval.com/backend/admin/backend/web/archivosDelCliente/items/images/20210108100138no_image_product.png")
     main_image = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Si no hay imágenes existentes, marcar esta como la principal
+        # If there are no existing images, mark this one as the main one
         if not self.product.images.exists():
             self.main_image = True
             
-        # Si no hay imágenes del producto marcadas como principal, marcar esta
+        # If there are no images marked as main, mark this one
         elif not self.product.images.filter(main_image=True).first():
             self.main_image = True
             
-        # si ya hay imagen principal dar valor de false
+        # If there is already a main image, set this to false
         else:
             self.main_image = False
             
@@ -116,28 +113,28 @@ class Product(models.Model):
     discount = models.IntegerField(default=0)
     description = models.TextField(null=True, blank=True)
     
-    # relacion uno a uno, cada producto tiene una categoria, sub, pbrand
+    # One-to-one relationship, each product has a category, subcategory, and brand
     category = models.ForeignKey('PCategory', on_delete=models.CASCADE, blank=True, null=True)
     subcategory = models.ForeignKey('PSubcategory', on_delete=models.CASCADE, blank=True, null=True)
     brand = models.ForeignKey('PBrand', on_delete=models.CASCADE, blank=True, null=True)
     
-    # fechas de actualizaciones de losprecios de productos
+    # Date fields for product price updates
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # para futuras calificaciones de usuarios
+    # For future user ratings
     stars = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
     
-    # para futuros productos que necesiten estos campos como ropa
+    # For future products that need these fields like clothing
     # color = models.CharField(max_length=50, null=True, blank=True)
     # size = models.CharField(max_length=50, null=True, blank=True)
     
     def save(self, *args, **kwargs):
-        # Verificar que la subcategoría pertenece a la categoría seleccionada
+        # Check that the subcategory belongs to the selected category
         if self.subcategory is not None:
             if self.subcategory.category != self.category:
                 raise ValueError(
-                    f"La subcategoría '{self.subcategory.name}' no pertenece a la categoría '{self.category.name}'."
+                    f"The subcategory '{self.subcategory.name}' does not belong to the category '{self.category.name}'."
                 )
                 
         super().save(*args, **kwargs)
@@ -147,7 +144,7 @@ class Product(models.Model):
 
     def make_stock_reserved(self, quantity):
         """
-            Metodo de los productos para poder reservar stock en las distintas ordenes de pago
+            Method for products to reserve stock for different payment orders
         """
         if not self.available or self.stock < quantity:
             return False
@@ -164,13 +161,25 @@ class Product(models.Model):
         
     @property
     def main_image(self):
+        """
+        This property allows us to identify the main image associated with the product, or
+        if not, retrieve an associated image or a default one.
+
+        Returns:
+            str: URL of an image associated with the product
+        """
+        
         image_url = None
         if self.images.exists():
             images = self.images.all()
-            # Intentar obtener la imagen principal
+            # Try to get the main image
             main_image = images.filter(main_image=True).first()
-            # Si no hay una imagen principal, obtener la primera imagen
+            # If there's no main image, get the first image
             image_url = main_image.image_url if main_image else images.first().imagen_url
+            
+            if not image_url:
+                image_url = "https://back.tiendainval.com/backend/admin/backend/web/archivosDelCliente/items/images/20210108100138no_image_product.png"
+            
         return image_url
     
     @property
@@ -180,4 +189,3 @@ class Product(models.Model):
         discount_amount = price * discount / 100
         new_price = price - discount_amount
         return new_price
-    

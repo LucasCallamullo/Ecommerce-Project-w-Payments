@@ -178,29 +178,29 @@
         </div>
 
         <!-- Recuadro de botones -->
-        <div class="d-flex mt-4">
+        <form class="d-flex mt-4" method="POST" id="product-detail-form">
+            {% csrf_token %}
 
             <div class="quantity-container-detail px-1 justify-content-between col-5">
-                <button class="btn prod-btn-qty" onclick="decrement(this)">
+                <button type="button" class="btn prod-btn-qty" onclick="decrement(this)">
                     -
                 </button>
 
-                <input type="text" class="form-control prod-input-qty" 
-                data-index="{{product.id}}" value="1" min="1">
+                <input type="text" class="form-control" id="prod-input-qty" value="1" min="1">
 
-                <button class="btn prod-btn-qty" onclick="increment(this)">
+                <button type="button" class="btn prod-btn-qty" onclick="increment(this)">
                     +
                 </button>
             </div>
 
-            <div class="col-1"></div>
+            <div class="col-1"> <input type="hidden" name="product_id" value="{{ product.id }}"> </div>
 
-            <button class="btn-add-item gap-1 col-6" data-index="{{ product.id }}">
+            <button class="btn-add-item gap-1 col-6" type="submit">
                 <span>Agregar</span>
                 <i class="fas fa-shopping-cart"></i>
             </button>
+        </form>
 
-        </div>
 
     </div>
 </div>

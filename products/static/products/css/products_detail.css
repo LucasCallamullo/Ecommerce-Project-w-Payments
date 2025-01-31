@@ -345,7 +345,7 @@
 }
 
 
-.prod-input-qty {
+#prod-input-qty {
     text-align: center; /* Texto centrado */
     font-size: var(--font-small);
     color: var(--text-primary);

@@ -32,15 +32,13 @@
         <form id="widget-register-form" class="widget-register-form" action="{% url 'register_widget' %}">
             {% csrf_token %}
 
-            <!-- Campo de Email 
-              <input type="email" id="w-email" name="w-email" class="form-control" required>-->
+            <!-- Campo de Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">    Email    </label>
                 {{ widget_form.email }}
             </div>
         
-            <!-- Campo de Password 
-             <input type="password" id="w-password" name="w-password" class="form-control" required>-->
+            <!-- Campo de Password -->
             <div class="mb-3">
                 <label for="password" class="form-label">    Password    </label>
                 {{ widget_form.password }}

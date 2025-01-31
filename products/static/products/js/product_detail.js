@@ -3,43 +3,84 @@
 // ========================================================================
 //               funcion botones del input y "agregar item"
 // ========================================================================
-function increment(button) {
+/*function increment(button) {
     // Encuentra el contenedor del input relacionado
     const input = button.parentElement.querySelector('.prod-input-qty');
-    let currentValue = parseInt(input.value, 10); // Obtiene el valor actual como número entero
-    
+    let currentValue = parseInt(input.value, 10);
+
     // Validar si el valor es un número válido
     if (isNaN(currentValue) || currentValue <= 0) {
         currentValue = 1
+    } else {
+        currentValue += 1;
     }
-
-    // Incrementa el valor
-    currentValue += 1;
-
-    // Actualiza el valor en el input
     input.value = currentValue;
 }
 
 function decrement(button) {
     // Encuentra el contenedor del input relacionado
     const input = button.parentElement.querySelector('.prod-input-qty');
-    let currentValue = parseInt(input.value, 10); // Obtiene el valor actual como número entero
+    let currentValue = parseInt(input.value, 10); 
+
+    if (isNaN(currentValue) || currentValue <= 1) {
+        currentValue = 1;
+    } else {
+        currentValue -= 1;
+    }
+    input.value = currentValue;
+}
+*/
+// Increment and decrement button handlers
+function increment(button) {
+    const input = button.closest('.quantity-container-detail').querySelector('#prod-input-qty');
+    let currentValue = parseInt(input.value, 10);
 
     // Validar si el valor es un número válido
     if (isNaN(currentValue) || currentValue <= 0) {
         currentValue = 1
+    } else {
+        currentValue += 1;
     }
+    input.value = currentValue;
+}
 
-    // Decrementa el valor, pero no permite valores menores que 1
-    if (currentValue > 1) {
+function decrement(button) {
+    const input = button.closest('.quantity-container-detail').querySelector('#prod-input-qty');
+    let currentValue = parseInt(input.value, 10);
+
+    // Validar si el valor es un número válido
+    if (isNaN(currentValue) || currentValue <= 1) {
+        currentValue = 1;
+    } else {
         currentValue -= 1;
     }
-
-    // Actualiza el valor en el input
     input.value = currentValue;
 }
 
 
+// Function to add products with buttons sent as forms using the CSRF token
+document.getElementById('product-detail-form').addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+    // Correctly accessing the product_id
+    const productId = this.querySelector('input[name="product_id"]').value;
+
+    // Get quantity of the product
+    const input = document.getElementById('prod-input-qty');
+    let currentValue = parseInt(input.value, 10);
+    
+    // Simple validation check
+    if (isNaN(currentValue) || currentValue <= 0) {
+        // This generic function is called from home/base/base.js
+        openAlert('Ingrese un numero válido.', 'red', 1000);
+        return;
+    }
+
+    // Handle adding product to cart
+    handleCartActions(productId, 'add', currentValue);
+});
+
+/* 
 // Reasigna eventos a los botones de incremento
 document.querySelectorAll('.btn-add-item').forEach(button => {
     button.addEventListener('click', function() {
@@ -57,7 +98,7 @@ document.querySelectorAll('.btn-add-item').forEach(button => {
         handleCartActions(productId, 'add', currentValue);
     });
 });
-
+*/
 
 // ========================================================================
 //               Para cambiar las imagens del contenedor main
@@ -84,13 +125,11 @@ document.querySelectorAll(".prod-small-image-container").forEach(container => {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-
     // Seleccionar el primer contenedor de imagen y agregarle la clase 'active'
     const firstContainer = document.querySelector(".prod-small-image-container");
     if (firstContainer) {
         firstContainer.classList.add("active");
     }
-
     // Seleccionamos todas las imágenes pequeñas
     const smallImages = document.querySelectorAll(".prod-small-image-container");
     let currentIndex = 0; // Índice de la imagen actual
@@ -136,19 +175,18 @@ document.addEventListener("DOMContentLoaded", function () {
 window.onload = () => {
     const overlay = document.getElementById('fullscreen-overlay');
     const productId = parseInt(overlay.getAttribute('data-index'), 10);
-    const imageContainer = document.getElementById('image-container'); // Contenedor que mostrará la imagen
+    const imageContainer = document.getElementById('image-container');
     const zoomButton = document.getElementById('zoom-button');
     const leftArrow = document.querySelector('.left-overlay');
     const rightArrow = document.querySelector('.right-overlay');
     let currentIndex = 0;
     let images = [];
-    let isZoomed = false; // Estado del zoom
-    let isDragging = false; // Estado del arrastre
-    let startX, startY; // Posiciones iniciales del mouse
-    let offsetX = 50, offsetY = 50; // Posición inicial del fondo (en porcentaje)
+    let isZoomed = false;       // Estado del zoom
+    let isDragging = false;     // Estado del arrastre
+    let startX, startY;         // Posiciones iniciales del mouse
+    let offsetX = 50, offsetY = 50;     // Posición inicial del fondo (en porcentaje)
 
     // Consultar el endpoint para obtener las imágenes
-    // fetch(`/images/${productId}/images/`)
     fetch(`/products-images/${productId}/`)
         .then(response => response.json())
         .then(data => {

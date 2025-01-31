@@ -33,12 +33,14 @@
                 <strong>${{ product.price }}</strong>
 
                 <!-- Botón de agregar al carrito -->
-                <div class="prod-extender-btn">
-                    <button class="prod-add-button" data-product-id="{{product.id}}">
+                <form class="prod-extender-btn" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+
+                    <button class="prod-add-button" type="submit">
                         Agregar
                     </button>
-                </div>
-
+                </form>
             </figcaption>
         </figure>
 

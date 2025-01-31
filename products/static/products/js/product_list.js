@@ -1,42 +1,42 @@
 
 
-let make_filter = false;
-
 
 // ==========================================================================
-//         AJAX PARA LAS TARJETAS QUE SE PRESENTAN en el product_list
+//         AJAX FOR CARDS PRESENTED IN THE product_list
 // ==========================================================================
+let make_filter = false;    // for revert the filter
+
 function updateProductListFromInput() {
-    // Recuperamos los filtros directamente desde el contenedor
+    // Retrieve the filters directly from the container
     const filtersElement = document.getElementById('filters');
     const filters = filtersElement.dataset;
     
     const searchInput = document.getElementById('search-input');
 
-    // Acceder a los filtros directamente (data-category-id --> categoryId, automático camelCase)
-    // Se asignan valores por defecto en caso de no existir, utiles para la logica el '0'
+    // Access filters directly (data-category-id --> categoryId, automatically camelCase)
+    // Default values are assigned in case they don't exist, useful for logic with '0'
     const categoryId = filters.categoryId || '';
     const subCategoryId = filters.subCategoryId || '';
     const topQuery = filters.topQuery || '';
     const inputNow = searchInput.value;
 
-    // para los casos donde se quiera resetear el filtro
+    // For cases where the filter should be reset
     if (make_filter && inputNow.length < 3) {
-        make_filter = false
-        updateProductList('0', topQuery, categoryId, subCategoryId);
+        make_filter = false;
+        updateProductList('', topQuery, categoryId, subCategoryId);
         return;
     }
 
-    // Verificar que la longitud del input sea >= 3 antes de continuar
+    // Check if the input length is >= 3 before proceeding
     if (inputNow.length < 3) return;
 
-    // timer de 300 ms para evitar multiples consultas 
+    // 300ms timer to avoid multiple queries
     let debounceTimer;
     clearTimeout(debounceTimer);
 
     debounceTimer = setTimeout(function() {
         updateProductList(inputNow, topQuery, categoryId, subCategoryId);
-        make_filter = true
+        make_filter = true;
     }, 300);
 };
 
@@ -47,7 +47,7 @@ async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) 
         &topQuery=${encodeURIComponent(topQuery)}&categoryId=${encodeURIComponent(categoryId)}
         &subCategoryId=${encodeURIComponent(subCategoryId)}`.replace(/\s+/g, '');
 
-        console.log('Request URL:', url); // Verifica la URL generada
+        console.log('Request URL:', url); // Verify the generated URL
 
         const response = await fetch(url, {
             method: 'GET',
@@ -60,39 +60,30 @@ async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) 
 
         const data = await response.json();
         
-        // realizar cambios en el contenedor y reasignar eventos 
+        // Make changes in the container and reassign events
         const carritoContent = document.getElementById('search-results');
         carritoContent.innerHTML = data.html_cards;
-        productButtonEvents();
 
+        // Reassign form events
+        formAddProductList();
+            
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
 
-function productButtonEvents() {
-    // Agregar el evento click dinámicamente
-    document.querySelectorAll('.prod-add-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
+// Function to add products with buttons sent as forms using the CSRF token
+function formAddProductList() {
+    document.querySelectorAll('.prod-extender-btn').forEach(form => {
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault(); 
+            
+            // Correctly accessing the product_id
+            const productId = form.querySelector('input[name="product_id"]').value;
             handleCartActions(productId, 'add', 1); 
-        });
-    });
-
-    // Detiene la propagación del evento hacia el <figure>
-    document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.prod-add-button');
-        buttons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                event.stopPropagation(); 
-                console.log(`Producto ID: ${button.dataset.productId}`);
-            });
         });
     });
 }
 
-
-// llamado inicial para actualizar la pagina
-productButtonEvents()
-
+formAddProductList();

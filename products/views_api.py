@@ -107,7 +107,6 @@ class ProductUpdateCardsQuery(APIView):
         category = utils.get_model_or_None(PCategory, category_id)
         subcategory = utils.get_model_or_None(PCategory, subcategory_id)
 
-
         products = utils.get_products_filters(
             category = category.id if category else None, 
             subcategory = subcategory.id if subcategory else None,
@@ -130,7 +129,7 @@ class ProductUpdateCardsQuery(APIView):
         
         # Si API_FULL es False, devolver HTML renderizado
         context = {'products': products}
-        html_cards = render_to_string('productos/products_list_cards.html', context)
+        html_cards = render_to_string('products/products_list_cards.html', context)
         return Response({'html_cards': html_cards}, status=status.HTTP_200_OK)
 
 
