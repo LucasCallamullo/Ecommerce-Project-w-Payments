@@ -209,7 +209,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # this is for deployment
-ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
+# ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     'https://project-ecommerce-payments.up.railway.app',  
     'http://127.0.0.1',
