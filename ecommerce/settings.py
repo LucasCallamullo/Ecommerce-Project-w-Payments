@@ -56,7 +56,7 @@ except environ.ImproperlyConfigured:
     MERCADO_PAGO_PUBLIC_KEY = os.getenv('MERCADO_PAGO_PUBLIC_KEY', 'default_public_key')
     MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MERCADO_PAGO_ACCESS_TOKEN', 'default_access_token')
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
-    SECRET_KEY = os.getenv('DEBUG', True)
+    DEBUG = os.getenv('DEBUG', True)
     
     DATABASES = {
         'default': {
@@ -80,23 +80,24 @@ INSTALLED_APPS = [
     
     # for deploy
     'whitenoise.runserver_nostatic',
+    'rest_framework',
     
     # My apps
     'home',
     'users',
-    'products',
     'cart',
+    'products',
     'orders',
     'payments',
-    'rest_framework',
+    
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
