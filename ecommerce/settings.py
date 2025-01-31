@@ -213,13 +213,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
 
 
-
 CSRF_TRUSTED_ORIGINS = [
     'https://project-ecommerce-payments.up.railway.app',
     'http://127.0.0.1',
-    'http://localhost:8000',
 ]
 
-CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
+# CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SAMESITE = 'None'  # Permitir cookies cross-site si es necesario
