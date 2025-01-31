@@ -102,19 +102,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# this is for deployment
-# ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = [
-    'https://project-ecommerce-payments.up.railway.app',  
-    'http://127.0.0.1',
-    'http://localhost:8000',
-]
-
-# CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SAMESITE = 'None'  # Permitir cookies cross-site si es necesario
-
 # =======================================================================
 #                        DRF SETTINGS STUFF 
 # =======================================================================
@@ -129,10 +116,10 @@ REST_FRAMEWORK = {
     ),
     
     # Esto es para usar drf con jwt (json web token)
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #    'rest_framework.authentication.BasicAuthentication',
+    #    'rest_framework.authentication.SessionAuthentication',
+    #),
 }
 # ====================================================================
 
@@ -218,3 +205,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Add for deploy to use "Whitenoise"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# this is for deployment
+# ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'https://project-ecommerce-payments.up.railway.app',  
+    'http://127.0.0.1',
+    'http://localhost:8000',
+]
+
+# CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SAMESITE = 'None'  # Permitir cookies cross-site si es necesario
