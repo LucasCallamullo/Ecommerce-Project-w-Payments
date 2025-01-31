@@ -18,12 +18,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# this is for deployment
-ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-w-payments.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://project-ecommerce-w-payments.up.railway.app', 'http://localhost']
-
-
 # =====================================================================================
 #             EVERYTHING RELATED TO ENVIRONMENTAL VARIABLES n DB
 # =====================================================================================
@@ -108,7 +102,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
+# this is for deployment
+ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-w-payments.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://project-ecommerce-w-payments.up.railway.app',  
+    'http://127.0.0.1',
+    'http://localhost:8000',
+]
 # =======================================================================
 #                        DRF SETTINGS STUFF 
 # =======================================================================
