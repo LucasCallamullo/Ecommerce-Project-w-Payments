@@ -57,6 +57,7 @@ async function handleCartActions(productId, action, value = 1) {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': getCookie('csrftoken')
             },
+            credentials: 'include', // Permite enviar cookies al servidor
             body: new URLSearchParams(bodyParams)
         });
 
