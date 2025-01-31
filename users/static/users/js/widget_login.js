@@ -161,7 +161,8 @@ function loginUser(form, widget = true) {
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('widget-register-form');
     if (form) {
-        loginUser(form);
+        // loginUser(form);
+        validFormsWithAlerts(form);
     } else {
         console.error("Formulario no encontrado.");
     }

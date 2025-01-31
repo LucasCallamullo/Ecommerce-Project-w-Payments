@@ -9,6 +9,10 @@ from cart.utils import get_render_htmls
 from products.models import Product
 
 
+def some_url(request):
+    return JsonResponse({"data": "hola mundoo"})
+
+
 def add_product(request):
     if request.method == 'POST':
         # recupera valores de la solicitud fetch en widget_carrito.js

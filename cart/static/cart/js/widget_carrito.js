@@ -58,7 +58,7 @@ async function handleCartActions(productId, action, value = 1) {
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: new URLSearchParams(bodyParams),
-            // credentials: 'include'
+            credentials: 'include',  // Asegúrate de incluir las credenciales si es necesario
         });
 
         if (!response.ok) {
@@ -182,5 +182,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-

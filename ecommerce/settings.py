@@ -68,6 +68,7 @@ except environ.ImproperlyConfigured:
             'PORT': os.getenv('MYSQL_PORT', '53817'),
         }
     }
+    
 # =====================================================================================
 # Application definition
 INSTALLED_APPS = [
@@ -103,28 +104,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# =======================================================================
-#                        DRF SETTINGS STUFF 
-# =======================================================================
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        # This allows you to view the API in HTML format (browser interface)
-        'rest_framework.renderers.BrowsableAPIRenderer',  
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    ),
-    
-    # Esto es para usar drf con jwt (json web token)
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #    'rest_framework.authentication.BasicAuthentication',
-    #    'rest_framework.authentication.SessionAuthentication',
-    #),
-}
-# ====================================================================
-
-
 ROOT_URLCONF = 'ecommerce.urls'
 
 TEMPLATES = [
@@ -143,7 +122,7 @@ TEMPLATES = [
                 'products.context_processors.get_categories_n_subcats',
                 'home.context_processors.get_ecommerce_data',
                 'cart.context_processors.carrito_total',
-                # 'users.context_processors.widget_register_form',
+                'users.context_processors.widget_register_form',
             ],
         },
     },
@@ -208,14 +187,36 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
+
+# =======================================================================
+#                        DRF SETTINGS STUFF 
+# =======================================================================
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        # This allows you to view the API in HTML format (browser interface)
+        'rest_framework.renderers.BrowsableAPIRenderer',  
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    
+    # Esto es para usar drf con jwt (json web token)
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #    'rest_framework.authentication.BasicAuthentication',
+    #    'rest_framework.authentication.SessionAuthentication',
+    #),
+}
+# ====================================================================
+
 # this is for deployment
 # ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = ['127.0.0.1', 'web-production-8e84.up.railway.app']
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://web-production-8e84.up.railway.app',
     'http://127.0.0.1',
+    'https://web-production-8e84.up.railway.app',
 ]
 
 # CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
