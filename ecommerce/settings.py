@@ -55,7 +55,7 @@ except environ.ImproperlyConfigured:
     # This is for deploy on railway
     MERCADO_PAGO_PUBLIC_KEY = os.getenv('MERCADO_PAGO_PUBLIC_KEY', 'default_public_key')
     MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MERCADO_PAGO_ACCESS_TOKEN', 'default_access_token')
-    SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
     DEBUG = os.getenv('DEBUG', True)
     
     DATABASES = {
@@ -69,8 +69,6 @@ except environ.ImproperlyConfigured:
         }
     }
 # =====================================================================================
-ALLOWED_HOSTS = ['*']
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -211,14 +209,17 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # this is for deployment
-# ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
+
+
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://project-ecommerce-payments.up.railway.app',  
+    'https://project-ecommerce-payments.up.railway.app',
     'http://127.0.0.1',
     'http://localhost:8000',
 ]
 
-# CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
+CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SAMESITE = 'None'  # Permitir cookies cross-site si es necesario

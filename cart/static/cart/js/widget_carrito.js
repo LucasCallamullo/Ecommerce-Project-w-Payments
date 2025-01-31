@@ -38,13 +38,13 @@ async function handleCartActions(productId, action, value = 1) {
         // Depend of the action we can call some endpoint
         switch (action) {
             case 'add':
-                endpoint = '/carrito/add';
+                endpoint = '/carrito/add/';
                 break;
             case 'subtract':
-                endpoint = '/carrito/subtract';
+                endpoint = '/carrito/subtract/';
                 break;
             case 'remove':
-                endpoint = '/carrito/remove';
+                endpoint = '/carrito/remove/';
                 break;
             default:
                 throw new Error('Acción desconocida');
