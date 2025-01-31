@@ -61,11 +61,11 @@ except environ.ImproperlyConfigured:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('MYSQL_DATABASE', 'default_database'),
-            'USER': os.getenv('MYSQL_USER', 'default_user'),
+            'NAME': os.getenv('MYSQL_DATABASE', 'railway'),
+            'USER': os.getenv('MYSQL_USER', 'root'),
             'PASSWORD': os.getenv('MYSQL_PASSWORD', 'default_password'),
             'HOST': os.getenv('MYSQL_HOST', 'localhost'),
-            'PORT': os.getenv('MYSQL_PORT', '3306'),
+            'PORT': os.getenv('MYSQL_PORT', '53817'),
         }
     }
 # =====================================================================================
@@ -209,12 +209,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # this is for deployment
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['127.0.0.1', 'project-ecommerce-payments.up.railway.app']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'web-production-8e84.up.railway.app']
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://project-ecommerce-payments.up.railway.app',
+    'https://web-production-8e84.up.railway.app',
     'http://127.0.0.1',
 ]
 
