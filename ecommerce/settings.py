@@ -122,7 +122,6 @@ TEMPLATES = [
                 'products.context_processors.get_categories_n_subcats',
                 'home.context_processors.get_ecommerce_data',
                 'cart.context_processors.carrito_total',
-                'users.context_processors.widget_register_form',
             ],
         },
     },

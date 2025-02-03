@@ -1,35 +1,8 @@
 
 
 // ========================================================================
-//               funcion botones del input y "agregar item"
+//            function buttons input and logic to add product
 // ========================================================================
-/*function increment(button) {
-    // Encuentra el contenedor del input relacionado
-    const input = button.parentElement.querySelector('.prod-input-qty');
-    let currentValue = parseInt(input.value, 10);
-
-    // Validar si el valor es un número válido
-    if (isNaN(currentValue) || currentValue <= 0) {
-        currentValue = 1
-    } else {
-        currentValue += 1;
-    }
-    input.value = currentValue;
-}
-
-function decrement(button) {
-    // Encuentra el contenedor del input relacionado
-    const input = button.parentElement.querySelector('.prod-input-qty');
-    let currentValue = parseInt(input.value, 10); 
-
-    if (isNaN(currentValue) || currentValue <= 1) {
-        currentValue = 1;
-    } else {
-        currentValue -= 1;
-    }
-    input.value = currentValue;
-}
-*/
 // Increment and decrement button handlers
 function increment(button) {
     const input = button.closest('.quantity-container-detail').querySelector('#prod-input-qty');
@@ -76,29 +49,10 @@ document.getElementById('product-detail-form').addEventListener("submit", async 
         return;
     }
 
-    // Handle adding product to cart
+    // This function is called from cart/widget_carrito.js
     handleCartActions(productId, 'add', currentValue);
 });
 
-/* 
-// Reasigna eventos a los botones de incremento
-document.querySelectorAll('.btn-add-item').forEach(button => {
-    button.addEventListener('click', function() {
-        const productId = this.getAttribute('data-index');
-        const input = button.parentElement.querySelector('.prod-input-qty');
-        let currentValue = parseInt(input.value, 10);
-
-        // Validar si el valor es un número válido
-        if (isNaN(currentValue) || currentValue <= 0) {
-            // esta funcion generica se llama desde home/base/base.js
-            openAlert('Ingrese un número correctamente.', 'red', 1000)
-            return;
-        }
-
-        handleCartActions(productId, 'add', currentValue);
-    });
-});
-*/
 
 // ========================================================================
 //               Para cambiar las imagens del contenedor main

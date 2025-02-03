@@ -1,112 +1,91 @@
 
 
+
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from django.contrib.auth import authenticate
-from rest_framework.exceptions import AuthenticationFailed
-from django.conf import settings
-from django.utils import timezone
-import json
-from datetime import timedelta
+from users.serializers import WidgetLoginSerializer, RegisterLoginSerializer
 
 
+from django.contrib.auth import authenticate, login, logout
 
-class LoginView(APIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            
-            
-            data = serializer.validated_data
-            response = Response(data)
-            
-            login(request, data["user"])
-            
-            expires = timezone.now() + timedelta(days=1)
-
-            response.set_cookie(
-                key='access_token',
-                value=data["tokens"]['access'],
-                httponly=True,
-                samesite='Lax',  # 'Lax' debería funcionar para la mayoría de los casos locales
-                expires=expires,
-                secure=settings.SECURE_SSL_REDIRECT if not settings.DEBUG else False,
-            )
-
-            return response
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 
-
-
-from django.http import JsonResponse
-from rest_framework import status
-from users.serializers import LoginSerializer
-
-
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-
-
-
-from django.conf import settings
-from datetime import timedelta
-from django.utils import timezone
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import status
-
-
-from django.contrib.auth import login
-# login(request, request.user) 
-
-class LoginView322(APIView):
+class RegisterUserView(APIView):
     
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            data = serializer.validated_data
-            response = Response(data)  # Usa Response de DRF aquí en lugar de JsonResponse
+        # When you pass `data=params`, the serializer calls the `validate` methods
+        serializer = RegisterLoginSerializer(data=request.data)  
+        if serializer.is_valid():  
+            # Calling `.save()` triggers the `create()` or `update()` method in the serializer
+            user = serializer.save()  # Executes `create()` and returns a `CustomUser` instance
+            login(request, user)      # Logs the user into the Django session
             
+            # To return the `CustomUser` object as JSON, pass it to the serializer without `data=`.
+            # This tells the serializer to serialize the object instead of validating it.
             
+            # Prepare the response with data
+            response_data = {
+                "user": RegisterLoginSerializer(user).data,
+                "message": "Registration successful"
+            }
             
-            # Configurar la cookie para el token de acceso
-            # expires = timezone.now() + timedelta(days=1)  # Configura la duración que desees para el JWT
-            max_age = timedelta(days=1)  # Define la duración de la cookie
-            
-            response.set_cookie(
-                key='access_token',
-                value=data["tokens"]['access'],  # Usa el token de acceso del diccionario
-                httponly=True,  # La cookie solo es accesible por el servidor, "none" si estan separados front y back
-                samesite='Lax',  # Asegura que la cookie solo se envíe en el mismo sitio
-                # expires=expires,  # Fecha de expiración
-                max_age=max_age,  # Duración de la cookie
-                secure=settings.SECURE_SSL_REDIRECT if not settings.DEBUG else False,  # Solo se envía por HTTPS en producción
-            )
-
-            return response  # Devuelve la respuesta correctamente
+            return Response(response_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class LoginView(APIView):
+    """
+    View that handles the login of a registered user.
 
+    Receives the form data from "widget_login.html" and validates it using the WidgetLoginSerializer.
+    If the data is valid, the user is authenticated and logged in to the Django session.
+
+    On success, it returns a response with the redirect URL and a success message.
+    On error, it returns the serializer errors to be displayed to the user.
+
+    **POST Method**
+    - Request: `data` (containing the email and password of the user).
     
-class ProtectedView(APIView):
-    permission_classes = [IsAuthenticated]  # Solo usuarios autenticados con JWT
+    - Success Response: A JSON object with:
+      - `message`: A message indicating the login was successful.
 
-    def get(self, request):
-        return Response({"message": "¡Estás autenticado con JWT!"})
+    - Error Response: 
+      - A JSON object with errors as "detail" to handle unsuccessful responses.
+    """
+    def post(self, request):
+        serializer = WidgetLoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            # Get data from the serializer's response
+            user = serializer.validated_data["user"]
+            message = serializer.validated_data["message"]
+            
+            login(request, user)  # Log the user into the Django session
+            return Response({"message": message}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CloseView(APIView):
+    """
+    View that allows a logged-in user to log out.
+
+    **POST Method**
+    - Success Response: A JSON object with:
+      - `redirect_url`: The URL to which the user will be redirected after logging out.
+    """
+    permission_classes = [IsAuthenticated]  # Only authenticated users can log out
+
+    def post(self, request):
+        logout(request)  # Log the user out
+        # Always return a JSON with a redirect URL to prevent errors
+        return Response({"message": "You close the session."}, status=status.HTTP_200_OK)
+
+
+
+

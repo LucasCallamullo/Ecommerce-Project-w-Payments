@@ -9,8 +9,11 @@ urlpatterns = [
     
 
     
-    path('widget-login/', LoginView.as_view(), name='widget-login'),
-    path('protected/', ProtectedView.as_view(), name='protected_view'),
+    path('widget-login/', LoginView.as_view(), name='widget_login'),
+    
+    path('close-session/', CloseView.as_view(), name='close_session'),
+    
+    path('register-session/', RegisterUserView.as_view(), name='register_user'),
     
     
 ]

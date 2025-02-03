@@ -12,14 +12,12 @@
     {% if user.is_authenticated %}
 
         <!-- Botón de Registro -->
-        <a href="{% url 'Profile' %}" class="btn-widget-register">
+        <a href="{% url 'user_profile' %}" class="btn-widget-register">
             <i class="fas fa-user-circle"></i>
-            <span id="user-email" data-email="{{user.email}}"
-                data-name="{{user.first_name}}" data-last-name="{{user.last_name}}">
-            </span>
+            <span> {{ user.email }} </span>
         </a>
 
-        <form class="widget-register-form" method="POST" action="{% url 'close_session' %}">
+        <form id="close-session" class="widget-register-form" method="POST" action="{% url 'close_session' %}">
             {% csrf_token %}
             <button type="submit">
                 <i class="fas fa-door-open"></i>
@@ -28,20 +26,22 @@
         </form>
 
     {% else %}
-    
-        <form id="widget-register-form" class="widget-register-form" action="{% url 'register_widget' %}">
+        <!-- Cuando el usuario no esta logeado verá esto -->
+        
+        <form id="widget-register-form" class="widget-register-form" action="{% url 'widget_login' %}">
             {% csrf_token %}
 
             <!-- Campo de Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">    Email    </label>
-                {{ widget_form.email }}
+                <input type="email" name="email" required>
             </div>
         
             <!-- Campo de Password -->
             <div class="mb-3">
                 <label for="password" class="form-label">    Password    </label>
-                {{ widget_form.password }}
+                <input type="password" name="password" required>
+                
             </div>
         
             <!-- Botón de Login -->
@@ -52,7 +52,7 @@
         <hr>
 
         <!-- Botón de Registro -->
-        <a href="{% url 'register_user' %}" class="btn-widget-register">
+        <a href="{% url 'register_user_page' %}" class="btn-widget-register">
             Register
         </a>
 

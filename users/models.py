@@ -76,7 +76,7 @@ class CustomUser(AbstractUser):
     username = None 
     
     email = models.EmailField(unique=True)  # El campo de email es único para cada usuario
-    phone = models.CharField(max_length=20, blank=True, null=True)  # Número de teléfono (opcional)
+    cellphone = models.CharField(max_length=20, blank=True, null=True)  # Número de teléfono (opcional)
     province = models.CharField(max_length=50, blank=True, null=True)  # Provincia del usuario (opcional)
     address = models.CharField(max_length=255, blank=True, null=True)  # Dirección del usuario (opcional)
     
@@ -106,17 +106,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email  # Devuelve el correo electrónico como representación del usuario
     
-    def tokens(self):
-        refresh = RefreshToken.for_user(self)
-        return {
-            'access': str(refresh.access_token),
-            'refresh': str(refresh)
-        }
-
-    
-    
     # BORRAR EVENTUALMENTE
-    
     # Método de validación para el email
     def clean_email(self):
         email = self.cleaned_data.get('email')

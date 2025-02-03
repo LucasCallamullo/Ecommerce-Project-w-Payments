@@ -55,138 +55,88 @@ document.getElementById('user-dropdown').addEventListener('animationend', functi
 // ========================================================================
 //           Validación generica de formularios con alertas de user
 // ========================================================================
-function validFormsWithAlerts(form) {
-    form.addEventListener('submit', async function(event) {
-        // Evita que el formulario se envíe de forma tradicional
-        event.preventDefault(); 
-        
-        const formData = new FormData(form);
-
-        try {
-            // mandamomos como url la action del formulario
-            const response = await fetch(form.action, { 
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest' 
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor.');
-            }
-
-            const data = await response.json(); // Procesar la respuesta como JSON
-
-            if (data.success) {
-                // La funcion openAlert viene de home/js/base.js
-                openAlert('Registro exitoso', 'green', 1000);
-                
-                // verificar bien despues el comportamiento de redirigir
-                setTimeout(() => {
-                    window.location.href = data.redirect_url; 
-                }, 1000);
-
-            } else {
-                // La funcion openAlert viene de home/js/base.js
-                const message = data.error || 'Ocurrió un error inesperado.';
-                openAlert(message, 'red', 2000);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            openAlert('Error al procesar la solicitud. Intenta nuevamente.', 'red', 2000);
-        }
-    });
-}
-
-// ========================================================================
-//           Validación generica de formularios con alertas de user
-// ========================================================================
-function loginUser(form, widget = true) {
+async function handleFormActions(form, actionType) {
     form.addEventListener("submit", async function (event) {
-        event.preventDefault(); // Evitamos el envío del formulario por defecto
+        event.preventDefault(); // Evitar el envío del formulario por defecto
 
-        // Identificar los campos de email y contraseña según el formulario
-        let emailID = widget ? "w-email" : "email";
-        let passID = widget ? "w-password" : "password";
-        let emailInput = document.getElementById(emailID);
-        let passInput = document.getElementById(passID);
-
-        const formData = {
-            email: emailInput ? emailInput.value : "",
-            password: passInput ? passInput.value : "",
-        };
+        // Convertimos FormData en JSON
+        const formData = new FormData(form);
+        const jsonData = Object.fromEntries(formData.entries());
+        console.log(jsonData);  // Verifica que el valor de la provincia esté incluido correctamente
 
         try {
-            // Mandamos los datos como POST al servidor usando la URL del formulario
             const response = await fetch(form.action, {
                 method: "POST",
                 headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData), // Convierte los datos del formulario a JSON
-                credentials: "include", // IMPORTANTE si usas cookies para autenticación
+
+                body: JSON.stringify(jsonData),
+
             });
 
-            if (!response.ok) {
-                throw new Error("Error en la respuesta del servidor.");
+            const data = await response.json();     // get data response
+
+            console.log(data);  // Ver el contenido completo de la respuesta
+            
+            if (!response.ok) {    // if not response valid from serializer
+                openAlert(data.detail || "Some error not response", "red", 1000);
+                return;
+            }
+            
+            // Redirect to specific url or to homre
+            let url = "/";
+
+            switch (actionType) {
+                case "Login":
+                    openAlert(data.message || "Login exitoso!", "green", 1000);
+                    url = "/profile/"
+                    break;
+
+                case "Register":
+                    openAlert(data.message || "Cuenta creada con exito!", "green", 1000);
+                    break;
+
+                case "Close":
+                    openAlert(data.message || "Sesión cerrada", "red", 1000);
+                    break;
+            
+                default:
+                    openAlert("Uknown action.", "red", 1000);
+                    break;
             }
 
-            const data = await response.json(); // Procesa la respuesta como JSON
+            // Redirect after a delay
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1000);
 
-            if (data.tokens) {
-                
-                // También guardar en cookies (pero idealmente debería hacerse en el backend)
-                // document.cookie = `access_token=${data.tokens.access}; path=/; HttpOnly=true`;
-
-                openAlert("Login exitoso!", "green", 1000);
-
-                // Redirigir a otra página después de un breve delay
-                setTimeout(() => {
-                    window.location.href = data.redirect_url;
-                }, 1000);
-
-            } else {
-                openAlert("Error: " + (data.detail || "No se recibieron tokens"), "red", 2000);
-            }
         } catch (error) {
             console.error("Error:", error);
-            openAlert("Error al procesar la solicitud. Intenta nuevamente.", "red", 2000);
+            openAlert(`Error: ${error.message}`, "red", 2000);
         }
     });
 }
 
 
-// Capturamos el evento del envío de datos al formulario
+// ============================================================================
+//                Capture events of forms 
+// ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('widget-register-form');
-    if (form) {
-        // loginUser(form);
-        validFormsWithAlerts(form);
+    // Captura el formulario de login
+    const loginForm = document.getElementById('widget-register-form');
+    if (loginForm) {
+        handleFormActions(loginForm, "Login");
     } else {
-        console.error("Formulario no encontrado.");
-    }
-});
-
-
-
-
-// Esta funcion es para cambiar lo que se muestra una vez que esta logeado
-document.addEventListener('DOMContentLoaded', function() {
-    
-    const user_span = document.getElementById('user-email')
-    const datasos = user_span.dataset;
-
-    const email = datasos.email || '0';
-    const name = datasos.name || '0';
-    const lastName = datasos.lastName || '0';
-
-    if (name !== '0') {
-        var username = name + ' ' + lastName
-    } else {
-        // Obtener la parte antes del '@'
-        var username = email.split('@')[0];
+        console.error("Form widget-register-form is not available.");
     }
 
-    user_span.textContent = username;
+    // Captura el formulario de cierre de sesión
+    const closeSessionForm = document.getElementById('close-session');
+    if (closeSessionForm) {
+        handleFormActions(closeSessionForm, "Close");
+    } else {
+        console.error("Form close-session is not available.");
+    }
 });

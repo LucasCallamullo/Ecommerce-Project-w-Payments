@@ -43,19 +43,20 @@
     <form id="register-form" class="col-8 register-user-container" method="POST" action="{% url 'register_user' %}">
         {% csrf_token %}
         
-        <!-- Fila para Email y Password -->
-        <div class="d-flex">
+        <!-- Fila para Email y Password { { form . email } }  { { form . password1 } } -->
+        <div class="d-flex"> 
             <div class="col-6 mb-3">
                 <div class="register-container">
                     <label for="email">E-mail</label>
-                    {{ form.email }}
+                    <input type="email" name="email" required>
+                    
                 </div>
             </div>
 
             <div class="col-6 mb-3">
                 <div class="register-container">
-                    <label for="password1">Password</label>
-                    {{ form.password1 }}
+                    <label for="password">Password</label>
+                    <input type="password" name="password" required>
                 </div>
             </div>
         </div>
@@ -65,14 +66,14 @@
             <div class="col-6">
                 <div class="register-container">
                     <label for="first_name">Nombre</label>
-                    {{ form.first_name }}
+                    <input type="text" name="first_name" required>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="register-container">
                     <label for="last_name">Apellido</label>
-                    {{ form.last_name }}
+                    <input type="text" name="last_name" required>
                 </div>
             </div>
         </div>
@@ -81,15 +82,19 @@
         <div class="d-flex mb-3">
             <div class="col-6">
                 <div class="register-container">
-                    <label for="phone">Celular</label>
-                    {{ form.phone }}
+                    <label for="cellphone">Celular</label>
+                    <input type="text" name="cellphone" required>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="register-container">
                     <label for="province">Provincia</label>
-                    {{ form.province }}
+                    <select name="province" id="id_province" class="form-control">
+                        {% for key, value in provinces %}
+                            <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
         </div>
@@ -99,7 +104,7 @@
             <div class="col-6">
                 <div class="register-container">
                     <label for="address">Dirección</label>
-                    {{ form.address }}
+                    <input type="text" name="address" required>
                 </div>
             </div>
         </div>
@@ -123,7 +128,7 @@
             const form = document.getElementById('register-form');
             // esta funcion se llama desde widget_register.js que se precarga antes debido a que esta
             // antes que este bloque en base.html
-            validFormsWithAlerts(form)
+            handleFormActions(form, "Register")
         });
     </script>
 {% endblock %}
