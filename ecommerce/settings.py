@@ -18,6 +18,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_URL_RAILWAY = "https://web-production-8e84.up.railway.app"
+
 # =====================================================================================
 #             EVERYTHING RELATED TO ENVIRONMENTAL VARIABLES n DB
 # =====================================================================================

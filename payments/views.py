@@ -23,8 +23,8 @@ def payment_view(request):
     expiration_date_from = generate_datetime(flag='start')
     expiration_date_to = generate_datetime(flag='end')
     
-    # para ls urls ngrok -.->  ngrok http http://localhost:8000
-    back_urls = get_urls_ngrok('https://generic-ecommerce-project-production.up.railway.app')
+    # get urls for mp payments
+    back_urls = get_urls_ngrok(settings.BASE_URL_RAILWAY)
     
     # a modo de prueba usaremos algun carrito de algun usuario
     # if request.user.is_authenticated: 
