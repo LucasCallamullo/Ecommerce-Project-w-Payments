@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import IsAuthenticated
 
 
+
 class RegisterUserView(APIView):
     
     def post(self, request):
@@ -85,7 +86,4 @@ class CloseView(APIView):
         logout(request)  # Log the user out
         # Always return a JSON with a redirect URL to prevent errors
         return Response({"message": "You close the session."}, status=status.HTTP_200_OK)
-
-
-
 

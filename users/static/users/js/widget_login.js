@@ -62,7 +62,6 @@ async function handleFormActions(form, actionType) {
         // Convertimos FormData en JSON
         const formData = new FormData(form);
         const jsonData = Object.fromEntries(formData.entries());
-        console.log(jsonData);  // Verifica que el valor de la provincia esté incluido correctamente
 
         try {
             const response = await fetch(form.action, {
@@ -77,11 +76,13 @@ async function handleFormActions(form, actionType) {
             });
 
             const data = await response.json();     // get data response
-
-            console.log(data);  // Ver el contenido completo de la respuesta
             
-            if (!response.ok) {    // if not response valid from serializer
-                openAlert(data.detail || "Some error not response", "red", 1000);
+            if (!response.ok) {    // If the response is not ok from the serializer
+                if (data && data.detail) {
+                    openAlert(data.detail, "red", 1000);  // If only have one response detail
+                } else {
+                    showErrorAlerts(data);        // If there is an accumulation of errors
+                }
                 return;
             }
             
@@ -96,6 +97,7 @@ async function handleFormActions(form, actionType) {
 
                 case "Register":
                     openAlert(data.message || "Cuenta creada con exito!", "green", 1000);
+                    url = "/profile/"
                     break;
 
                 case "Close":
@@ -117,6 +119,23 @@ async function handleFormActions(form, actionType) {
             openAlert(`Error: ${error.message}`, "red", 2000);
         }
     });
+}
+
+
+function showErrorAlerts(errors, delay=1200) {
+    let delay_total = 0;
+    for (let field in errors) {
+        if (errors.hasOwnProperty(field)) {
+            errors[field].forEach((error) => {
+                setTimeout(function() {
+                    openAlert(`${field}: ${error}`, "red", delay);
+                }, delay_total);
+
+                // Incrementa el retraso para la siguiente alerta
+                delay_total += delay; 
+            });
+        }
+    }
 }
 
 

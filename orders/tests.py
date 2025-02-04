@@ -4,7 +4,7 @@ from django.test import TestCase
 from orders.models import (
     OrderStatus, PaymentMethod, OrderItem, Order, Envio, Factura, TipoFactura
 )
-from productos.models import Product
+from products.models import Product
 from users.models import CustomUser
 
 
@@ -25,7 +25,7 @@ class OrderModelsTest(TestCase):
             postal_code=1900,
         )
         self.factura = Factura.objects.create(
-            tipo=TipoFactura.A,
+            tipo="A",
             buyer_name="Juan Pérez",
             buyer_dni=12345678,
             description="Factura por compra online."

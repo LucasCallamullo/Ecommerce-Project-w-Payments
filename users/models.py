@@ -105,15 +105,3 @@ class CustomUser(AbstractUser):
     # Método para representar el usuario como una cadena (usando el email)
     def __str__(self):
         return self.email  # Devuelve el correo electrónico como representación del usuario
-    
-    # BORRAR EVENTUALMENTE
-    # Método de validación para el email
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        try:
-            # Valida el email utilizando el validador de Django
-            validate_email(email)
-        except ValidationError:
-            # Si el email no es válido, se lanza una excepción de validación
-            raise ValidationError("Invalid email address")
-        return email

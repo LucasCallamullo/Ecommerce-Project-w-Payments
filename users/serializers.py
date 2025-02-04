@@ -2,13 +2,16 @@
 
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, NotAcceptable
+from rest_framework.exceptions import NotAcceptable, ValidationError
+
 
 CustomUser = get_user_model()
 
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+
 
 
 class RegisterLoginSerializer(serializers.Serializer):
@@ -25,10 +28,11 @@ class RegisterLoginSerializer(serializers.Serializer):
         try:
             validate_email(value)
         except ValidationError:
-            raise serializers.ValidationError("El correo electrónico no es válido.")
+            raise ValidationError("El correo electrónico no es válido.")
         
         if CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Este correo ya está registrado.")
+            # raise serializers.ValidationError({"detail": "Este correo ya está registrado."})
+            raise ValidationError("Este correo ya está registrado.")
         
         return value
 
@@ -37,7 +41,7 @@ class RegisterLoginSerializer(serializers.Serializer):
         try:
             validate_password(value)
         except ValidationError as e:
-            raise serializers.ValidationError(e.messages)
+            raise ValidationError(e.messages)
         return value
 
     def validate(self, data):
@@ -45,7 +49,7 @@ class RegisterLoginSerializer(serializers.Serializer):
         required_fields = ["first_name", "last_name", "cellphone", "province", "address"]
         for field in required_fields:
             if not data.get(field, "").strip():
-                raise serializers.ValidationError({field: "Este campo no puede estar vacío."})
+                raise ValidationError(f"{field}: Este campo no puede estar vacío.")
         return data
 
     def create(self, validated_data):
@@ -60,6 +64,7 @@ class RegisterLoginSerializer(serializers.Serializer):
             address=validated_data["address"]
         )
         return user
+
 
 
 class WidgetLoginSerializer(serializers.Serializer):
