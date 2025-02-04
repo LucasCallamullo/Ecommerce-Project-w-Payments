@@ -123,7 +123,7 @@ function validFormOrderWithAlerts(form) {
                 body: formData,
                 headers: {
                     // Asegúrate de enviar el token CSRF
-                    // 'X-CSRFToken': getCookie('csrftoken')
+                    'X-CSRFToken': getCookie('csrftoken'),
                     'X-Requested-With': 'XMLHttpRequest' 
                 }
             });

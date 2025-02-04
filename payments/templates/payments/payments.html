@@ -8,6 +8,24 @@
 
 {% block extra_head %}
     <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+
+    <style>
+        #form-checkout {
+          display: flex;
+          flex-direction: column;
+          max-width: 600px;
+        }
+    
+        .container-mp {
+          height: 18px;
+          display: inline-block;
+          border: 1px solid rgb(118, 118, 118);
+          border-radius: 2px;
+          padding: 1px 2px;
+        }
+    </style>
+
 {% endblock %}
 
 
@@ -16,11 +34,23 @@
 {% block content %}
 
 
-    <div id="wallet_container">
+    <!-- <div id="wallet_container"></div> -->
 
-    </div>
-
-
+    
+    <form id="form-checkout">
+        <div id="form-checkout__cardNumber" class="container-mp"></div>
+        <div id="form-checkout__expirationDate" class="container-mp"></div>
+        <div id="form-checkout__securityCode" class="container-mp"></div>
+        <input type="text" id="form-checkout__cardholderName" />
+        <select id="form-checkout__issuer"></select>
+        <select id="form-checkout__installments"></select>
+        <select id="form-checkout__identificationType"></select>
+        <input type="text" id="form-checkout__identificationNumber" />
+        <input type="email" id="form-checkout__cardholderEmail" />
+    
+        <button type="submit" id="form-checkout__submit">Pagar</button>
+        <progress value="0" class="progress-bar">Cargando...</progress>
+    </form>
 
 
 
@@ -54,6 +84,117 @@
 
 {% block extra_scripts %}
     <script>
+        
+        const cardForm = mp.cardForm({
+            amount: "100.5",
+            iframe: true,
+            form: {
+                id: "form-checkout",
+                cardNumber: {
+                    id: "form-checkout__cardNumber",
+                    placeholder: "Numero de tarjeta",
+                },
+                expirationDate: {
+                    id: "form-checkout__expirationDate",
+                    placeholder: "MM/YY",
+                },
+                securityCode: {
+                    id: "form-checkout__securityCode",
+                    placeholder: "Código de seguridad",
+                },
+                cardholderName: {
+                    id: "form-checkout__cardholderName",
+                    placeholder: "Titular de la tarjeta",
+                },
+                issuer: {
+                    id: "form-checkout__issuer",
+                    placeholder: "Banco emisor",
+                },
+                installments: {
+                    id: "form-checkout__installments",
+                    placeholder: "Cuotas",
+                },        
+                identificationType: {
+                    id: "form-checkout__identificationType",
+                    placeholder: "Tipo de documento",
+                },
+                identificationNumber: {
+                    id: "form-checkout__identificationNumber",
+                    placeholder: "Número del documento",
+                },
+                cardholderEmail: {
+                    id: "form-checkout__cardholderEmail",
+                    placeholder: "E-mail",
+                },
+            },
+            callbacks: {
+                onFormMounted: error => {
+                    if (error) return console.warn("Form Mounted handling error: ", error);
+                    console.log("Form mounted");
+                },
+                
+                onSubmit: async event => {
+                    event.preventDefault();
+                
+                    const formData = cardForm.getCardFormData();
+                
+                    const paymentData = {
+                        token: formData.token,
+                        issuer_id: formData.issuerId,
+                        payment_method_id: formData.paymentMethodId,
+                        transaction_amount: Number(formData.amount),
+                        installments: Number(formData.installments),
+                        description: "Descripción del producto",
+                        payer: {
+                            email: formData.cardholderEmail,
+                            identification: {
+                                type: formData.identificationType,
+                                number: formData.identificationNumber
+                            }
+                        }
+                    };
+                
+                    try {
+                        const response = await fetch("/process_payment/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(paymentData)
+                        });
+                
+                        const result = await response.json();
+                        if (result.status === "approved") {
+                            alert("Pago aprobado!");
+                            // Aquí podrías redirigir o mostrar una confirmación visual
+                        } else {
+                            alert("Hubo un problema con el pago: " + result.status);
+                        }
+                    } catch (error) {
+                        console.error("Error al procesar el pago:", error);
+                        alert("Error al procesar el pago.");
+                    }
+                },
+                
+                onFetching: (resource) => {
+                    console.log("Fetching resource: ", resource);
+        
+                    // Animate progress bar
+                    const progressBar = document.querySelector(".progress-bar");
+                    progressBar.removeAttribute("value");
+        
+                    return () => {
+                        progressBar.setAttribute("value", "0");
+                    };
+                }
+            },
+        });
+    </script>
+
+
+    
+    <script>
+        /*
          // Usa la public key que pasaste desde el backend
         const mp = new MercadoPago('{{ public_key }}', { 
             locale: 'es-AR'
@@ -71,6 +212,7 @@
                 },
             },
          });
+         */
     </script>
 
 {% endblock %}
