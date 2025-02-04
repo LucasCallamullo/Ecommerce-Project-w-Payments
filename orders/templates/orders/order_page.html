@@ -38,21 +38,22 @@
 
 
 
+
 <div class="d-flex">
 	<div class="col-7"> 
-		<form id="form-order" class="form-container" method="POST" action="{% url 'valid_form_order' %}">
+		<form id="form-order" class="form-container" method="POST" action="{% url 'valid_order_form' %}">
 			{% csrf_token %}
 			<h1> Tus Datos </h1>
 
 			<!-- Nombre y Apellido -->
 			<div class="row">
 				<div class="col">
-					<label for="nombre">Nombre</label>
-					{{ form.name }}
+					<label for="first_name">Nombre</label>
+					<input type="text" name="first_name" required>
 				</div>
 				<div class="col">
-					<label for="apellido">Apellido</label>
-					{{ form.last_name }}
+					<label for="last_name">Apellido</label>
+					<input type="text" name="last_name" required>
 				</div>
 			</div>
 
@@ -60,11 +61,11 @@
 			<div class="row">
 				<div class="col">
 					<label for="telefono-cod">Celular</label>
-					{{ form.cellphone }}
+					<input type="text" name="cellphone" required>
 				</div>
 				<div class="col">
 					<label for="email">Email</label>
-					{{ form.email }}
+					<input type="email" name="email" required>
 				</div>
 			</div>
 
@@ -72,7 +73,7 @@
 			<div class="row">
 				<div class="col">
 					<label for="dni">DNI</label>
-					{{ form.dni }}
+					<input type="text" name="dni" required>
 				</div>
 			</div>
 
@@ -80,7 +81,7 @@
 			<div class="row">
 				<div class="col">
 					<label for="nota">Aclaración del pedido</label>
-					{{ form.detail_order }}
+					<textarea name="detail_order"></textarea>
 				</div>
 			</div>
 

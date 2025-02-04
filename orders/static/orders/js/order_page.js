@@ -48,13 +48,11 @@ async function updateExtraForm(envioMethod) {
     }
 }
 
-
 // recuperar variables
 const enviosButtons = document.querySelectorAll('input[name="envio"]');
 const envioSpan = document.getElementById('envio-method')
 const extraForm = document.getElementById('extra_form');
 let envioMethodId = 0;
-
 
 enviosButtons.forEach(envio => {
     envio.addEventListener('change', (event) => {
@@ -81,7 +79,6 @@ confirmButton.addEventListener('click', () => {
     flagsOrdersConfirm();
 });
 
-
 // Llamar a la función en el evento del botón de confirmación
 confirmButtonModal.addEventListener('click', () => {
     flagsOrdersConfirm();
@@ -101,6 +98,21 @@ confirmButtonModal.addEventListener('click', () => {
 });
 
 
+function flagsOrdersConfirm() {
+    if ( idPayment == 0 ) {
+        openAlert('Todavía no seleccionaste un método de pago.', 'red', 2000)
+    } else if ( envioMethodId == 0 ) {
+        openAlert('Todavía no seleccionaste un método de envío.', 'red', 2000)
+    } else {
+        const modalOverlay2 = document.getElementById('modal-overlay');
+        modalOverlay2.style.display = 'flex';
+    }
+}
+
+
+// =============================================================================
+//            Eventos para validar el formulario con la modal
+// =============================================================================
 // Función para manejar el formulario con validaciones y alertas
 function validFormOrderWithAlerts(form) {
 
@@ -112,43 +124,40 @@ function validFormOrderWithAlerts(form) {
         // Agregar los valores adicionales a los datos del formulario
         const formData = new FormData(form);
         formData.append('payment_id', idPayment);
-        formData.append('envio_method_id', envioMethodId);
+        formData.append('envio_method_id', envioMethodId);  
 
-        console.log("aca paso algo malo");
+        const jsonData = Object.fromEntries(formData.entries()); // Convertimos FormData en JSON
 
         try {
             // Mandamos la solicitud fetch con la acción del formulario
             const response = await fetch(form.action, { 
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(jsonData),
                 headers: {
-                    // Asegúrate de enviar el token CSRF
                     'X-CSRFToken': getCookie('csrftoken'),
-                    'X-Requested-With': 'XMLHttpRequest' 
+                    "Content-Type": "application/json",
                 }
             });
 
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor.');
-            }
-
             const data = await response.json(); // Procesar la respuesta como JSON
 
-            if (data.success) {
-                // Función para mostrar alertas (debe estar definida en tu proyecto)
-                openAlert(data.message, 'green', 1000);
-                console.log(data.message);
-
-                // Redirigir a la URL proporcionada por la respuesta
-                setTimeout(() => {
-                    window.location.href = data.redirect_url; 
-                }, 1000);
-
-            } else {
-                const message = data.error || 'Ocurrió un error inesperado.';
-                openAlert(message, 'red', 2000);
-                console.log(message);
+            if (!response.ok) {    // If the response is not ok from the serializer
+                if (!data.success) {
+                    openAlert("No hay suficiente stock para su carrito.", 'red', 1500);
+                } else {
+                    showErrorAlerts(data);        // If there is an accumulation of errors
+                }
+                return;
             }
+
+            // Función para mostrar alertas con mensajes de exito
+            openAlert("Pedido guardado, complete su pago para retirar!", 'green', 2000);
+            console.log(data.message);
+
+            // Redirigir a la URL
+            setTimeout(() => {
+                window.location.href = '/payment_view/'; 
+            }, 2000);
 
         } catch (error) {
             console.error('Error:', error);
@@ -164,18 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function flagsOrdersConfirm() {
-    if ( idPayment == 0 ) {
-        openAlert('Todavía no seleccionaste un método de pago.', 'red', 2000)
-    } else if ( envioMethodId == 0 ) {
-        openAlert('Todavía no seleccionaste un método de envío.', 'red', 2000)
-    } else {
-        const modalOverlay2 = document.getElementById('modal-overlay');
-        modalOverlay2.style.display = 'flex';
-    }
-}
-
-
+// =============================================================================
+//            Eventos para abrir el modal
+// =============================================================================
 function modalEvents() {
     const orderButton = document.getElementById('order-btn');
     const modalOverlay = document.getElementById('modal-overlay');

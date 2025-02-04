@@ -78,11 +78,10 @@ async function handleFormActions(form, actionType) {
             const data = await response.json();     // get data response
             
             if (!response.ok) {    // If the response is not ok from the serializer
-                if (data && data.detail) {
-                    openAlert(data.detail, "red", 1000);  // If only have one response detail
-                } else {
-                    showErrorAlerts(data);        // If there is an accumulation of errors
-                }
+
+                openAlert("Algunos campos estan incompletos", "red", 1000);
+                
+                showErrorAlerts(data);        // If there is an accumulation of errors
                 return;
             }
             

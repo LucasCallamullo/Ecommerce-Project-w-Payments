@@ -41,4 +41,6 @@ urlpatterns = [
     path('', include("cart.urls_api")),
     
     path('', include("users.urls_api")),
+    
+    path('', include("orders.urls_api")),
 ]

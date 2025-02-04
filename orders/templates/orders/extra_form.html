@@ -5,27 +5,27 @@
 
     <div class="row"> 
         <div class="col">
-            <label for="nombre_quien_retira">Nombre quien retira</label>
-            {{ form.name_retiro }}
+            <label for="name_retiro">Nombre quien retira</label>
+            <input type="text" name="name_retiro" required>
         </div>
 
         <div class="col">
-            <label for="dni_quien_retira">DNI quien retira</label>
-            {{ form.dni_retiro }}
+            <label for="dni_retiro">DNI quien retira</label>
+            <input type="text" name="dni_retiro" required>
         </div>
     </div>
   
-    
-
-        
-
 {% else %}
     
     <h3>Datos de Envío</h3>
     <div class="row"> 
         <div class="col">
-            <label for="provincia">Provincia</label>
-            {{ form.province }}
+            <label for="province">Provincia</label>
+            <select name="province" id="id_province" class="form-control">
+                {% for key, value in provinces %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="col">
@@ -49,4 +49,5 @@
         <label for="detalles">Detalles del Envío</label>
         {{ form.detail }}
     </div>
+
 {% endif %}
