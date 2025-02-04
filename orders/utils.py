@@ -19,9 +19,9 @@ def confirm_stock_available(user_id):
     
     for item in cart.items.all():
         quantity = item.quantity
-        product = item.product
+        
         # llamamos al metodo del modelo Product
-        flag = product.make_stock_reserved(quantity)
+        flag = item.product.make_stock_reserved(quantity)
         
         # Devolvemos el nombre del producto que no tiene suficiente stock
         if flag is False:
@@ -30,7 +30,7 @@ def confirm_stock_available(user_id):
             return False
         
         # obtenemos una lista con los productos que fueron modificacods para eficiencia
-        list_product_unreserved.append({"product": product, "qty":quantity})
+        list_product_unreserved.append({"product": item.product, "qty":quantity})
         
     return True
         

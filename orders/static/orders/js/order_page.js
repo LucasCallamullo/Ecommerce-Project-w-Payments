@@ -142,12 +142,12 @@ function validFormOrderWithAlerts(form) {
             const data = await response.json(); // Procesar la respuesta como JSON
 
             if (!response.ok) {    // If the response is not ok from the serializer
-                if (!data.success) {
-                    openAlert("No hay suficiente stock para su carrito.", 'red', 1500);
-                } else {
-                    showErrorAlerts(data);        // If there is an accumulation of errors
-                }
+                showErrorAlerts(data);        // If there is an accumulation of errors
                 return;
+            }
+
+            if (!data.success) {
+                openAlert("No hay suficiente stock para su carrito.", 'red', 1500);
             }
 
             // Función para mostrar alertas con mensajes de exito
