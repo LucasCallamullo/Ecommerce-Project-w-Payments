@@ -13,21 +13,22 @@ class OrderFormSerializer(serializers.Serializer):
     email = serializers.EmailField()
     cellphone = serializers.CharField()
     dni = serializers.CharField()
-    detail_order = serializers.CharField()
+    detail_order = serializers.CharField(required=False, allow_blank=True)
 
     # Campos de dirección, inicialmente no son obligatorios
-    province = serializers.CharField(required=False)
-    city = serializers.CharField(required=False)
-    address = serializers.CharField(required=False)
-    postal_code = serializers.CharField(required=False)
-    detail = serializers.CharField(required=False)
+    province = serializers.CharField(required=False, allow_blank=True)
+    city = serializers.CharField(required=False, allow_blank=True)
+    address = serializers.CharField(required=False, allow_blank=True)
+    postal_code = serializers.CharField(required=False, allow_blank=True)
+    detail = serializers.CharField(required=False, allow_blank=True)
     
     # Campos de retiro en local, inicialmente no son obligatorios
-    name_retiro = serializers.CharField(required=False)
-    dni_retiro = serializers.CharField(required=False)
+    name_retiro = serializers.CharField(required=False, allow_blank=True)
+    dni_retiro = serializers.CharField(required=False, allow_blank=True)
 
-    # Método de envío
-    id_envio_method = serializers.CharField()
+    # Método de envío y pago
+    envio_method_id = serializers.CharField()
+    payment_method_id = serializers.CharField()
 
     def validate(self, data):
         # Campos dependiendo del método de envío
@@ -41,6 +42,7 @@ class OrderFormSerializer(serializers.Serializer):
             for field in retiro_fields:
                 if not data.get(field, "").strip():
                     raise ValidationError(f"{field}: Este campo no puede estar vacío.")
+                
         else:  # Si no es retiro, entonces deben ser los campos de dirección
             for field in envio_fields:
                 if not data.get(field, "").strip():
