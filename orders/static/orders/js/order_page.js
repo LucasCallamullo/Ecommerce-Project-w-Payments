@@ -123,7 +123,7 @@ function validFormOrderWithAlerts(form) {
 
         // Agregar los valores adicionales a los datos del formulario
         const formData = new FormData(form);
-        formData.append('payment_id', idPayment);
+        formData.append('payment_method_id', idPayment);
         formData.append('envio_method_id', envioMethodId);  
 
         const jsonData = Object.fromEntries(formData.entries()); // Convertimos FormData en JSON
@@ -148,6 +148,7 @@ function validFormOrderWithAlerts(form) {
 
             if (!data.success) {
                 openAlert("No hay suficiente stock para su carrito.", 'red', 1500);
+                return;
             }
 
             // Función para mostrar alertas con mensajes de exito

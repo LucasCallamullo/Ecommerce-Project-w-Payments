@@ -34,7 +34,7 @@ class OrderFormSerializer(serializers.Serializer):
         envio_fields = ['province', 'city', 'address', 'postal_code', 'detail']
         retiro_fields = ['name_retiro', 'dni_retiro']
         
-        envio_method = data.get("id_envio_method")  # Asegúrate de acceder correctamente al valor
+        envio_method = data.get("envio_method_id")  # Asegúrate de acceder correctamente al valor
         
         if envio_method in ["1", 1]:  # Si es retiro en local
             # Validar campos de retiro

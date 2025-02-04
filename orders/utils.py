@@ -30,7 +30,7 @@ def confirm_stock_available(user_id):
             return False
         
         # obtenemos una lista con los productos que fueron modificacods para eficiencia
-        list_product_unreserved.append({"product": item.product, "qty":quantity})
+        list_product_unreserved.append({"product": item.product, "quantity":quantity})
         
     return True
         
