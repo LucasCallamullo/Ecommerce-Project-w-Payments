@@ -45,7 +45,7 @@ def make_unreservation_items(list_product_unreserved):
         product.make_stock_unreserved(quantity)
 
     
-    
+# this is for legacy no not use more forms only serializers
 def get_form_errors(form_errors):
     # Procesar errores de manera legible
     errors = []

@@ -99,11 +99,13 @@ def success(request):
     # para confirmar la orden marcarla como compra realizada
     payer = payment.get("payer", {})
     
-    order, factura = confirm_order(request, payer)
+    # get the order and factura created
+    order, factura, message = confirm_order(request, payer)
     
     # Asignar el número de factura basado en el ID generado
-    factura.invoice_number = f"FAC-{factura.id:06d}"
-    factura.save()
+    if factura:    # stupid check
+        factura.invoice_number = f"FAC-{factura.id:06d}"
+        factura.save()
     
     cart = request.user.carrito
     
@@ -112,6 +114,8 @@ def success(request):
         'order': order,
         
         # this is for debug
+        'message': message,
+        
         'items': items,
         'payer': payer,
         'payment': payment,

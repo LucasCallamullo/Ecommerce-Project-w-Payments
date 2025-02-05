@@ -16,6 +16,8 @@
     <h1>¡Pago realizado con éxito!</h1>
     <p>Gracias por tu compra. Tu pedido ha sido procesado.</p>
 
+    <p>MENSAJE : {{ message }} </p>
+
     <p>Detalles del pago:</p>
 
 
@@ -94,6 +96,11 @@
             <li>
                 {{ item.title }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }}
             </li>
+        {% empty %}
+            <li>
+                esto se supone que esta vacio correctametne xddd
+            </li>
+
         {% endfor %}
     </ul>
 
@@ -105,16 +112,21 @@
             <li>
                 {{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.product.price }}
             </li>
+        {% empty %}
+            <li>
+                esto se supone que esta vacio correctametne xddd
+            </li>
+
         {% endfor %}
     </ul>
     
     <div class="separador mt-3 mb-3"> </div>
     
-    <div>  {{ payer }}  </div>
+    <div> PAYER:  {{ payer }}  </div>
 
     <div class="separador mt-3 mb-3"> </div>
 
-    <div>  {{ message }}  </div>
+    <div> MENSAJE: {{ message }}  </div>
     
     <!-- Aquí podrías incluir algún icono de éxito -->
     <img src="https://www.mercadopago.com/org-img/MP3/home/logomp3.gif" alt="Pago exitoso">
@@ -122,7 +134,7 @@
 
     <div class="separador mt-3 mb-3"> </div>
     <div class="mt-3 mb-3"> </div>
-    <p> {{ payment }} </p>
+    <p> PAYMENT: {{ payment }} </p>
 
 {% endblock %}
 

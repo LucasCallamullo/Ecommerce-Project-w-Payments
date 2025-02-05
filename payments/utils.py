@@ -42,11 +42,11 @@ def confirm_order(request, payer):
     # recuperamos el order data de la session en el paso anterior que se guardo
     order_data = request.session.get("order_data")
     if not order_data:    # stupid check
-        return None, "No hay datos de orden disponibles."
+        return None, None, "No hay datos de orden disponibles."
 
     user = request.user    # get user
     if not user.is_authenticated:    # stupid check
-        return None, "Usuario no autenticado."
+        return None, None, "Usuario no autenticado."
 
     try:
         with transaction.atomic():
@@ -54,7 +54,7 @@ def confirm_order(request, payer):
             payment_id = int(order_data.get("payment_method_id", 0))
 
             if not envio_method_id or not payment_id:    # stupid check
-                return None, "Falta el método de envío o pago."
+                return None, None, "Falta el método de envío o pago."
 
             # Crear envío
             envio_method = EnvioMethod.objects.get(id=envio_method_id)
@@ -144,7 +144,7 @@ def confirm_order(request, payer):
             carrito.clear()
             # cart.items.all().delete()
 
-            return new_order, "Se creó correctamente la orden."
+            return new_order, factura, "La nueva orden fue creada con exito!"
 
     except Exception as e:
-        return None, f"Error al confirmar la orden: {e}"
+        return None, None, f"Error al confirmar la orden: {e}"
