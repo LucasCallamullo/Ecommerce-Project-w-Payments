@@ -1,6 +1,8 @@
 
 
 from django.utils.html import escape
+from django.db import transaction
+
 from cart.models import Cart
 from products.models import Product
 
@@ -13,32 +15,45 @@ def confirm_stock_available(user_id):
     If it returns False, it means there is not enough stock available.
     """
     
-    # Recuperamos el cart asociado al usuario con prefetch_related para optimizar la consulta
-    cart = Cart.objects.prefetch_related('items__product').get(user_id=user_id)
-    
-    list_product_unreserved = []
-    
-    for item in cart.items.all():
-        quantity = item.quantity
+    # Iniciamos una transacción para que select_for_update() funcione
+    with transaction.atomic():
         
-        # Bloqueamos el producto con select_for_update para evitar condiciones de carrera
-        product = Product.objects.select_for_update().get(id=item.product.id)
-        
-        # Llamamos al método del modelo Product para reservar el stock
-        flag = product.make_stock_reserved(quantity)
-        
-        # Devolvemos el nombre del producto que no tiene suficiente stock
-        if flag is False:
-            # Deshacemos la reservación de los productos modificados
-            make_unreservation_items(list_product_unreserved)
-            return False
-        
-        # Agregamos los productos reservados para poder deshacer la reservación si es necesario
-        list_product_unreserved.append({"product": product, "quantity": quantity})
-        
+        # Recuperamos el cart asociado al usuario con prefetch_related para optimizar la consulta
+        cart = Cart.objects.prefetch_related('items__product').get(user_id=user_id)
+
+        for item in cart.items.all():
+            quantity = item.quantity
+
+            # Bloqueamos el producto con select_for_update para evitar condiciones de carrera
+            product = Product.objects.select_for_update().get(id=item.product.id)
+
+            # Llamamos al método del modelo Product para reservar el stock
+            flag = product.make_stock_reserved(quantity)
+            
+            # Devolvemos el nombre del producto que no tiene suficiente stock
+            if flag is False:
+                # Deshacemos la reservación de los productos modificados
+                transaction.set_rollback(True)  # Cancela todo automáticamente
+                return False 
+
     return True
+
         
 def make_unreservation_items(list_product_unreserved):
+    """
+    list_product_unreserved = []
+    if flag is False:
+        # Deshacemos la reservación de los productos modificados
+        transaction.set_rollback(True)  # Cancela todo automáticamente
+        return False
+        make_unreservation_items(list_product_unreserved)
+        return False
+    
+    # Agregamos los productos reservados para poder deshacer la reservación si es necesario
+    list_product_unreserved.append({"product": product, "quantity": quantity})
+    """
+    
+    
     for items in list_product_unreserved:
         product = items["product"]
         quantity = items["quantity"]
