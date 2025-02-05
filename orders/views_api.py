@@ -17,6 +17,7 @@ class order_form(APIView):
         if confirm_stock is False:
             return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
         
+        print(request.data)  # Para ver qué datos realmente llegan
         serializer = OrderFormSerializer(data=request.data)
 
         if serializer.is_valid():

@@ -158,6 +158,7 @@ function validFormOrderWithAlerts(form) {
             // Redirigir a la URL
             setTimeout(() => {
                 window.location.href = '/payment_view/'; 
+                // window.location.href = '/'; 
             }, 2000);
 
         } catch (error) {
