@@ -2,14 +2,15 @@
 
 from django.utils.html import escape
 from cart.models import Cart
+from products.models import Product
 
 
 def confirm_stock_available(user_id):
     """
-        Funcion destinada a reservar stock de cada producto dentro del carrito
-        para la creacion del link de pago
-        
-        si llegase a retornar false significa que no hay stock disponible
+    Function to reserve stock for each product in the cart
+    to create the payment link.
+    
+    If it returns False, it means there is not enough stock available.
     """
     
     # Recuperamos el cart asociado al usuario con prefetch_related para optimizar la consulta
@@ -20,26 +21,29 @@ def confirm_stock_available(user_id):
     for item in cart.items.all():
         quantity = item.quantity
         
-        # llamamos al metodo del modelo Product
-        flag = item.product.make_stock_reserved(quantity)
+        # Bloqueamos el producto con select_for_update para evitar condiciones de carrera
+        product = Product.objects.select_for_update().get(id=item.product.id)
+        
+        # Llamamos al método del modelo Product para reservar el stock
+        flag = product.make_stock_reserved(quantity)
         
         # Devolvemos el nombre del producto que no tiene suficiente stock
         if flag is False:
-            # deshacemos la reservacion de los items que modificamos
+            # Deshacemos la reservación de los productos modificados
             make_unreservation_items(list_product_unreserved)
             return False
         
-        # obtenemos una lista con los productos que fueron modificacods para eficiencia
-        list_product_unreserved.append({"product": item.product, "quantity":quantity})
+        # Agregamos los productos reservados para poder deshacer la reservación si es necesario
+        list_product_unreserved.append({"product": product, "quantity": quantity})
         
     return True
-        
         
 def make_unreservation_items(list_product_unreserved):
     for items in list_product_unreserved:
         product = items["product"]
         quantity = items["quantity"]
         product.make_stock_unreserved(quantity)
+
     
     
 def get_form_errors(form_errors):

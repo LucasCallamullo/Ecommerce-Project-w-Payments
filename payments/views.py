@@ -89,27 +89,30 @@ def success(request):
     # Recupera el ID del pago que Mercado Pago envió en la notificación
     payment_id = int(request.GET.get('payment_id'))
 
+    # Recuperamos los datos del payment despues del success por mercado pago para almacenar informacion
     payment_response = sdk.payment().get(payment_id)
     payment = payment_response["response"]
 
-    # Accede a la lista de ítems (productos) que fueron comprados
-    items = payment.get("additional_info", {}).get("items", [])  # Verifica si los ítems están dentro de "additional_info"
+    # Verifica si los ítems están dentro de "additional_info"
+    items = payment.get("additional_info", {}).get("items", [])
     
     # para confirmar la orden marcarla como compra realizada
     payer = payment.get("payer", {})
     
-    order, message = confirm_order(request, payer)
+    order, factura = confirm_order(request, payer)
+    
     # Asignar el número de factura basado en el ID generado
-    # factura.invoice_number = f"FAC-{factura.id:06d}"
-    # factura.save()
+    factura.invoice_number = f"FAC-{factura.id:06d}"
+    factura.save()
     
     cart = request.user.carrito
     
     contexto = {
         'cart': cart,
-        'items': items,
         'order': order,
-        'message': message,
+        
+        # this is for debug
+        'items': items,
         'payer': payer,
         'payment': payment,
     }
@@ -117,6 +120,12 @@ def success(request):
 
 
     return render(request, 'payments/success.html', contexto)
+
+
+
+
+
+
 
 
 def failure(request):

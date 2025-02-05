@@ -3,7 +3,9 @@
 from orders.models import Order, OrderStatus, OrderItem
 from orders.models import Envio, EnvioMethod, PaymentMethod
 from orders.models import Factura
-from cart.models import Cart
+from cart.carrito import Carrito
+
+from products.models import Product
 
 
 from django.db import transaction
@@ -11,53 +13,63 @@ from django.db import transaction
 
 def confirm_order(request, payer):
     """
-    order_data = {
-        'name': form.cleaned_data.get('name'),
-        'last_name': form.cleaned_data.get('last_name'),
-        'cellphone': form.cleaned_data.get('cellphone'),
-        'email': form.cleaned_data.get('email'),
-        'dni': form.cleaned_data.get('dni'),
-        'detail_order': form.cleaned_data.get('detail_order', ''),
-        'id_payment': id_payment,
-        'id_envio_method': id_envio_method,
-    }
-    if id_envio_method == '1': 
-        order_data.update({
-            'name_retiro': form.cleaned_data.get('name_retiro'),
-            'dni_retiro': form.cleaned_data.get('dni_retiro'),
-        })
-    # Envío a domicilio
-    else:  
-        order_data.update({
-            'province': form.cleaned_data.get('province'),
-            'city': form.cleaned_data.get('city'),
-            'address': form.cleaned_data.get('address'),
-            'postal_code': form.cleaned_data.get('postal_code', ''), #no necesario
-            'detail': form.cleaned_data.get('detail', ''),
-        })
-    """
     
-    order_data = request.session.get("order_data", {})
-    # if not order_data:
-    #    return
+    
+    order_data = {
+        "first_name": "Lucas",
+        "last_name": "Martinez",
+        "email": "lucas.martinez@example.com",
+        "cellphone": "3515437688",
+        "dni": "41224335",
+        "detail_order": "Por favor, entregar antes de las 18:00.",
+        
+        # NOTE if id_envio_method == '1': # this is only for retire local
+        "name_retiro": "lucas",
+        "dni_retiro": "martinez",
+        
+        # NOTE if id_envio_method != '1': # Home delivery
+        "province": "Córdoba",
+        "city": "Córdoba Capital",
+        "address": "Av. Colón 1234",
+        "postal_code": "5000",
+        "detail": "Departamento 2B",
+        
+        # NOTE this is for use to complete de order
+        "envio_method_id": "2", 
+        "payment_method_id": "3"
+    }
+    """
+    # recuperamos el order data de la session en el paso anterior que se guardo
+    order_data = request.session.get("order_data")
+    if not order_data:    # stupid check
+        return None, "No hay datos de orden disponibles."
+
+    user = request.user    # get user
+    if not user.is_authenticated:    # stupid check
+        return None, "Usuario no autenticado."
 
     try:
         with transaction.atomic():
+            envio_method_id = int(order_data.get("envio_method_id", 0))
+            payment_id = int(order_data.get("payment_method_id", 0))
+
+            if not envio_method_id or not payment_id:    # stupid check
+                return None, "Falta el método de envío o pago."
+
             # Crear envío
-            envio_method_id = int(order_data["id_envio_method"])
             envio_method = EnvioMethod.objects.get(id=envio_method_id)
             envio = Envio.objects.create(
                 method=envio_method,
-                buyer_name = order_data.get("name_retiro", ""),
-                buyer_dni = order_data.get("dni_retiro", ""),
-                address = order_data.get("address", ""),
-                province = order_data.get("province", ""),
-                city = order_data.get("city", ""),
-                postal_code = order_data.get("postal_code", ""),
-                detail = order_data.get("detail", ""),
+                buyer_name=order_data.get("name_retiro", ""),
+                buyer_dni=order_data.get("dni_retiro", ""),
+                address=order_data.get("address", ""),
+                province=order_data.get("province", ""),
+                city=order_data.get("city", ""),
+                postal_code=order_data.get("postal_code", ""),
+                detail=order_data.get("detail", ""),
             )
 
-            # Crear factura
+            # Extraer datos del payer(pagador) from MP API of the response success
             mp_name = mp_last_name = mp_dni = None
             if payer:
                 mp_name = payer.get("first_name", None)
@@ -66,55 +78,73 @@ def confirm_order(request, payer):
                 if identification:
                     mp_dni = identification.get("number", None)
 
+            # Obtener carrito
+            # cart = Cart.objects.prefetch_related('items__product').get(user=user)
+            # total_cart = sum(float(item.product.price) * item.quantity for item in cart.items.all())
             
-            
-            cart = Cart.objects.prefetch_related('items__product').get(user=request.user)
-            total_cart = sum(float(item.product.price) * item.quantity for item in cart.items.all())
-            
+            # Obtenemos el carrito de la session
+            carrito = Carrito(request)
+            total_cart = carrito.total_price
+
+            # Crear factura
             factura = Factura.objects.create(
                 f_type="B",
-                buyer_name=order_data.get("name", ""),
+                buyer_name=order_data.get("first_name", ""),
                 buyer_last_name=order_data.get("last_name", ""),
                 buyer_dni=order_data.get("dni", ""),
                 email=order_data.get("email", ""),
                 cellphone=order_data.get("cellphone", ""),
                 total_items=total_cart,
                 shipment_cost=envio_method.price,
-                name_mp = mp_name,
-                last_name_mp = mp_last_name,
-                dni_mp = mp_dni,
-                invoice_number = None
+                name_mp=mp_name,
+                last_name_mp=mp_last_name,
+                dni_mp=mp_dni,
+                invoice_number=None  # This generate after create Factura
             )
-            
 
             # Crear orden
-            payment_id = int(order_data["id_payment"])
             payment_method = PaymentMethod.objects.get(id=payment_id)
-            status = OrderStatus.objects.get(id=2)  # Orden Pendiente
-            
+            status = OrderStatus.objects.get(id=2)  # Orden en estado "Pendiente"
+
             new_order = Order.objects.create(
-                user= request.user,
-                status= status,
-                payment= payment_method,
-                envio= envio,
-                detail_order= order_data.get("detail_order", ""),
-                factura= factura
+                user=user,
+                status=status,
+                payment=payment_method,
+                envio=envio,
+                detail_order=order_data.get("detail_order", ""),
+                factura=factura
             )
 
             # Crear OrderItems
-            for item in cart.items.all():
+            """  for item in cart.items.all():
                 OrderItem.objects.create(
                     order=new_order,
                     product=item.product,
                     quantity=item.quantity,
                     price=item.product.price
                 )
+            """
+            # Obtener todos los productos del carrito en una sola consulta
+            product_ids = [value["id"] for _, value in carrito.items]
+            products = {product.id: product for product in Product.objects.filter(id__in=product_ids)}
+            
+            for _, value in carrito.items:
                 
-            # 
-            message = f"Se creo correctamente la orden"
-            return new_order, message
-    
-    # Manejar errores y registrar logs si es necesario
+                 # Acceder al producto ya consultado
+                product = products.get(value["id"]) 
+
+                OrderItem.objects.create(
+                    order=new_order,
+                    product=product,
+                    quantity=value["qty"],
+                    price=product.price
+                )
+
+            # Vaciar el carrito tras la compra
+            carrito.clear()
+            # cart.items.all().delete()
+
+            return new_order, "Se creó correctamente la orden."
+
     except Exception as e:
-        message = f"Error al confirmar la orden: {e}"
-        return None, message
+        return None, f"Error al confirmar la orden: {e}"
