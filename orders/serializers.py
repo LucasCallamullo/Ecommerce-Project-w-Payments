@@ -27,8 +27,8 @@ class OrderFormSerializer(serializers.Serializer):
     dni_retiro = serializers.CharField(required=False, allow_blank=True)
 
     # Método de envío y pago
-    envio_method_id = serializers.CharField()
-    payment_method_id = serializers.CharField()
+    envio_method_id = serializers.CharField(required=False)
+    payment_method_id = serializers.CharField(required=False)
 
     def validate(self, data):
         # Campos dependiendo del método de envío
