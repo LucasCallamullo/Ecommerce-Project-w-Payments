@@ -11,6 +11,10 @@ def intdot(value):
     """
     try:
         value = float(value)
+        
+        if value == 0:
+            return f"0"
+        
         return f"{value:,.0f}".replace(",", ".")
     except (ValueError, TypeError):
         return value

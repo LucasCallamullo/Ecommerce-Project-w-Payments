@@ -18,6 +18,8 @@
 
     <p>MENSAJE : {{ message }} </p>
 
+    <p>MENSAJE_Error : {{ message_error }} </p>
+
     <p>Detalles del pago:</p>
 
 
@@ -29,34 +31,34 @@
             <div class="card-body">
                 <!-- Buyer Information -->
                 <h4 class="mb-3"> Información comprador </h4>
-                <p><strong>Name:</strong> {{ order.factura.buyer_name }} {{ order.factura.buyer_last_name }}</p>
-                <p><strong>Email:</strong> {{ order.factura.email }}</p>
-                <p><strong>Phone:</strong> {{ order.factura.cellphone }}</p>
-                <p><strong>DNI:</strong> {{ order.factura.buyer_dni }}</p>
+                <p><strong>Name:</strong> {{ factura.buyer_name }} {{ factura.buyer_last_name }}</p>
+                <p><strong>Email:</strong> {{ factura.email }}</p>
+                <p><strong>Phone:</strong> {{ factura.cellphone }}</p>
+                <p><strong>DNI:</strong> {{ factura.buyer_dni }}</p>
                 
                 <!-- Shipping Information -->
                 <h4 class="mb-3">Shipping Information</h4>
-                <p><strong>Shipping Method:</strong> {{ order.envio.method.name }}</p>
-                {% if order.envio.method.id == 1 %}
-                    <p><strong>buyer_name:</strong> {{ order.envio.buyer_name }}</p>
-                    <p><strong>buyer_dni:</strong> {{ order.envio.buyer_dni }}</p>
+                <p><strong>Shipping Method:</strong> {{ envio_method.name }}</p>
+                {% if envio_method.id == 1 %}
+                    <p><strong>buyer_name:</strong> {{ envio.buyer_name }}</p>
+                    <p><strong>buyer_dni:</strong> {{ envio.buyer_dni }}</p>
                 {% else %}
-                    <p><strong>Address:</strong> {{ order.envio.address }}</p>
-                    <p><strong>City:</strong> {{ order.envio.city }}</p>
-                    <p><strong>Province:</strong> {{ order.envio.province }}</p>
-                    <p><strong>Postal Code:</strong> {{ order.envio.postal_code }}</p>
-                    <p><strong>Details:</strong> {{ order.envio.detail }}</p>
+                    <p><strong>Address:</strong> {{ envio.address }}</p>
+                    <p><strong>City:</strong> {{ envio.city }}</p>
+                    <p><strong>Province:</strong> {{ envio.province }}</p>
+                    <p><strong>Postal Code:</strong> {{ envio.postal_code }}</p>
+                    <p><strong>Details:</strong> {{ envio.detail }}</p>
                 {% endif %}
 
                 <!-- Order Summary -->
                 <h4 class="mb-3">Pedido</h4>
                 <p><strong>Order ID:</strong> {{ order.id }}</p>
-                <p><strong>Methodo de Pago:</strong> {{ order.payment.name }}</p>
+                <p><strong>Methodo de Pago:</strong> {{ payment.name }}</p>
                 <p><strong>Status:</strong> {{ order.status.name }}</p>
-                <p><strong>Factura Numero:</strong> ${{ order.factura.invoice_number }}</p>
-                <p><strong>Total Items:</strong> ${{ order.factura.total_items }}</p>
-                <p><strong>Costo de Envio:</strong> ${{ order.factura.shipment_cost }}</p>
-                <p><strong>Costo Total:</strong> ${{ order.factura.total }}</p>
+                <p><strong>Factura Numero:</strong> ${{ factura.invoice_number }}</p>
+                <p><strong>Total Items:</strong> ${{ factura.total_items }}</p>
+                <p><strong>Costo de Envio:</strong> ${{ factura.shipment_cost }}</p>
+                <p><strong>Costo Total:</strong> ${{ factura.total }}</p>
 
                 <!-- Order Items -->
                 <h4 class="mb-3">Pedido Items</h4>
@@ -70,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in order.products.all %}
+                        {% for item in items %}
                         <tr>
                             <td>{{ item.product.name }}</td>
                             <td>{{ item.quantity }}</td>
@@ -90,9 +92,19 @@
 
     <div class="separador mt-3 mb-3"> </div>
 
-    <h2> ITEMS </h2>
+
+    <div class="separador mt-3 mb-3"> </div>
+    <div class="separador mt-3 mb-3"> </div>
+    <div class="separador mt-3 mb-3"> </div>
+
+    <h1>
+        PARA DEBUG
+    </h1>
+
+
+    <h3> ITEMS </h2>
     <ul>
-        {% for item in items %}
+        {% for item in items_mp %}
             <li>
                 {{ item.title }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }}
             </li>
@@ -114,7 +126,7 @@
             </li>
         {% empty %}
             <li>
-                esto se supone que esta vacio correctametne xddd
+                esto se supone que esta vacio correctametne vacio el carrito xddd
             </li>
 
         {% endfor %}
@@ -134,7 +146,7 @@
 
     <div class="separador mt-3 mb-3"> </div>
     <div class="mt-3 mb-3"> </div>
-    <p> PAYMENT: {{ payment }} </p>
+    <p> PAYMENT: {{ payment_mp }} </p>
 
 {% endblock %}
 

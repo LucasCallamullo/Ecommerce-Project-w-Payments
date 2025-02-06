@@ -1,8 +1,7 @@
 
 
 from datetime import datetime, timezone, timedelta
-
-def generate_datetime(flag='start', hours_window=4, utc_offset=-3):
+def generate_datetime(flag: str='start', hours_window: int=4, utc_offset: int=-3) -> str:
     """
     Genera una fecha y hora formateada en el estándar ISO 8601.
     
@@ -35,11 +34,13 @@ def generate_datetime(flag='start', hours_window=4, utc_offset=-3):
     return formatted_time
 
 
-
-def get_urls_ngrok(url):
+def get_urls_ngrok(url: str) -> dict:
+    """ 
+        Obtiene de forma generica las urls necesarias para trabajar con mercado pago
+    """
     if url.endswith('/'):
         url = url.rstrip("/")
-        
+    
     back_urls = {
         "success": url + "/success/",
         "failure": url + "/failure/",
@@ -50,6 +51,8 @@ def get_urls_ngrok(url):
     
     
 from cart.models import Cart
+from orders.models import EnvioMethod
+
 def get_items_from_cart(request):
     """
     Se espera que la funcion devuelva todos los items almacenados en el carrito del usuario con el formato
@@ -70,37 +73,59 @@ def get_items_from_cart(request):
     """
     items = []
     total_cart = 0
-    
     user = request.user
-    
-    # if not user.is_authenticated:
-    #    return items, total_cart
 
     # REcuperamos el cart asociado al usuario con prefetch_related para optimizar la consulta
     cart = Cart.objects.prefetch_related('items__product').get(user=user)
     
     for item in cart.items.all():
         price = float(item.product.price)
-        qty = item.quantity
+        quantity = item.quantity
         
         items.append({
             "id": item.product.id,
             "title": item.product.name,
-            "quantity": qty, 
+            "quantity": quantity, 
             "unit_price": price,
             "currency_id": "ARS",  # Moneda (ajustar según sea necesario)
             "picture_url": item.product.main_image,
             "description": item.product.description if item.product.description else '',
-            "category_id": item.product.category.name,
+            # "category_id": item.product.category.name,
+            "category_id": "computing",
         })
         
         # aprovechamos el recorrido para calcular el total cart
-        total_cart += price * qty
+        total_cart += price * quantity
          
+    # obtenemos la info de la session
+    order_data = request.session.get("order_data", {})
+    
+    # recuperamos el envio method para obtener sus datos y agregarlos a los items
+    envio_method_id = int(order_data.get("envio_method_id", 0))    # falta un stupid check para el caso de 0
+    envio_method = EnvioMethod.objects.get(id=envio_method_id)
+    
+    # Al usar check out pro incluiremos al costo de envio si existiera como un item
+    items.append({
+        "id": envio_method.id,
+        "title": envio_method.name,
+        "quantity": 1, 
+        "unit_price": float(envio_method.price),
+        "currency_id": "ARS",  # Moneda (ajustar según sea necesario)
+        # "picture_url": item.product.main_image,
+        "description": "precio del envío",
+        "category_id": "envío",
+    })
+    
+    total_cart += float(envio_method.price)    # terminamos de acumular los valores
+    
     return items, total_cart
     
 
 def get_items_with_discount(items, discount, total):
+    """  
+        Esto es para obtener los items con un descuento total aplicado proporcionalmente
+        si el descuento fueran 5000, descontaría a todos los items proporcionalmente 5000
+    """
     
     # Recalcular precios proporcionalmente
     for item in items:
@@ -135,35 +160,34 @@ def get_payer_info_from_form(request):
     },
         
     order_data = {
-        'name': form.cleaned_data.get('name'),
-        'last_name': form.cleaned_data.get('last_name'),
-        'cellphone': form.cleaned_data.get('cellphone'),
-        'email': form.cleaned_data.get('email'),
-        'dni': form.cleaned_data.get('dni'),
-        'detail_order': form.cleaned_data.get('detail_order', ''),
-        'id_payment': id_payment,
-        'id_envio_method': id_envio_method,
+        "first_name": "Lucas",
+        "last_name": "Martinez",
+        "email": "lucas.martinez@example.com",
+        "cellphone": "3515437688",
+        "dni": "41224335",
+        "detail_order": "Por favor, entregar antes de las 18:00.",
+        
+        # NOTE if id_envio_method == '1': # this is only for retire local
+        "name_retiro": "lucas",
+        "dni_retiro": "martinez",
+        
+        # NOTE if id_envio_method != '1': # Home delivery
+        "province": "Córdoba",
+        "city": "Córdoba Capital",
+        "address": "Av. Colón 1234",
+        "postal_code": "5000",
+        "detail": "Departamento 2B",
+        
+        # NOTE this is for use to complete de order
+        "envio_method_id": "2", 
+        "payment_method_id": "3"
     }
-    if id_envio_method == '1': 
-        order_data.update({
-            'name_retiro': form.cleaned_data.get('name_retiro'),
-            'dni_retiro': form.cleaned_data.get('dni_retiro'),
-        })
-    # Envío a domicilio
-    else:  
-        order_data.update({
-            'province': form.cleaned_data.get('province'),
-            'city': form.cleaned_data.get('city'),
-            'address': form.cleaned_data.get('address'),
-            'postal_code': form.cleaned_data.get('postal_code', ''), #no necesario
-            'detail': form.cleaned_data.get('detail', ''),
-        })
     """
     # obtenemos la info de la session
     order_data = request.session.get("order_data", {})
     
     payer = {
-        "name": order_data.get("name", ''),
+        "name": order_data.get("first_name", ''),
         "surname": order_data.get("last_name", ''),
         "email": order_data.get("email", ''),
         "phone": {
@@ -177,8 +201,8 @@ def get_payer_info_from_form(request):
     }
     
     # retiro a domicilio
-    id_envio_method = int(order_data.get("id_envio_method", 0))
-    if id_envio_method != 1:
+    envio_method_id = int(order_data.get("envio_method_id", 0))
+    if envio_method_id != 1:
         payer["address"] = {
             "street_name": order_data.get("address", ''),
             "street_number": 123,

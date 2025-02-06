@@ -5,8 +5,10 @@ from django.db import models
 class OrderStatus(models.Model):
     # 1	Cancelado
     # 2	Pendiente
-    # 3	Enviado
-    # 4	Completado
+    # 3 Pagado a Confirmar
+    # 4	Pagado confirmado, sin entrega
+    # 5 Envío en camino
+    # 6	Completado
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, null=True)
     

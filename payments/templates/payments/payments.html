@@ -2,48 +2,146 @@
 
 
 {% extends "home/base.html" %}
+{% load custom_filters %}
 
 <!-- Verifica los datos del contexto -->
 
 
 {% block extra_head %}
+
+
     <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <link rel="stylesheet" href="{% static 'payments/css/payments.css' %}">
+
+
 {% endblock %}
-
-
 
 
 {% block content %}
 
+    <h2 class=""> ¡Tu pedido se registró con éxito! </h2>
 
-    <div id="wallet_container"></div>
+    <div>
+        <p> 
+            1. Si abonas con TARJETA y retiras en local, ÚNICAMENTE  el titular con tarjeta 
+            utilizada en mano y DNI puede retirar, sin excepción.
+        </p>
+        <p> 
+            2. Si abonas por TRANSFERENCIA* carga el comprobante dentro de 1 hora de haber 
+            realizado el pedido, caso contrario será cancelado, sin excepción.
 
+        </p>
+        <p> 
+            3. Si abonas con CRIPTOMONEDA: Pedí el link de pago "Binance Pay" a nuestro Whatsapp. 
+            Luego carga el comprobante de pago, caso contrario tu pedido será cancelado sin excepción.
+        </p>
+        <p> 
+            *La verificación por TRANSFERENCIA pueden demorar 24hs por demora bancaria y es ajeno 
+            a nosotros. Veras actualizado el estado de tu pedido una vez confirmado el pago, 
+            por favor sea paciente.
+        </p>
 
-    <h1> DATOSSS </h1>
+        <p> Te saluda atentamente, el team {{ store.name }}. </p>
+    </div>
 
-    {% if payer %}
-        <p>Order Data: {{ payer }}</p>
-    {% else %}
-        <p>No order data available.</p>
-    {% endif %}
+    <hr>
 
+    <div class="container-fluid">
+        <h3> Orden Pendiente de Pago</h3>
+        
+        <img class="pending-order-img" src="{% static 'img/pending_order.jpg' %}" alt="">
     
-    <p>
-        {{ preference_id }}
-    </p>
+        <p> Tenes hasta una hora para finalizar tu compra sino te pedido será cancelado </p>
+    </div>
 
+    <hr>
 
-    <p>
-        {% for pay in payer.items %}
-            <span> datos :  {{pay}} </span>
-        {% endfor %}
-    </p>
+    <div>
+        Fecha: {{ date }}
+        Hora: {{ hour }}
+        Método de pago: {{ payment.name }}
+        Método de envío: {{ envio_method.name }}
+        
+        {% if envio_method.id == 1 %}
+            Dirección de retiro: {{ store.name }}
+        {% else %}  
+            Dirección de retiro: {{ payer.address.street_name }}
+        {% endif %}
+    
+        Nombre: {{ payer.name }} {{ payer.surname }}
+        Email: {{ payer.email }}
+    </div>
+
+    <div class="container-order">
+        <div class="order-view-header">
+            <div class="order-col image-col"> </div>
+            <div class="order-col cart-view-product">Producto</div>
+            <div class="order-col justify-content-end">Precio</div>
+            <div class="order-col justify-content-end">Cantidad</div>
+            <div class="order-col justify-content-end">Sub-Total</div>
+        </div>
+    
+        <div class="order-view-content">
+            {% for item in items %}                 
+                <div class="order-row">
+                    <!-- Imagen del producto -->
+                    <div class="order-col image-col">
+                        <img src="{{ item.product.main_image }}" class="img-sm" alt="{{ item.product.name }}">
+                    </div>
+    
+                    <!-- Nombre del producto -->
+                    <div class="order-col">
+                        <div class="cart-view-product-name">{{ item.product.name }}</div>
+                    </div>
+    
+                    <!-- Precio -->
+                    <div class="order-col justify-content-end">
+                        <span>${{ item.product.price|intdot }}</span>
+                    </div>
+    
+                    <!-- Catnidad -->
+                    <div class="order-col justify-content-end">
+                        <span>{{ item.quantity }}</span>
+                    </div>
+    
+                    <!-- Subtotal -->
+                    <div class="order-col justify-content-end">
+                        ${{ item.subtotal|intdot }}
+                    </div>
+                </div>
+    
+            {% endfor %}
+
+            <hr>
+
+            <!-- Completamos con otros datos -->
+            <div class="order-row">
+                <span> Envio </span>    
+                <span> ${{ envio_method.price|intdot }}</span>
+            </div>
+
+            <div class="order-row">
+                <span> Descuento </span>    
+                <span> ${{ discount.price|intdot }}</span>
+            </div>
+
+            <hr>
+
+            <div class="order-row">
+                <span> Total </span>    
+                <span> ${{ total_cart|intdot }}</span>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- brick de mercado pago -->
+    <div class="container-mp"> 
+        <div id="wallet_container"></div>
+    </div>
 
 {% endblock %}
-
-
-
-
 
 
 
