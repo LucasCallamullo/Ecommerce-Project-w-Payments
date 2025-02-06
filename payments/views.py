@@ -40,7 +40,7 @@ def payment_view(request):
     payer = utils_for_mp.get_payer_info_from_form(request)
     
     # Create order and factura asociados a esta venta
-    order, message = utils.create_order_pending(request, payer)
+    order, message = utils.create_order_pending(request)
     if order is None:    # for some reason..
         return render(request, "payments/fail_payments.html", {"error": message})    
     
@@ -164,7 +164,7 @@ def success(request):
         
         # this is for debug
         'message': message,
-        'message_error': message,
+        'message_error': message_error,
         
         
         'payer': payer,
