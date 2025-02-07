@@ -8,7 +8,7 @@ def generate_datetime(flag: str='start', hours_window: int=4, utc_offset: int=-3
     Args:
         flag (str): Define si se genera la hora de inicio ('start') o fin ('end').
         hours_window (int): Cantidad de horas para la ventana de tiempo.
-        utc_offset (int): Desfase horario en horas respecto a UTC.
+        utc_offset (int): Desfase horario en horas respecto a UTC. establecido para Argentina
     
     Returns:
         str: Fecha y hora formateada en ISO 8601 con el offset de zona horaria.
@@ -51,7 +51,7 @@ def get_urls_ngrok(url: str) -> dict:
     
     
 from cart.models import Cart
-from orders.models import EnvioMethod
+from orders.models import ShipmentMethod
 
 def get_items_from_cart(request):
     """
@@ -102,7 +102,7 @@ def get_items_from_cart(request):
     
     # recuperamos el envio method para obtener sus datos y agregarlos a los items
     envio_method_id = int(order_data.get("envio_method_id", 0))    # falta un stupid check para el caso de 0
-    envio_method = EnvioMethod.objects.get(id=envio_method_id)
+    envio_method = ShipmentMethod.objects.get(id=envio_method_id)
     
     # Al usar check out pro incluiremos al costo de envio si existiera como un item
     items.append({

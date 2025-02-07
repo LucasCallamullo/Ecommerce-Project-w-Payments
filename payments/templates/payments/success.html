@@ -32,23 +32,23 @@
             <div class="card-body">
                 <!-- Buyer Information -->
                 <h4 class="mb-3"> Información comprador </h4>
-                <p><strong>Name:</strong> {{ factura.buyer_name }} {{ factura.buyer_last_name }}</p>
-                <p><strong>Email:</strong> {{ factura.email }}</p>
-                <p><strong>Phone:</strong> {{ factura.cellphone }}</p>
-                <p><strong>DNI:</strong> {{ factura.buyer_dni }}</p>
+                <p><strong>Name:</strong> {{ invoice.name }} </p>
+                <p><strong>Email:</strong> {{ invoice.email }}</p>
+                <p><strong>Phone:</strong> {{ invoice.cellphone }}</p>
+                <p><strong>DNI:</strong> {{ invoice.dni }}</p>
                 
                 <!-- Shipping Information -->
                 <h4 class="mb-3">Shipping Information</h4>
-                <p><strong>Shipping Method:</strong> {{ envio_method.name }}</p>
-                {% if envio_method.id == 1 %}
-                    <p><strong>buyer_name:</strong> {{ envio.buyer_name }}</p>
-                    <p><strong>buyer_dni:</strong> {{ envio.buyer_dni }}</p>
+                <p><strong>Shipping Method:</strong> {{ shipment_method.name }}</p>
+                {% if shipment_method.id == 1 %}
+                    <p><strong>buyer_name:</strong> {{ shipment.name_pickup }}</p>
+                    <p><strong>buyer_dni:</strong> {{ shipment.dni_pickup }}</p>
                 {% else %}
-                    <p><strong>Address:</strong> {{ envio.address }}</p>
-                    <p><strong>City:</strong> {{ envio.city }}</p>
-                    <p><strong>Province:</strong> {{ envio.province }}</p>
-                    <p><strong>Postal Code:</strong> {{ envio.postal_code }}</p>
-                    <p><strong>Details:</strong> {{ envio.detail }}</p>
+                    <p><strong>Address:</strong> {{ shipment.address }}</p>
+                    <p><strong>City:</strong> {{ shipment.city }}</p>
+                    <p><strong>Province:</strong> {{ shipment.province }}</p>
+                    <p><strong>Postal Code:</strong> {{ shipment.postal_code }}</p>
+                    <p><strong>Details:</strong> {{ shipment.detail }}</p>
                 {% endif %}
 
                 <!-- Order Summary -->
@@ -56,10 +56,12 @@
                 <p><strong>Order ID:</strong> {{ order.id }}</p>
                 <p><strong>Methodo de Pago:</strong> {{ payment.name }}</p>
                 <p><strong>Status:</strong> {{ order.status.name }}</p>
-                <p><strong>Factura Numero:</strong> ${{ factura.invoice_number }}</p>
-                <p><strong>Total Items:</strong> ${{ factura.total_items }}</p>
-                <p><strong>Costo de Envio:</strong> ${{ factura.shipment_cost }}</p>
-                <p><strong>Costo Total:</strong> ${{ factura.total }}</p>
+                <p><strong>Factura Numero:</strong> ${{ invoice.invoice_number }}</p>
+
+                <p><strong>Descuento:</strong> ${{ invoice.discount }}</p>
+                <p><strong>Costo de Envio:</strong> ${{ invoice.shipment_cost }}</p>
+                <p><strong>Costo Total:</strong> ${{ invoice.total }}</p>
+                <p><strong>Costo Total Recibido post MP:</strong> ${{ invoice.total_mp }}</p>
 
                 <!-- Order Items -->
                 <h4 class="mb-3">Pedido Items</h4>
@@ -93,6 +95,9 @@
 
     <div class="separador mt-3 mb-3"> </div>
 
+    <!-- podría incluir algún icono de éxito -->
+    <img src="https://www.mercadopago.com/org-img/MP3/home/logomp3.gif" alt="Pago exitoso">
+
 
     <div class="separador mt-3 mb-3"> </div>
     <div class="separador mt-3 mb-3"> </div>
@@ -102,48 +107,7 @@
         PARA DEBUG
     </h1>
 
-
-    <h3> ITEMS </h2>
-    <ul>
-        {% for item in items_mp %}
-            <li>
-                {{ item.title }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }}
-            </li>
-        {% empty %}
-            <li>
-                esto se supone que esta vacio correctametne xddd
-            </li>
-
-        {% endfor %}
-    </ul>
-
     <div class="separador mt-3 mb-3"> </div>
-
-    <h2> Carrito </h2>
-    <ul>
-        {% for item in cart.items.all %}
-            <li>
-                {{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.product.price }}
-            </li>
-        {% empty %}
-            <li>
-                esto se supone que esta vacio correctametne vacio el carrito xddd
-            </li>
-
-        {% endfor %}
-    </ul>
-    
-    <div class="separador mt-3 mb-3"> </div>
-    
-    <div> PAYER:  {{ payer }}  </div>
-
-    <div class="separador mt-3 mb-3"> </div>
-
-    <div> MENSAJE: {{ message }}  </div>
-    
-    <!-- Aquí podrías incluir algún icono de éxito -->
-    <img src="https://www.mercadopago.com/org-img/MP3/home/logomp3.gif" alt="Pago exitoso">
-
 
     <div class="separador mt-3 mb-3"> </div>
     <div class="mt-3 mb-3"> </div>

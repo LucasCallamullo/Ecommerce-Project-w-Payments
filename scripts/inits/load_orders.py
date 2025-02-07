@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings')
 django.setup()
 
-from orders.models import OrderStatus, PaymentMethod, EnvioMethod
+from orders.models import StatusOrder, PaymentOrder, ShipmentMethod
 
 
 def load_data(model_class, data):
@@ -50,9 +50,9 @@ def load_orders_init():
     ]
 
     # Llamadas a la función genérica
-    load_data(OrderStatus, data_order_status)
-    load_data(PaymentMethod, data_payment_methods)
-    load_data(EnvioMethod, data_envio_methods)
+    load_data(StatusOrder, data_order_status)
+    load_data(PaymentOrder, data_payment_methods)
+    load_data(ShipmentMethod, data_envio_methods)
 
 
 if __name__ == "__main__":

@@ -83,12 +83,13 @@ def payment_view(request):
     preference_id = preference["id"]
     
     # obtener info de la order
-    items = order.products.all()      # get Orderitems associeted with the order    
-    envio_method = order.envio.method    # get method envio associeted with the order
+    items = order.items.all()      # get Orderitems associeted with the order    
+    shipment_method = order.shipment.method    # get method envio associeted with the order
     payment = order.payment              # get payment from order created
     
-    date = (order.at_create - timedelta(hours=3)).strftime("%d/%m/%Y")
-    hour = (order.at_create - timedelta(hours=3)).strftime("%H:%M")
+    # get date and hours in Argentina
+    date = (order.created_at - timedelta(hours=3)).strftime("%d/%m/%Y")
+    hour = (order.created_at - timedelta(hours=3)).strftime("%H:%M")
 
     context = {
         'preference_id': preference_id,    # esto es para crear el brick en el front asociado al monto
@@ -96,7 +97,7 @@ def payment_view(request):
         
         # order stuff
         'items': items,        
-        'envio_method': envio_method,    
+        'shipment_method': shipment_method,    
         'discount': discount,
         
         'date': date,
@@ -125,51 +126,41 @@ def success(request):
     
     # Obtén el `external_reference` (que es el ID de la orden)
     external_reference = payment_mp.get("external_reference")
-    print("External Reference:", external_reference)
     
     # Si `external_reference` existe, puedes asociarlo con la orden de tu sistema
     order = Order.objects.get(id=external_reference)  # Aquí asocias el pago con tu orden
     message_error = "Salio todo bien"    # for debug
-    if not order:
+    if not order:    # stupid check
         message_error = "No hubo external reference o no se asocio bien el id"
 
-    # Verifica si los ítems están dentro de "additional_info"
-    items_mp = payment_mp.get("additional_info", {}).get("items", [])
-    
-    # para confirmar la orden marcarla como compra realizada
-    payer = payment_mp.get("payer", {})
-    
     # get the order and factura created
-    factura, message = utils.confirm_order(request, payer, order)
+    invoice, message = utils.confirm_order(request, payment_mp, order)
     
     # Asignar el número de factura basado en el ID generado
-    if factura:    # stupid check
-        factura.invoice_number = f"FAC-{factura.id:06d}"
-        factura.save()
+    if invoice:    # stupid check
+        invoice.invoice_number = f"FAC-{invoice.id:06d}"
+        invoice.save()
     
     
-    items = order.products.all()      # get Orderitems associeted with the order    
-    envio = order.envio
-    envio_method = order.envio.method    # get method envio associeted with the order
+    items = order.items.all()      # get Orderitems associeted with the order    
+    shipment = order.shipment
+    shipment_method = order.shipment.method    # get method envio associeted with the order
     payment = order.payment              # get payment from order created
     
     
     contexto = {
         'order': order,
-        'factura': factura,
+        'invoice': invoice,
         'items': items,
-        'envio': envio,
-        'envio_method': envio_method,
+        'shipment': shipment,    # no se usa en template
+        'shipment_method': shipment_method,
         'payment': payment,
         
         # this is for debug
         'message': message,
         'message_error': message_error,
         
-        
-        'payer': payer,
-        'items_mp': items_mp,
-        'payment_mp': payment_mp,
+        'payment_mp': payment_mp
     }
     
 

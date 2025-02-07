@@ -50,30 +50,36 @@
     <hr>
 
     <div class="container-fluid">
-        <h3> Orden Pendiente de Pago</h3>
-        
-        <img class="pending-order-img" src="{% static 'img/pending_order.jpg' %}" alt="">
-    
-        <p> Tenes hasta una hora para finalizar tu compra sino te pedido será cancelado </p>
+        <div class="d-flex"> 
+            <div class="col-6"> 
+                <h3> Orden Pendiente de Pago</h3>
+                <p> Tenes hasta una hora para finalizar tu compra sino te pedido será cancelado </p>
+            </div>
+            <div class="col-6">
+                <img class="pending-order-img" src="{% static 'img/pending_order.jpg' %}" alt="">
+            </div>
+        </div>
     </div>
 
     <hr>
 
-    <div>
-        Fecha: {{ date }}
-        Hora: {{ hour }}
-        Método de pago: {{ payment.name }}
-        Método de envío: {{ envio_method.name }}
+    <ul>
+        <li> Fecha: {{ date }} </li>
+        <li> Hora: {{ hour }} </li> 
+        <li> Método de pago: {{ payment.name }} </li> 
+        <li> Método de envío: {{ shipment_method.name }} </li> 
         
-        {% if envio_method.id == 1 %}
-            Dirección de retiro: {{ store.name }}
-        {% else %}  
-            Dirección de retiro: {{ payer.address.street_name }}
-        {% endif %}
+        <li>  
+            {% if shipment_method.id == 1 %}
+                Dirección de retiro: {{ store.addreess }}
+            {% else %}  
+                Dirección de retiro: {{ payer.address.street_name }}
+            {% endif %}
+        </li>
     
-        Nombre: {{ payer.name }} {{ payer.surname }}
-        Email: {{ payer.email }}
-    </div>
+        <li> Nombre: {{ payer.name }} {{ payer.surname }} </li>
+        <li> Email: {{ payer.email }} </li> 
+    </ul>
 
     <div class="container-order">
         <div class="order-view-header">
@@ -120,12 +126,12 @@
             <!-- Completamos con otros datos -->
             <div class="order-row">
                 <span> Envio </span>    
-                <span> ${{ envio_method.price|intdot }}</span>
+                <span> ${{ shipment_method.price|intdot }}</span>
             </div>
 
             <div class="order-row">
                 <span> Descuento </span>    
-                <span> ${{ discount.price|intdot }}</span>
+                <span> ${{ discount|intdot }}</span>
             </div>
 
             <hr>
@@ -158,7 +164,7 @@
             initialization: {
                 // Usa el preference_id que pasaste desde el backend
                 preferenceId: "{{ preference_id }}",  
-                redirectMode: "blank",
+                redirectMode: "self",    // use 'blank' for open a new tab
             },
             customization: {
                 texts: {
