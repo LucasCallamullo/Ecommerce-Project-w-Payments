@@ -56,8 +56,10 @@ def profile_tab(request, tab_name):
     
     if tab_name == 'first-tab':
         orders = request.user.orders
+        context = { 'orders': orders }
         html_content = render_to_string('users/tabs/pedidos.html', context)
         scripts = None
+        
         # scripts = ['/static/js/pedidos.js']  # Ruta al script
         return JsonResponse({'html': html_content, 'scripts': scripts})
 
