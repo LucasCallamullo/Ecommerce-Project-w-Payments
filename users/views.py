@@ -53,23 +53,26 @@ from django.template.loader import render_to_string
 
 def profile_tab(request, tab_name):
     
-    products = Product.objects.all()
-    products = products.filter(category=1)
-
-    context = { 'products': products }
     
     if tab_name == 'first-tab':
+        orders = request.user.orders
         html_content = render_to_string('users/tabs/pedidos.html', context)
         scripts = None
         # scripts = ['/static/js/pedidos.js']  # Ruta al script
         return JsonResponse({'html': html_content, 'scripts': scripts})
 
     if tab_name == 'second-tab':
+        products = Product.objects.all()
+        products = products.filter(category=1)
+        context = { 'products': products }
+        
         html_content = render_to_string('users/tabs/favoritos.html', context)
         scripts = ['/static/users/js/favoritos.js']
         return JsonResponse({'html': html_content, 'scripts': scripts})
 
     if tab_name == 'third-tab':
+        
+        context = {"none": None}
         html_content = render_to_string('users/tabs/compras.html', context)
         scripts = ['/static/js/compras.js']
         return JsonResponse({'html': html_content, 'scripts': scripts})
