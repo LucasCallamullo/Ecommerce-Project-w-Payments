@@ -55,7 +55,8 @@ def profile_tab(request, tab_name):
     
     
     if tab_name == 'first-tab':
-        orders = request.user.orders
+        user = request.user
+        orders = user.orders.all()        # obtener todas las ordenes asociadas
         context = { 'orders': orders }
         html_content = render_to_string('users/tabs/pedidos.html', context)
         scripts = None
