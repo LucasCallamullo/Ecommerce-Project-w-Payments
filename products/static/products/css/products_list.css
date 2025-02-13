@@ -262,3 +262,38 @@ Estilo general de la barra lateral
         pointer-events: auto; /* Habilita la interacción cuando es visible */
     }
 }
+
+
+/* 
+    BTN LIKESS
+*/
+.btn-like {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Ícono inactivo (fa-regular) */
+.btn-like i {
+    color: #6c757d; /* Gris de Bootstrap */
+}
+
+/* Hover: Cambia el color antes de hacer clic */
+.btn-like:hover i {
+    color: #dc3545; /* Rojo Bootstrap */
+    transform: scale(1.1);
+}
+
+/* Activo (fa-solid, "me gusta") */
+.btn-like.liked i {
+    color: #dc3545; /* Rojo Bootstrap */
+    transform: scale(1.2);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Animación al hacer clic */
+.btn-like:active {
+    transform: scale(0.9);
+}

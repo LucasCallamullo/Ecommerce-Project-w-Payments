@@ -3,6 +3,8 @@
 # Create your views here.
 from django.shortcuts import render
 from products.models import Product
+from favorites.models import FavoriteProduct
+from orders.models import Order
 
 def register_user(request):
     PROVINCIAS_CHOICES = [
@@ -53,20 +55,25 @@ from django.template.loader import render_to_string
 
 def profile_tab(request, tab_name):
     
-    
     if tab_name == 'first-tab':
         user = request.user
-        orders = user.orders.all()        # obtener todas las ordenes asociadas
+        # Trae órdenes junto con la factura en una sola consulta SQL
+        
+        if user.is_superuser:    # verificamos si es admin
+            orders = Order.objects.all()
+        else:
+            orders = user.orders.select_related("invoice").all()
+        
         context = { 'orders': orders }
         html_content = render_to_string('users/tabs/pedidos.html', context)
         scripts = None
-        
         # scripts = ['/static/js/pedidos.js']  # Ruta al script
         return JsonResponse({'html': html_content, 'scripts': scripts})
 
     if tab_name == 'second-tab':
-        products = Product.objects.all()
-        products = products.filter(category=1)
+        user = request.user
+        favorites = FavoriteProduct.objects.filter(user=user).select_related("product")
+        products = [fav.product for fav in favorites]
         context = { 'products': products }
         
         html_content = render_to_string('users/tabs/favoritos.html', context)

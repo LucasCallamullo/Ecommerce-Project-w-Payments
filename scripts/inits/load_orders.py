@@ -31,6 +31,8 @@ def load_orders_init():
     data_order_status = [
         {'name': 'Cancelado', 'description': 'El envío fue rechazado/devuelto'},
         {'name': 'Pendiente', 'description': 'Espera a ser retirado.'},
+        {'name': 'Pago a Confirmar', 'description': 'Se deberá confirmar el ingreso a la cuenta bancaria.'},
+        {'name': 'Pago Confirmado', 'description': 'Una vez confirmado el pago.'},
         {'name': 'Enviado', 'description': 'Espera a ser recibido.'},
         {'name': 'Completado', 'description': 'Pedido Recibido.'},
     ]

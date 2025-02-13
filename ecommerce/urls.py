@@ -34,6 +34,8 @@ urlpatterns = [
     
     path('', include("payments.urls")),
     
+    path('', include("favorites.urls")),
+    
     
     # DRF API
     path('', include("products.urls_api")),

@@ -1,5 +1,59 @@
 
 
+// =========================================================================
+//                        LIKES EFFECTS
+// =========================================================================
+
+function buttonLikeEvents() {
+    // Selecciona todos los formularios de los botones "me gusta"
+    document.querySelectorAll(".btn-like").forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = button.getAttribute("data-index");  // Aquí usamos "button" en lugar de "this"
+            const isLiked = button.classList.contains("liked");  // También cambiamos "this" por "button"
+            formButtonLikedProducts(button, productId, isLiked);  // Pasamos el "button" a la siguiente función
+        });
+    });
+};
+
+async function formButtonLikedProducts(button, productId, isLiked) {
+    try {
+        // Realiza la solicitud POST usando Fetch
+        const response = await fetch('/favorites-products/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                product_id: productId,
+            })
+        });
+
+        const data = await response.json();  // Espera la respuesta JSON del servidor
+
+        if (!response.ok) {
+            openAlert(data.detail, 'red', 1500);
+            return;
+        }
+
+        // Actualiza el botón de acuerdo con el estado
+        const icon = button.querySelector('i');  // Ahora usamos "button"
+        if (isLiked) {
+            button.classList.remove("liked");  // Si es favorito, lo quita
+            openAlert('Producto eliminado como Favorito.', 'red', 1500)
+            icon.classList.replace("fa-solid", "fa-regular");
+        } else {
+            button.classList.add("liked");  // Si no es favorito, lo agrega
+            openAlert('Producto agregado como Favorito!', 'green', 1500)
+            icon.classList.replace("fa-regular", "fa-solid");
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
+
 
 // ==========================================================================
 //         AJAX FOR CARDS PRESENTED IN THE product_list
@@ -66,6 +120,7 @@ async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) 
 
         // Reassign form events
         formAddProductList();
+        buttonLikeEvents();
             
     } catch (error) {
         console.error('Error:', error);
@@ -87,3 +142,6 @@ function formAddProductList() {
 }
 
 formAddProductList();
+buttonLikeEvents();
+
+

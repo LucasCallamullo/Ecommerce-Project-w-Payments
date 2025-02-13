@@ -70,12 +70,21 @@ class ProductList(APIView):
         
         # Si hay productos, serializamos y respondemos con los productos
         if products.exists():
+            
             message = f"Category: {category} | Sub-Category: {subcategory} | Available: {available}"
             product_serializer = ProductListFilters(products, many=True)
+            
+            user = request.user
+            favorite_product_ids = None
+            if user.is_authenticated:
+                # IDs de productos favoritos
+                favorite_product_ids = set(user.favorites.values_list('product', flat=True))  
+            
             response_data = {
                 'message': message,
                 'total_products': products.count(),
                 'products': product_serializer.data,
+                'favorite_product_ids': favorite_product_ids,
                 'brands': brand_serializer.data
             }
             return Response(response_data, status=status.HTTP_200_OK)
@@ -128,7 +137,16 @@ class ProductUpdateCardsQuery(APIView):
             return Response(product_serializer.data, status=status.HTTP_200_OK)
         
         # Si API_FULL es False, devolver HTML renderizado
-        context = {'products': products}
+        user = request.user
+        favorite_product_ids = None
+        if user.is_authenticated:
+            # IDs de productos favoritos
+            favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
+        
+        context = {
+            'products': products,
+            'favorite_product_ids': favorite_product_ids
+        }
         html_cards = render_to_string('products/products_list_cards.html', context)
         return Response({'html_cards': html_cards}, status=status.HTTP_200_OK)
 

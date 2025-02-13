@@ -33,11 +33,18 @@ def product_list(request, cat_slug=None, subcat_slug=None):
         subcategory=subcategory.id if subcategory else None, 
         empty=True    # Allows us to get an empty queryset
     )
+    
+    user = request.user
+    favorite_product_ids = None
+    if user.is_authenticated:
+        # IDs de productos favoritos
+        favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
 
     context = {
         'products': products,
         'category': category,
-        'subcategory': subcategory
+        'subcategory': subcategory,
+        'favorite_product_ids': favorite_product_ids
     }
     return render(request, "products/products_list.html", context)
 
@@ -53,9 +60,17 @@ def product_top_search(request):
     query = request.GET.get('topQuery', '')
     top_query = utils.normalize_or_None(query) 
     products = utils.get_products_filters(top_query=top_query, empty=True)
+    
+    user = request.user
+    favorite_product_ids = None
+    if user.is_authenticated:
+        # IDs de productos favoritos
+        favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
+        
     context = {
         'products': products,
-        'query': query
+        'query': query,
+        'favorite_product_ids': favorite_product_ids
     }
     return render(request, 'products/products_list.html', context)
 

@@ -21,16 +21,33 @@
                 <a href="{% url 'product_detail' product.id product.slug %}">
                     <h6>{{ product.name }}</h6>
                 </a>
+                
+                <div class="row p-0"> 
+                    <div class="col-8"> 
+                        {% if product.stock > 4 %}
+                            <span class="bold-green">Disponible</span>
+                        {% elif product.stock > 0 and product.stock < 4 %}
+                            <span class="bold-orange">Stock Bajo</span>
+                        {% else %}
+                            <span class="bold-red">Sin Stock</span>
+                        {% endif %}
 
-                {% if product.stock > 4 %}
-                    <span class="bold-green">Disponible</span>
-                {% elif product.stock > 0 and product.stock < 4 %}
-                    <span class="bold-orange">Stock Bajo</span>
-                {% else %}
-                    <span class="bold-red">Sin Stock</span>
-                {% endif %}
+                        <strong>${{ product.price }}</strong>
+                    </div>
 
-                <strong>${{ product.price }}</strong>
+                    <div class="col-4"> 
+                        <!-- Botón de la corazon -->
+                        {% if product.id in favorite_product_ids %}
+                            <button class="btn-like liked" data-index="{{product.id}}">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                        {% else %}
+                            <button class="btn-like" data-index="{{product.id}}">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
 
                 <!-- Botón de agregar al carrito -->
                 <form class="prod-extender-btn" method="POST">
