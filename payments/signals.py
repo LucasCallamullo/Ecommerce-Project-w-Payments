@@ -6,11 +6,11 @@ from orders.models import InvoiceOrder
 
 @receiver(post_save, sender=InvoiceOrder)
 def send_invoice_email(sender, instance, created, **kwargs):
-    # if instance.status == 'paid':  # Solo si la factura se marca como pagada
+    # if instance.status == 'paid':  # si la factura pagada
     subject = 'Pago Confirmado - Gracias por tu compra'
-    text_content = f'Hola {instance.customer.name}, tu pago por la factura #{instance.id} ha sido confirmado.'
+    text_content = f'Hola {instance.name}, tu pago por la factura #{instance.invoice_number} ha sido confirmado.'
     html_content = f'''
-        <p>Hola <strong>{instance.customer.name}</strong>,</p>
+        <p>Hola <strong>{instance.name}</strong>,</p>
         <p>Tu pago por la factura <strong>#{instance.id}</strong> ha sido confirmado.</p>
         <p>Gracias por tu compra.</p>
     '''
