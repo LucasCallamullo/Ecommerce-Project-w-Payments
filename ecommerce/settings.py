@@ -30,6 +30,12 @@ pymysql.install_as_MySQLdb()
 import environ, os
 env = environ.Env()    # Init the environment
 
+# configuiracion estander email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 try:
     # In local we use environ to bring keys from the .env file, in "Railway" this does not work
     # as such and we must use the "except" block to configure correctly with the environment variables
@@ -52,6 +58,11 @@ try:
             'PORT': env('MYSQL_PORT'),
         }
     }
+    
+    # configuracion basica email variables de entorno
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 except environ.ImproperlyConfigured:
     # This is for deploy on railway
@@ -70,6 +81,11 @@ except environ.ImproperlyConfigured:
             'PORT': os.getenv('MYSQL_PORT', '53817'),
         }
     }
+    
+    # configuracion basica email variables de entorno
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'email_not_found'),
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'pw_email_not_found'),
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
     
 # =====================================================================================
 # Application definition
