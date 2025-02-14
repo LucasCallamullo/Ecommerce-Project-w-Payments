@@ -157,8 +157,6 @@ def confirm_order(request, payment_mp, order):
     transaction_details = payment_mp.get("transaction_details", {})
 
     # 
-    
-
     try:
         with transaction.atomic():
             
