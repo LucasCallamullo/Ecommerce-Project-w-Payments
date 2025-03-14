@@ -11,7 +11,7 @@
 
 <!-- Contenido principal de la pagina -->
 
-{% block content %}
+{% block main_content %}
 
 <div class="d-flex mt-3 mb-4 gap-3">
     <!-- Se utiliza para agregar mas botones en este container -->
@@ -118,11 +118,11 @@
 
 </div>
 
-{% endblock %}
+{% endblock main_content %}
 
 
 {% block extra_scripts %}
     <!-- JavaScript for Product Page -->
     <script src="{% static 'products/js/product_list.js' %}"></script>
-{% endblock %}
+{% endblock extra_scripts %}
 

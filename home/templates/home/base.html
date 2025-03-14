@@ -10,298 +10,297 @@
     <!-- Preconnect and Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Favicon tradicional de 16x16 píxeles -->
-    <link rel="icon" href="{% static 'img/ico/favicon.ico' %}" type="image/x-icon">
-    <!-- Favicon principal, tamaño recomendado de 32x32 píxeles -->
+    <!-- Page icons for different devices -->
+    <link rel="shortcut icon" href="{% static 'img/ico/favicon-16x16.png' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'img/ico/favicon-32x32.png' %}" sizes="32x32" type="image/png">
-    <!-- Icono para dispositivos Apple -->
     <link rel="apple-touch-icon" href="{% static 'img/ico/apple-touch-icon.png' %}">
-    <!-- Iconos para Android y pantallas de alta resolución -->
     <link rel="icon" sizes="192x192" href="{% static 'img/ico/android-chrome-192x192.png' %}">
     <link rel="icon" sizes="512x512" href="{% static 'img/ico/android-chrome-512x512.png' %}">
-    <!-- Agregar el manifiesto de la PWA -->
     <link rel="manifest" href="{% static 'img/ico/site.webmanifest' %}">
+
 
     <!-- Fonts - Para mostrar algunos iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
+    <!-- REMIXICONS search icons in: https://remixicon.com -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+
+    <!-- Bootstrap CSS 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
+    -->
+
     <!-- Optional: Your custom styles -->
+    <link href="{% static 'home/css/basic.css' %}" rel="stylesheet"> 
     <link href="{% static 'home/css/base.css' %}" rel="stylesheet"> 
-    
+    <link href="{% static 'home/css/base_navbar.css' %}" rel="stylesheet"> 
     
     <!-- For More CSS Modules -->
     {% block extra_head %}
         <title> Base Project HTML </title>
         
-        <!-- Cargar CSS o meta tags específicos de la página aquí -->
+        <!-- Load page-specific CSS or meta tags here -->
     {% endblock %}
 </head>
 
 
 <body>
+
+    <!-- HEADER -->
     <header>
-        <!-- Combined Navbar for Small Screens -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex d-lg-none">
-            <div class="container-fluid">
-                <!-- Logo -->
-                <a class="navbar-brand" href="{% url 'Home' %}">
-                    <img src="{% static 'img/ico/logo.jpg' %}" alt="Logo">
+
+        <!--  NAV MOBILE  -->
+        <nav class="mobile-nav container-page gap-1">
+            {% include 'home/mobile_nav.html' %}
+        </nav>
+
+        <!-- 
+            Top nav bar ( logo - search - social icons ) 
+        -->
+        <nav class="top-nav container-page" id="top-nav">
+
+            <!-- Logo -->
+            <div class="first-col"> 
+                <a href="{% url 'Home' %}" class="w-100 h-100">
+                    <img src="{% static 'img/ico/logo.jpg' %}" class="logo" alt="logo">
                 </a>
-                <!-- Toggler Button -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#combinedNavbar" aria-controls="combinedNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <!-- Navbar Content -->
-                <div class="collapse navbar-collapse" id="combinedNavbar">
-                    <form class="d-flex my-2">
-                        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+            </div>
 
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="smallNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Services
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="smallNavbarDropdown">
-                                <li><a class="dropdown-item" href="#">Web Development</a></li>
-                                <li><a class="dropdown-item" href="#">SEO Optimization</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Consulting</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                    </ul>
-                </div>
+            <!-- Search Bar -->
+            <form class="second-col justify-start top-bar-search" 
+            action="{% url 'product_top_search' %}" method="GET">
+
+                <input type="text" placeholder="Buscar..." 
+                name="topQuery" aria-label="Search">
+                    
+                <button class="btn" type="submit">
+                    <i class="ri-search-line"></i>
+                </button>
+            </form>
+
+            <!--  Iconos -->
+            <div class="third-col d-flex justify-end gap-3">
+                <a href="{{ store.google_url }}" target="_blank" class="nav__social-link">
+                    <i class="ri-whatsapp-line"></i>
+                </a>
+
+                <a href="{{ store.ig_url }}" target="_blank" class="nav__social-link">
+                    <i class="ri-instagram-line"></i>
+                </a>
+
+                <a href="{{ store.tt_url }}" target="_blank" class="nav__social-link">
+                    <i class="ri-tiktok-fill"></i>
+                </a>
+
+                <a href="{{ store.fb_url }}" target="_blank" class="nav__social-link">
+                    <i class="ri-facebook-box-fill"></i>
+                </a>
             </div>
         </nav>
 
-        <!-- Optimized Top Navbar -->
-        <nav class="navbar navbar-expand-lg d-none d-lg-flex my-main-navbar-bg" id="TopNavBar">
-            <div class="container-fluid my-container-page px-5">
 
-                <!-- Logo -->
-                <div class="col-3 col-lg-3"> 
-                    <a class="navbar-brand" href="{% url 'Home' %}">
-                        <img src="{% static 'img/ico/logo.jpg' %}" id="logo_home" alt="Logo" width="150">
-                    </a>
-                </div>
+        <!-- Main nav bar ( categories - list links - register icon ) -->
+        <nav class="d-flex main-nav" id="main-nav">
+            <div class="container-page">
+                <ul class="d-flex w-100 h-100" id="main-nav-list">
 
-                <!-- Search Bar -->
-                <div class="col-6 col-lg-6"> 
-                    <form class="my-search-top-bar" action="{% url 'product_top_search' %}" method="GET">
-                        
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Buscar..." 
-                            name="topQuery" aria-label="Search">
-                               
-                            <button class="btn" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- Social Media Icons -->
-                <div class="d-flex col-3 col-lg-3 gap-2 justify-content-end">
-                    <a class="btn btn-header-icon" href="{{store.tt_url}}" target="_blank">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a class="btn btn-header-icon" href="{{store.fb_url}}" target="_blank">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                    <a class="btn btn-header-icon" href="{{store.ig_url}}" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="btn btn-header-icon" href="{{store.google_url}}" target="_blank">
-                        <i class="fab fa-google"></i>
-                    </a>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Original Main Navbar   -->
-        <nav class="navbar navbar-expand-lg my-main-navbar-bg d-none d-lg-flex">
-            <div class="container-fluid my-container-page px-5">
-                <!-- Toggler Button -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                data-bs-target="#MainNavBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-        
-                <!-- Navbar Links -->
-                <div class="collapse navbar-collapse" id="MainNavBar">
-                    <ul class="navbar-nav w-100 d-flex align-items-center">
-
-                        <!-- Dropdown de productos -->
-                        <li class="nav-item dropdown col-3 col-lg-3">
+                    <!-- to pass image url to the script -->
+                    <li class="d-none" id="logo-url" data-img="{% static 'img/ico/logo.jpg' %}"></li>
+                    
+                    <!-- drop down menu - hoods -->
+                    <li class="first-col dropdown justify-start">
+                        <div class="w-100">
                             {% include "products/dropmenu_categories.html" %}
-                        </li>
-                        
-                        <!-- Links principales -->
-                        <li class="nav-item col-6 col-md-6">
-                            <ul class="navbar-nav d-flex gap-2 justify-content-start">
-                                <li class="nav-item nav-item-link-mainbar">
-                                    <a class="nav-link" href="#">Contacto</a>
-                                </li>
-                                <li class="nav-item nav-item-link-mainbar">
-                                    <a class="nav-link" href="#">Ofertas</a>
-                                </li>
-                                <li class="nav-item nav-item-link-mainbar">
-                                    <a class="nav-link" href="#">Mis Pedidos</a>
-                                </li>
-                                <li class="nav-item nav-item-link-mainbar">
-                                    <a class="nav-link" href="{% url 'help_mp' %}">Arma tu PC</a>
-                                </li>
-                            </ul>
-                        </li>
+                        </div>
+                    </li>
 
-                        <!-- Botones de carrito y usuario -->
-                        <li class="nav-item col-lg-3">
-                            <ul class="navbar-nav d-flex gap-4 justify-content-end">
+                    <!-- list useful links -->
+                    <li class="second-col justify-start"> 
+                        <ul class="nav__list justify-start gap-3">
+                            <li class="nav__item">
+                                <a href="{% url 'Home' %}" class="nav__link">
+                                    <span>Home</span>
+                                </a>
+                            </li>
 
-                                <!-- boton dark - mode -->
-                                <li class="nav-item">
-                                    <button class="btn btn-header" id="themeToggle">
-                                        <i id="theme-icon" class="fas fa-moon"></i>
-                                    </button>
-                                </li>
-                                
-                                <!-- Botón del carrito -->
-                                <li class="nav-item">
-                                    {% include "cart/widget_carrito.html" %}
-                                </li>
-                            
-                                <!-- Botón y dropdown del usuario -->
-                                <li class="nav-item dropdown">
-                                    {% include "users/widget_login.html" %}
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+                            <li class="nav__item">
+                                <a href="#" class="nav__link">
+                                    <span>About Us</span>
+                                </a>
+                            </li>
+                    
+                            <li class="nav__item">
+                                <a href="{% url 'help_mp' %}" class="nav__link">
+                                    <span>Contact</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- icons sections-->
+                    <li class="third-col d-flex justify-end gap-2">
+                        <button class="theme-toggle btn btn-main-nav">
+                            <i class="theme-icon ri-moon-line"></i>
+                        </button>
+            
+                        <button class="btn btn-main-nav">
+                            <i class="ri-shopping-cart-2-line"></i>
+                            <!-- { % include "cart/widget_carrito.html" % } -->
+                        </button>
+            
+                        <!-- Icon user login -->
+                        <button class="btn btn-main-nav">
+                            <i class="ri-user-3-line"></i>
+                            <!-- { % include "users/widget_login.html" % } -->
+                        </button>
+                    </li>
+                </ul>
             </div>
         </nav>
+   </header>
 
-    </header>
 
-    
-    
     <main>
-        <div class="container-fluid my-container-page px-5">
-            {% block content %}
-                <!-- Contenido específico de la página -->
-            {% endblock %}
+        <!-- To place banners without the page limit -->
+        {% block top_banner_image %}
+          
+        {% endblock top_banner_image %}
+
+        <!-- we limit the page container to the main content. -->
+        <div class="container-page"> 
+            {% block main_content %}
+        
+            {% endblock main_content %}
         </div>
 
         <!-- Contenedor de Alertas -->
-        <div class="alerts-container" id="alertsContainer">
+        <div class="alerts-container" id="alerts-container">
             <!-- efecto de span de alertas ( ver base.js )-->
         </div>
-
     </main>
+    
+    <!-- To place banners without the page limit -->
+    {% block bot_banner_image %}
+          
+    {% endblock bot_banner_image %}
+
 
     <!-- FOOTER -->   
-    <hr class="offset-1 col-10">    
-    <footer>
-        <div class="container-fluid my-container-page px-5">
-            <div class="row">
-                <!-- Primera columna: Logo + Texto de la compañía -->
-                <div class="mt-5 col-4">
-                    <a href="{% url 'Home' %}">
-                        <img src="{% static 'img/ico/logo.jpg' %}" alt="Company Logo" 
-                        class="footer-logo">
-                    </a>
+    <hr class="offset-1 col-10"> 
 
-                    <p class="mt-3">
+    <footer class="container-page">
+        <div class="footer-container">
+            <div class="footer-col">
+                <!-- Primera columna: Logo + Texto de la compañía -->
+                <a class="w-100" href="{% url 'Home' %}">
+                    <img src="{% static 'img/ico/logo.jpg' %}" alt="Company Logo" 
+                    class="footer-logo">
+                </a>
+
+                <div class="mt-3 mb-3">
+                    <h2 class="footer-text"> {{ store.name }} </h2>
+
+                    <p class="footer-text">
                         ¡Tu cueva Gamer en Córdoba! 🎮
                     </p>
-                    <p>
+                    <p class="footer-text">
                         Somos la tienda de computación y videojuegos que hacía falta en Córdoba.
-                        Nacida con el propósito de satisfacer a todo jugador PC Gamer, Playstation, Nintendo y Xbox
+                        Nacida con el propósito de satisfacer a todo jugador PC Gamer, Playstation, 
+                        Nintendo y Xbox.
                     </p>
-                    <p>
+                    <p class="footer-text">
                         Grandes marcas nos acompañan como Asus, Corsair, Hyperx, Gigabyte, Logitech,
                         Samsung o Redragon entre otras.
                     </p>
-    
-                    <h3><strong>Additional Information! </strong></h3>
-
-                    <button class="mb-3 btn-footer">
-                        <i class="fa fa-map-marker-alt"></i>
-                        <p>{{store.address}}, Córdoba, Argentina.</p>
-                    </button>
-
-                    <button class="mb-3 btn-footer">
-                        <i class="fab fa-whatsapp icon"></i>
-                        <p>{{store.cellphone}}</p>
-                    </button>
-
-                    <button class="mb-3 btn-footer">
-                        <i class="fa fa-clock"></i>
-                        <div class="text-container">
-                            <p>Lunes a Viernes de 10hs a 14hs y de 15hs a 18:50hs.</p>
-                            <p>Sábado mediodía.</p>
-                        </div>
-                    </button>
-
-                    <button class="mb-3 btn-footer">
-                        <i class="fa fa-envelope"></i>
-                        <p>{{store.email}}</p>
-                    </button>
-
                 </div>
 
-                <!-- Tercera columna: Vacía para personalización futura -->
-                <div class="mt-5 col-3">
-                    <h3 class="ms-3">Seguinos!</h3>
-                    <!-- Icon Container -->
-                    <div class="icon-container-footer">
-                        <a href="{{store.tt_url}}" class="btn" target="_blank">
-                            <i class="fab fa-tiktok icon"></i>
-                        </a>
-                        <a href="{{store.fb_url}}" class="btn" target="_blank">
-                            <i class="fab fa-facebook icon"></i>
-                        </a>
-                        <a href="{{store.ig_url}}" class="btn" target="_blank">
-                            <i class="fab fa-instagram icon"></i>
-                        </a>
-                        <a href="{{store.google_url}}" class="btn" target="_blank">
-                            <i class="fab fa-google icon"></i>
-                        </a>
+
+                <h3 class="mt-3 mb-3"> Additional Information! </h3>
+
+                
+                
+                <p class="footer-text d-flex gap-2">
+                    <i class="ri-map-pin-line icon-medium"></i>
+                    <span>{{store.address}}, Córdoba, Argentina.</span>
+                </p>
+
+                <p class="footer-text d-flex gap-2">
+                    <i class="ri-whatsapp-line icon-medium"></i>
+                    <span>{{store.cellphone}}</span>
+                </p>
+
+                <div class="footer-text d-flex gap-2">
+                    <i class="ri-time-line icon-medium"></i>
+                    <div>
+                        <p class="footer-text">
+                            Lunes a Viernes de 10hs a 14hs y de 15hs a 18:50hs.
+                        </p>
+                        <p class="footer-text">Sábado mediodía.</p>
                     </div>
                 </div>
 
+                <p class="footer-text d-flex gap-2">
+                    <i class="ri-mail-line icon-medium"></i>
+                    <span>{{store.email}}</span>
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h3 class="footer-text">Columna 2</h3>
+                <p class="footer-text">Más contenido...</p>
+            </div>
+
+            <div class="footer-col">
+                <!-- Tercera columna: Vacía para personalización futura -->
+                <h2 class="footer-text">Seguinos!</h2>
+
+                <!-- Icon Container -->
+                <div class="footer-text d-flex gap-3">
+                    <a href="{{store.tt_url}}" class="nav__social-link" target="_blank">
+                        <i class="ri-tiktok-fill icon-xl"></i>
+                    </a>
+                    <a href="{{store.fb_url}}" class="nav__social-link" target="_blank">
+                        <i class="ri-facebook-box-fill icon-xl"></i>
+                    </a>
+                    <a href="{{store.ig_url}}" class="nav__social-link" target="_blank">
+                        <i class="ri-instagram-line icon-xl"></i>
+                    </a>
+                    <a href="{{store.google_url}}" class="nav__social-link" target="_blank">
+                        <i class="ri-google-fill icon-xl"></i>
+                    </a>
+                </div>
             </div>
         </div>
         
-        <hr class="offset-1 col-10">
-        <div class="row"> 
-            <strong class="mt-1 mb-3 offset-1 col-10">
-                © 2024 Ecommerce Generic. All rights reserved.
-            </strong>
+
+        <hr class="mt-3">
+
+        <div class="mt-4"> 
+            <strong> © 2024 Ecommerce Generic. All rights reserved. </strong>
         </div>
+
     </footer>
     
-    <!-- Bootstrap Bundle with Popper -->
+
+    <!--  BUTTON ARROW BACK DESKTOP-->
+    <button id="backToTop" class="back-to-top">
+        <i class="ri-arrow-up-line"></i>
+        <svg class="progress" width="40" height="40">
+            <circle cx="20" cy="20" r="18" />
+        </svg>
+    </button>
+
+    <!-- Almacena el estado de autenticación en un div oculto -->
+    <div id="auth-status" data-register-user="{{ user.is_authenticated|lower }}" hidden></div>
+
+    <!-- Bootstrap Bundle with Popper 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    
+    -->
     
     <script src="{% static 'home/js/base.js' %}"></script>
+    <script src="{% static 'home/js/base_navbar.js' %}"></script>
 
     <!-- JavaScript for Carrito Widget -->
     <script src="{% static 'cart/js/widget_carrito.js' %}"></script>
@@ -311,9 +310,9 @@
     
     <!-- Optional: Your custom scripts -->
     {% block extra_scripts %}
-        <!-- Cargas archivos .js propios de cada template/vista esto es util ya que se cargan despues
-         de los scripts de la base dejando a funciones de los mismos como globales-->
-    {% endblock %}
+        <!-- You load your own .js files for each template/view, this is useful since they are 
+        loaded later of the base scripts leaving their functions as global -->
+    {% endblock extra_scripts %}
 
 </body>
 </html>

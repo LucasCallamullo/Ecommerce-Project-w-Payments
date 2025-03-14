@@ -1,0 +1,752 @@
+
+
+:root {
+    /* main color de la empresa */
+    --main-color: #5e08e7;
+    --main-light-color: #9554ff;
+
+    /* Primary Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9faa9;
+    
+    --text-primary: #000000;
+    --text-secondary: #6c757d;
+
+    /* Gradients */
+    --gradient: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+    --gradient2: linear-gradient(45deg, rgba(148,194,227,1) 0%, rgba(72,136,181,1) 100%);
+
+    /* Sizes */
+    --font-xl: 1.6rem;
+    --font-medium: 1.2rem;
+    --font-normal: 1.0rem;
+    --font-small: 0.85rem;
+    --font-x-small: 0.7rem;
+    --font-small-up: 0.92rem;
+
+    /* Fonts */
+    --font-main: 'Montserrat', sans-serif;
+    --font-slim: 'Montserrat', sans-serif;
+
+    /* heigths */
+    --main-nav-heigth: 60px;
+    --top-nav-height: 140px;
+
+    /* width responsive */
+    --width-col-3: 90%
+}
+
+/* Modo oscuro */
+.dark-mode {
+    
+    --bg-primary: #343a40;
+    --bg-secondary: #212529;
+    --text-primary: #ffffff;
+    --text-secondary: #6c757d;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+
+    color: var(--text-primary);
+    font-size: var(--font-normal);
+    font-family: var(--font-main);
+    background-color: var(--bg-secondary);
+
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .2s ease-in-out;
+}
+
+
+main {
+    display: flex;
+    /*
+    min-height: calc(100vh - (var(--main-nav-height) + var(--top-nav-height) + 10px));
+    margin-top: calc(var(--main-nav-height) + var(--top-nav-height) + 10px);
+    */
+}
+
+
+footer {
+    /* background-color: var(--main-color); */
+    background-color: var(--bg-secondary);
+}
+
+.my-container-page {
+    max-width: 1200px;   /* ancho de gorila games */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    /* overflow-x: visible;  Permite el scroll si el contenido interno excede el ancho */
+}
+
+.my-main-navbar-bg {
+    background-color: var(--main-color);
+    height: var(--main-nav-heigth);
+    max-height: var(--main-nav-heigth);
+} 
+
+.bold-red {
+    color: #ff0808;
+    font-weight: bold;
+    font-size: var(--font-small);
+    margin: 0;
+    padding: 0;
+}
+
+.bold-green {
+    color: #28a745;
+    font-weight: bold;
+    font-size: var(--font-small);
+    margin: 0;
+    padding: 0;
+}
+
+.bold-orange {
+    color: #ff9900;
+    font-weight: bold;
+    font-size: var(--font-small);
+    margin: 0;
+    padding: 0;
+}
+
+.my-center-container {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.btn-paralelogramo {
+    color: white;
+    font-family: var(--font-main);
+    font-size: var(--font-normal);
+    background-color: var(--main-color);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    transform: skew(-30deg);
+}
+
+.btn-paralelogramo span {
+    display: inline-block;
+    transform: skew(30deg);
+}
+
+
+/* 
+                Icono de carrito y Register
+*/
+.btn-header {
+    position: relative;
+    background-color: transparent;
+    height: 100%;
+    width: 50px;
+    display: flex;               /* Usamos flexbox para centrar el contenido */
+    justify-content: center;     /* Centra los íconos horizontalmente */
+    align-items: center;         /* Centra los íconos verticalmente */
+    cursor: pointer;
+    padding: 5px;                  /* Elimina el padding extra */
+}
+
+.btn-header i {
+    font-size: var(--font-xl);   /* Ajusta el tamaño del ícono */
+    color: white;
+    pointer-events: none;        /* Asegura que el icono no bloquee los clics */
+    transition: color 0.3s ease;
+    border: none; 
+    outline: none;               /* Elimina el contorno al hacer clic */
+}
+
+.badge {
+    position: absolute;
+    background-color: var(--main-light-color);
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: var(--font-small);
+}
+
+.btn-header:hover {
+    background-color: var(--bg-primary);
+}
+
+.btn-header:hover i,
+.btn-header:focus i{
+    color: var(--main-color);
+}
+
+.btn-header:focus {
+    outline: none;
+    background-color: var(--main-light-color); /* Fondo blanco semitransparente cuando está enfocado */
+}
+
+/* Animaciones para el widget de registro */
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-10px);
+        opacity: 0;
+        display: block;
+    }
+}
+
+
+#user-dropdown.show {
+    display: block;
+    animation-name: slideDown;
+}
+
+#user-dropdown.hide {
+    display: block;
+    animation-name: slideUp;
+}
+
+#user-dropdown {
+    position: absolute;
+    right: 0;  /* El menú se alinea al borde derecho del botón */
+    left: auto;  /* Asegura que 'left' no afecte */
+    top: 100%;  /* El menú se despliega justo debajo del botón */
+    width: max-content; /* Ajusta el ancho al contenido */
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
+    border: 3px solid var(--main-color);
+    border-radius: 8px;
+    padding: 10px;
+
+    display: none;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    
+    width: 220px;
+}
+
+/* Estilo de los inputs y el botón dentro del dropdown */
+.widget-register-form input,
+.widget-register-form button {
+    width: 100% !important;
+    padding: 8px !important;
+    margin: 5px 0 !important;
+    border: 1px solid #ccc !important;
+}
+
+
+.widget-register-form button {
+    background-color: var(--main-light-color);
+    color: white;
+    border: none;
+    border-radius: 0 !important;
+    cursor: pointer;
+}
+
+.widget-register-form button:hover {
+    border: none !important;
+    outline: none !important; 
+    background-color: var(--main-color);
+    transform: scale(1.01);
+}
+
+.btn-widget-register {
+    display: inline-block;  /* Asegura que se comporte como un botón */
+    text-align: center;
+
+    width: 100%; 
+    padding: 4% 5%;     /* Estilo adicional de padding */
+    border: 1px solid transparent;
+    background-color: var(--text-secondary); 
+    color: #fff;          
+    text-decoration: none; 
+}
+
+.btn-widget-register:hover {
+    background-color: var(--main-color); 
+    text-decoration: none;
+}
+
+.btn-widget-register i {
+    font-size: var(--font-medium);
+    margin-top: 1%;
+    margin-right: 1%;
+}
+
+
+/* ================================================================================
+    PIE DE PAGINAAAAAAAAAAAAAAAAAAAAAAAAAAAAA todo  FOOTER
+/* ================================================================================ */
+/* 
+primera columna 
+*/
+.footer-logo {
+    max-height: 160px;
+    width: 90%;
+    max-width: 100%;
+}
+
+footer p,
+footer strong {
+    font-size: var(--font-normal);
+    color: var(--text-primary);
+}
+
+.btn-footer {
+    font-size: var(--font-medium);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center; /* Alinea el icono y el texto verticalmente */
+    justify-content: flex-start; /* Alinea todo a la izquierda */
+    margin: 0;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s ease-in-out;
+    text-align: left;
+}
+
+.btn-footer i {
+    font-size: var(--font-xl);
+    margin-right: 1rem;
+}
+
+.btn-footer .text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+}
+
+.btn-footer p {
+    margin: 0;
+    font-size: var(--font-normal);
+}
+
+.btn-footer:hover {
+    background-color: var(--bg-primary);
+    transform: scale(1.05);
+}
+
+.btn-footer:focus {
+    outline: 2px solid var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+.btn-footer:active {
+    transform: scale(0.95);
+    background-color: var(--bg-primary);
+}
+/* 
+    Segunda Columna 
+*/
+.icon-container-footer {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.icon-container-footer .btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Transición suave para el hover */
+}
+
+.icon-container-footer .btn:hover {
+    transform: scale(1.1);
+}
+
+.icon-container-footer .btn i {
+    font-size: 2rem;
+    transition: color 0.3s ease-in-out; /* Transición suave para el color */
+}
+
+/* Colores asociados a cada plataforma */
+.icon-container-footer .btn .fa-tiktok {
+    color: #69C9D0; /* Color de TikTok */
+}
+
+.icon-container-footer .btn .fa-facebook {
+    color: #1877F2; /* Color de Facebook */
+}
+
+.icon-container-footer .btn .fa-instagram {
+    color: #E1306C; /* Color de Instagram */
+}
+
+.icon-container-footer .btn .fa-google {
+    color: #DB4437; /* Color de Google */
+}
+
+/*
+                Alerts        Estilos generales para el contenedor de la alerta
+*/
+/* Contenedor de alertas */
+.alerts-container {
+    position: fixed;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    width: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column; /* Las alertas nuevas aparecen al final */
+    gap: 10px; /* Espacio entre alertas */
+}
+
+/* Estilo base para las alertas */
+.custom-alert {
+    background-color: #fff;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: var(--font-normal);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(100%); /* Empuja la alerta hacia abajo inicialmente */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(100%); /* Comienza un poco abajo */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Se mueve a su posición original */
+    }
+}
+
+/* Animación de salida */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0); /* Se encuentra en su posición original */
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-100%); /* Se mueve hacia arriba fuera de la vista */
+    }
+}
+
+/* Mostrar alerta */
+.custom-alert.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-100%);
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+/* Ocultar alerta */
+.custom-alert.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%); /* La alerta se mueve hacia arriba cuando se oculta */
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+.alert-green {
+    border: 1px solid #00c01a;
+    background-color: #00c01a;
+}
+
+.alert-red {
+    border: 1px solid #be0404e3;
+    background-color: #be0404e3;
+}
+
+.custom-alert i {
+    font-size: var(--font-medium);
+}
+
+.custom-alert span {
+    margin-left: 5%;
+}
+
+/* Botón de cerrar */
+.custom-alert button {
+    background: none;
+    border: none;
+    color: #fff;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+  
+.custom-alert button:hover {
+    transform: scale(0.9);
+}
+  
+
+/* ======================================================================================
+            NECESARIO PARA CREAR LA VISTA SOMBREADA DEL WIDGET DEL CARRITO todo
+====================================================================================== */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1010; /* Justo debajo del carrito */
+    pointer-events: none; /* Evita que interfiera cuando no está visible */
+}
+
+.overlay.show {
+    opacity: 1;
+    pointer-events: all; /* Permite la interacción cuando está visible */
+}
+
+.cart-container {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 100vh;
+    background-color: var(--bg-primary);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1050; /* Más alto que el overlay */
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: auto;
+}
+
+.cart-container.show {
+    transform: translateX(0);
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--text-primary);
+    height: 8%;
+    max-height: 8%;
+}
+
+.cart-header button {
+    font-size: var(--font-medium);
+    background-color: #e40707;
+    color: #fff;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.cart-header button:hover {
+    color: var(--text-primary);
+    background-color: #fff;
+    border: 3px solid #e40707;
+}
+
+/* widget content cart */
+.cart-content {
+    height: 82%;
+    max-height: 100%;
+    width: 100%;
+    max-width: 100%;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative; /* Habilita el posicionamiento absoluto de los hijos */
+
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background-color: var(--bg-primary);
+
+    padding: 0 1.5%;   /* primero y despues x  */
+    width: calc(100% - 1.5%);
+    height: 30%;
+}
+
+.cart-item img {
+    width: 35%;
+    max-width: 35%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    background-color: #fff;
+}
+
+.cart-item .cart-item-info {
+    padding: 2% 2.5%;   /* primero y despues x  */
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    /* align-items: center; */
+}
+
+.cart-item .cart-item-info .cart-btn-remove-item {
+    position: absolute;
+
+    top: 2%; /* Ajusta la posición desde la parte superior */
+    right: -7%; /* Ajusta la posición desde la derecha */
+    z-index: 1051;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(221, 14, 14, 0.808);
+    font-size: var(--font-medium);
+    color: #fff;
+
+    width: 25px; /* Tamaño del botón */
+    height: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+.cart-item .cart-item-info .cart-btn-remove-item:hover {
+    background-color: darkred;
+}
+.cart-item .cart-item-info .cart-btn-remove-item:active {
+    transform: scale(0.9); /* Efecto de zoom */
+}
+
+.cart-span-cont {
+    height: 80%;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+}
+
+.cart-span-cont span {
+    font-size: calc(var(--font-small) - 0.1rem ) !important;
+    font-weight: bold;
+}
+
+.cart-item-conts {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    height: 20%;
+    gap: 5%;
+    padding: 0;
+    margin-bottom: 1%;
+}
+
+.cart-item-conts button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16%;
+    height: 100%;
+    font-size: var(--font-normal);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+
+    border: none;
+    border-radius: 0;
+}
+
+.cart-item-conts button:hover{
+    border: 1px solid var(--text-primary);
+}
+
+.cart-item-conts .cart-item-qty {
+    width: 40%;
+    height: 102% !important;
+
+    font-size: var(--font-normal);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    font-weight: bold;
+    border: none;
+    text-align: center;
+    align-self: center;
+}
+
+
+/* widget footer cart */
+.cart-footer {
+    height: 20%;
+    background-color: var(--bg-primary);
+    border-top: 2px solid var(--text-primary);
+}
+
+.cart-cont-total {
+    justify-content: space-between;
+    padding: 3% 5%;
+}
+
+.cart-cont-btn-actions {
+    justify-content: space-between;
+    padding: 0% 5%;
+}
+
+.foot-wdt-cart {
+    width: 47%;
+    padding: 2%;
+    font-size: var(--font-normal);
+    color: #fff !important;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-ver-carrito {
+    background-color: var(--text-secondary);
+}
+
+.btn-ver-carrito:hover,
+.btn-ver-carrito:active {
+    background-color: var(--main-light-color);
+}
+
+.btn-finalizar {
+    background-color: var(--main-color);
+}
+
+.btn-finalizar:hover,
+.btn-finalizar:active {
+    background-color: var(--main-light-color);
+}

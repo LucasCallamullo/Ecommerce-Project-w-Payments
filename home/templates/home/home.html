@@ -1,6 +1,8 @@
-{% extends "home/base.html" %}
 
+
+{% extends "home/base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 
 <!-- For More CSS Modules -->
@@ -15,78 +17,95 @@
 {% endblock %}
 
 
-<!-- Content -->
-{% block content %}
 
+
+<!-- To place banners without the page limit -->
+{% block top_banner_image %}
 
     <!-- Carousel Headers -->
     <div class="swiper-container home-header-container">
-        <div class="swiper-wrapper home-header">
+        <div class="swiper-wrapper w-100 h-100">
             {% for image in store.headers.all %}
                 <div class="swiper-slide">
-                    <img src="{{ image.image_url }}" alt="{{ image.image_url }}">
+                    <img class="header-img" src="{{ image.image_url }}" alt="{{ image.image_url }}">
                 </div>
             {% endfor %}
         </div>
 
-        <!-- mostrar los botones de navegación -->
+        <!-- mostrar los botones de navegación 
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div> 
+        -->
 
         <!-- mostrar la paginación -->
         <div class="swiper-pagination"></div>
     </div>
- 
-  
+          
+{% endblock top_banner_image %}
 
 
-    <div class="mt-5 container-fluid">
-        
+
+<!-- Content -->
+{% block main_content %}
+
+    
+    <div class="w-100 mt-3">
     {% for category, products in products_by_category.items %}
+        <!-- title of each swiper container -->
         <div class="carousel-title">
-            <div class="c-p-title">
-                <i class="fa fa-heart"></i>
+            <div class="c-title">
                 <span> {{ category }} </span>
             </div>
     
-            <div class="d-flex gap-2 mb-1"> 
-                <!-- Los botones se manejarán con Swiper -->
+            <div class="d-flex gap-1"> 
+                <!-- Buttons will be handled with Swiper -->
                 <div class="swiper-button-prev-product" id="prev-{{ forloop.counter }}">
-                    <i class="fas fa-chevron-left"></i>
+                    <i class="ri-arrow-left-s-line"></i>
                 </div>
                 <div class="swiper-button-next-product" id="next-{{ forloop.counter }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="ri-arrow-right-s-line"></i>
                 </div>
             </div>
         </div>
     
-        <!-- Contenedor del carrusel Swiper -->
+        <!-- Swiper Carousel Container -->
         <div class="swiper-products" id="swiper-{{ forloop.counter }}">
             <div class="swiper-wrapper">
                 {% for product in products %}
                 
-                <figure class="swiper-slide carousel-producto-item" data-index="{{ forloop.counter0 }}" onclick="openModal({{ product.id }})">
-                    <img src="{{ product.main_image }}" alt="{{ product.name }}">
-    
-                    <figcaption class="carousel-producto-datos">
-                        <!-- Nombre del producto -->
-                        <h3>{{ product.name }}</h3>
+                <figure class="swiper-slide carousel-product-item" data-index="{{ forloop.counter0 }}" onclick="openModal({{ product.id }})">
+                    
+                    <!-- Contenedor de productos -->
+                    <div class="image-container" data-url="{% url 'product_detail' product.id product.slug %}">
+                        <!-- Imagen del Producto -->
+                        <img src="{{ product.main_image }}" alt="{{ product.name }}">
+
+                        <!-- Botón de la esquina -->
+                        <button class="btn corner-box" data-modal-id="modal-{{ product.id }}">
+                            <i class="ri-focus-mode icon-medium"></i>
+                        </button>
+                    </div>
+
+
+                    <figcaption class="carousel-product-data">
+                        <a href="{% url 'product_detail' product.id product.slug %}">
+                            {{ product.name }}
+                        </a>
         
-                        <div class="carousel-producto-info">
-                            <div class="d-flex"> 
-                                <strong>{{ product.stars }}</strong>
-                                <strong class="stars">★</strong>
+                        <div class="container-space-between">
+                            <div class="d-flex gap-1"> 
+                                <strong>{{ product.stars|intdot }}</strong>
+                                <i class="ri-star-fill"></i>
                             </div>
+
                             <!-- TOP 10 BUTTON SIDE -->
-                            {% if user.is_authenticated %}
-                                <button class="heart-button" onclick="alert('hola {{product.id}}')">
-                                    <i class="fa-solid fa-heart"></i>
-                                </button>
-                            {% endif %}
+                            <button class="btn heart-button" data-index="{{ product.id }}">
+                                <i class="ri-heart-add-line icon-medium"></i>
+                            </button>
                         </div>
     
                         <!-- Categoría y Subcategory -->
-                        <div class="carousel-producto-info">
+                        <div class="container-space-between">
                             {% if not product.available or product.stock == 0 %}
                                 <div class="bold-red">No disponible</div>
                             {% elif product.stock <= 3 %}
@@ -98,32 +117,27 @@
                         
                         {% if product.discount %}
                             <!-- descuento -->
-                            <div class="carousel-producto-info">
-                                <strong>Descuento: </strong>
-                                <div class="d-flex gap-2"> 
-                                    <strong class="bold-red">% {{product.discount}} </strong> 
-                                    <strong class="bold-red"> OFF </strong>
-                                </div>
+                            <div class="container-space-between">
+                                <strong>Descuento:</strong>
+                                <span class="bold-red">% {{product.discount}} OFF</span>
                             </div>
             
                             <!-- Precios: Normal y Oferta -->
-                            <div class="carousel-producto-info">
-                                <div class="precio-normal"> Normal: </div>
-                                <div class="precio-normal"> ${{ product.price }} </div>
+                            <div class="container-space-between">
+                                <div class="price-line-through">Normal:</div>
+                                <div class="price-line-through">$ {{product.price|intdot}}</div>
                             </div>
     
                             <!-- Precio con descuento (calculado por JavaScript) -->
-                            <div class="carousel-producto-info">
-                                <div class="bold-red"> Oferta: </div>
-                                <div id="p-price-w-discount" class="bold-red"> 
-                                    ${{ product.calc_discount }}
-                                </div>
+                            <div class="container-space-between">
+                                <div class="bold-red">Oferta:</div>
+                                <div class="bold-red">$ {{product.calc_discount|intdot}}</div>
                             </div>
                         
                         {% else %}
     
-                            <div class="carousel-producto-info">
-                                <strong> ${{ product.price }} </strong>
+                            <div class="container-space-between">
+                                <strong> $ {{ product.price|intdot }} </strong>
                             </div>
                           
                         {% endif %}
@@ -133,27 +147,42 @@
     
                     <!-- Botón de agregar al carrito -->
                     <div class="carousel-extender-btn">
-                        <button class="carousel-btn-carrito" data-index="{{product.id}}">
+                        <button class="btn gap-1 carousel-btn-carrito" data-index="{{product.id}}">
                             <span>Agregar</span> 
-                            <i class="fas fa-shopping-basket"></i> 
+                            <i class="ri-shopping-basket-2-fill"></i>
                         </button>
                     </div>
     
                 </figure>
+
                 {% endfor %}
             </div>
         </div>
     {% endfor %}
-    
+
     </div>
 
 
+    <!-- Modales y Overlay (fuera del Swiper) -->
+    {% for category, products in products_by_category.items %}
+        {% for product in products %}
+        <div class="carousel-modal" id="modal-{{ product.id }}" data-state="null">
+            <button class="btn close-modal">
+                <i class="ri-close-line icon-medium"></i>
+            </button>
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+            <p>Precio: ${{ product.price }}</p>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="overlay" id="overlay-carousel"></div>
 
 
     
-    
 
-{% endblock %}
+
+{% endblock main_content %}
 
 
 
@@ -164,59 +193,8 @@
     <!-- Swiper JS sirve para el carousel -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 
-    <script>
-        var swiperHeader  = new Swiper('.swiper-container', {
-            loop: true, // Ciclo infinito
-            autoplay: {
-              delay: 2500, // Tiempo de espera entre deslizamientos (en milisegundos)
-              disableOnInteraction: false, // No desactivar autoplay al interactuar
-            },
-            slidesPerView: 1, // Asegura que solo se muestre un slide a la vez
-            spaceBetween: 0, // Espacio entre las imágenes (ajústalo si lo deseas)
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-              el: '.swiper-pagination',
-              clickable: true, // Hacer clic en los puntos de paginación
-            },
-        });
 
-        // ================================================================================
-        //                        Logica del tab de favoritos
-        // ================================================================================
-        // Esta es la forma de realizar un swiper diferente para cada uno como espera swiper js
-        document.querySelectorAll('.swiper-products').forEach((swiperContainer, index) => {
-            const swiper = new Swiper(`#swiper-${index + 1}`, {
-                loop: true,
-                navigation: {
-                    nextEl: `#next-${index + 1}`, // Botón "siguiente" único
-                    prevEl: `#prev-${index + 1}`, // Botón "anterior" único
-                },
-                slidesPerView: 4,
-                spaceBetween: 25,
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                grabCursor: true,
-            });
-        });
+    <script src="{% static 'home/js/home.js' %}"></script>
         
-        // Reasigna eventos a los botones de incremento
-        
-        document.querySelectorAll('.carousel-btn-carrito').forEach(button => {
-            
-            button.addEventListener('click', function() {
-                const productId = this.getAttribute('data-index');
-                const qty_add = 1;
-                handleCartActions(productId, 'add', qty_add);
-            });
-        });
-        
-        
-
-    </script>
 
 {% endblock %}

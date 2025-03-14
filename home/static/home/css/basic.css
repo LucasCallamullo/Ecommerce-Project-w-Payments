@@ -1,0 +1,543 @@
+
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
+
+:root {
+    /* main color de la empresa */
+    --main-color: #5e08e7;
+    --main-light-color: #9554ff;
+
+    /* Primary Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9faa9;
+
+    /* Extended Grayscale */
+    --bg-secondary-light: #c9c9c96e;  /* Más claro que el secondary */
+    --bg-secondary-dark: #8a8b8b60;   /* Más oscuro que el secondary */
+    --bg-secondary-mobile: #aaaaaaa9;
+    
+    --text-primary: #000000;
+    --text-secondary: #6c757d;
+    
+    /* basic colores */
+    --white-color: #fff;
+    --black-color: #000;
+
+    /* Font Sizes */
+    --font-small: 0.8rem;
+    --font-small-plus: 0.9rem;
+    --font-normal: 1rem;
+    --font-normal-plus: 1.25rem;
+    --font-medium: 1.5rem;
+    --font-xl: 2rem;
+    --font-xxl: 2.5rem;
+    
+    /* Font Weights */
+    --font-normal-weight: 400;
+    --font-plus-weight: 500;
+    --font-bold-weight: 700; 
+    
+    /* Fonts */
+    --font-main: 'Montserrat';
+    --font-slim: 'Montserrat';
+
+    /* heigths */
+    --height-header: 25vh;
+    --height-item-main-nav: 48px; 
+
+    /*========== z index ==========*/
+    --z-fixed: 100;
+    --z-index-overlay: 150;
+    --z-index: 200;
+    --z-index-plus: 300;
+
+    /* width responsive */
+    --width-first-col: 24%;
+    --width-second-col: 50%;
+    --width-third-col: 26%;
+    --width-after-first-col: 76%;
+
+    /* for animations generic variabels */
+    --max-height-vertical-anim: 0;
+}
+
+/* Modo oscuro */
+.dark-mode {
+    --bg-primary: #343a40;
+    --bg-secondary: #212529;
+    --bg-secondary-mobile: #aaaaaaa9;
+
+    --text-primary: #ffffff;
+    --text-secondary: #6c757d;
+}
+
+
+/* Tablets (máx. 1024px) */
+@media screen and (max-width: 992px) {
+
+}
+
+/* Celulares (máx. 768px) */
+@media screen and (max-width: 768px) {
+    :root {
+        /* heigths */
+        --height-header: 12vh;
+        --height-item-main-nav: 75px;
+
+        /* Font Sizes */
+        --font-small: 0.65rem;
+        --font-normal: 0.9rem;
+        --font-medium: 1.4rem;
+        --font-xl: 1.9rem;
+        --font-xxl: 2.4rem;
+        
+        /* Font Weights */
+        --font-normal-weight: 300;  
+        --font-bold-weight: 600;    
+    }
+}
+
+/* Celulares pequeños (máx. 480px) */
+@media screen and (max-width: 480px) {
+    :root {
+        /* heigths */
+        --height-header: 8vh;
+        --height-item-main-nav: 50px;
+
+        /* Font Sizes */
+        --font-small: 0.55rem;
+        --font-normal: 0.8rem;
+        --font-medium: 1.3rem;
+        --font-xl: 1.8rem;
+        --font-xxl: 2.3rem;
+
+        /* Font Weights */
+        --font-normal-weight: 300;
+        --font-bold-weight: 500;
+    }
+}
+
+
+/* ====================================================================
+        Basic adjustments to classes
+==================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box !important; /* To remove the padding and border, increase the width */
+    margin: 0;
+    padding: 0;
+}
+
+body * {
+    /* esto fue hecho para que se incluya la fuente en los include de la base.html */
+    font-family: var(--font-main), sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+    /* Color highlighting when pressed on mobile devices */
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    text-decoration: none;
+}
+
+button i {
+    pointer-events: none;
+}
+
+
+/* ======================================================================
+        GENERAL STYLES AND CLASSES
+====================================================================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+
+    overflow-x: hidden;
+    color: var(--text-primary);
+    font-size: var(--font-normal);
+    font-family: var(--font-main), sans-serif;
+    background-color: var(--bg-secondary);
+
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .2s ease-in-out;
+}
+
+header {
+    height: var(--height-header);
+    width: 100%;
+    background-color: var(--main-color);
+    padding-top: 0.5rem;
+    padding-bottom: 0.1rem;
+}
+
+main {
+    width: 100%;
+    background-color: var(--bg-secondary);
+}
+
+footer {
+    width: 100%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    background-color: var(--bg-primary);
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: var(--z-fixed);
+    }
+
+    main {
+        margin-top: var(--height-header);
+    }
+}
+
+
+/* ======================================================================
+        Containers
+====================================================================== */
+/*  Main container for all the contents of header, main, footer with paddings */
+.container-page {
+    width: 100%;
+    padding-left: 7%;
+    padding-right: 7%;
+    margin: 0 auto;
+}
+
+/* to maintain consistency on desktop with the first column of the logo, dropmenu, and first column */
+.first-col {
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+    width: var(--width-first-col);
+    max-width: var(--width-first-col);
+}
+
+.second-col {
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+
+    margin-left: 2%;
+    width: var(--width-second-col);
+    max-width: var(--width-second-col);
+}
+
+.third-col {
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+    width: var(--width-third-col);
+    max-width: var(--width-third-col);
+}
+
+/* se utiliza esto para el contenido posterior a la primera columna */
+.main-content {
+    position: relative;
+    margin-left: 2%;
+
+    height: 100%;
+    max-height: 100%;
+    width: var(--width-after-first-col);
+    max-width: var(--width-after-first-col);
+}
+
+@media (min-width: 1300px) {
+    .container-page {
+        max-width: 1300px;  
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+}
+
+/* Tablets (máx. 992px) --> 4/5 de la base */
+@media (max-width: 992px) {
+    .container-page {
+        padding-left: 5.5%;
+        padding-right: 5.5%;
+    }
+}
+
+/* Celulares (máx. 768px) --> 3/5 de la base */
+@media (max-width: 768px) {
+    .container-page {
+        padding-left: 3.5%;
+        padding-right: 3.5%;
+    }
+}
+
+/* Celulares pequeños (máx. 480px) --> 2/5 de la base */
+@media (max-width: 480px) {
+    .container-page {
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+}
+
+
+/* ======================================================================
+        Generic Clases to use
+====================================================================== */
+.btn {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    
+    outline: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+
+    cursor: pointer;
+    user-select: none; /* Prevents text selection inside the button */
+    transition: color 0.3s ease-in-out, /* Smoothly changes text color */
+                background-color 0.3s ease-in-out, /* Smoothly changes background color */
+                border-color 0.3s ease-in-out, /* Smoothly changes border color */
+                box-shadow 0.3s ease-in-out; /* Smoothly applies/removes shadows */
+}
+
+.container-space-between {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+}
+
+.show {
+    display: block !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.d-none {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.d-flex {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.d-flex-col {
+    flex-direction: column;
+}
+
+.h-100 {
+    height: 100%;
+    max-height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.w-100 {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.w-50 {
+    width: 50%;
+    max-width: 50%;
+}
+
+.justify-start {
+    display: flex !important;
+    justify-self: start !important;
+    justify-content: start !important;
+    align-self: center !important;
+    align-items: center !important;
+    /* text-align: justify !important;     para las etiquetas p */
+}
+
+.justify-center {
+    display: flex !important;
+    justify-self: center !important;
+    justify-content: center !important;
+    align-self: center !important;
+    align-items: center !important;
+}
+
+.justify-end {
+    display: flex !important;
+    justify-self: end !important;
+    justify-content: end !important;
+    align-self: center !important;
+    align-items: center !important;
+}
+
+.icon-medium {
+    font-size: var(--font-medium);
+}
+
+.icon-xl {
+    font-size: var(--font-xl);
+}
+
+/* Gap base */
+.gap-0 { gap: 0rem !important; }  
+.gap-1 { gap: 0.5rem !important; }   /* 8px */
+.gap-2 { gap: 1rem !important; }     /* 16px */
+.gap-3 { gap: 1.5rem !important; }   /* 24px */
+.gap-4 { gap: 2rem !important; }     /* 32px */
+.gap-5 { gap: 2.5rem !important; }   /* 40px */
+.gap-6 { gap: 3rem !important; }     /* 48px */
+
+/* Margin Top (mt-*) */
+.mt-0 { margin-top: 0rem !important; }
+.mt-1 { margin-top: 0.5rem !important; }   /* 8px */
+.mt-2 { margin-top: 1rem !important; }     /* 16px */
+.mt-3 { margin-top: 1.5rem !important; }   /* 24px */
+.mt-4 { margin-top: 2rem !important; }     /* 32px */
+.mt-5 { margin-top: 2.5rem !important; }   /* 40px */
+.mt-6 { margin-top: 3rem !important; }     /* 48px */
+
+/* Margin Bottom (mb-*) */
+.mb-0 { margin-bottom: 0rem !important; }
+.mb-1 { margin-bottom: 0.5rem !important; }   /* 8px */
+.mb-2 { margin-bottom: 1rem !important; }     /* 16px */
+.mb-3 { margin-bottom: 1.5rem !important; }   /* 24px */
+.mb-4 { margin-bottom: 2rem !important; }     /* 32px */
+.mb-5 { margin-bottom: 2.5rem !important; }   /* 40px */
+.mb-6 { margin-bottom: 3rem !important; }     /* 48px */
+
+/* Tablets (máx. 992px) -> 4/5 del base */
+@media (max-width: 992px) {
+    .gap-1 { gap: 0.4rem !important; }   /* 6.4px */
+    .gap-2 { gap: 0.8rem !important; }   /* 12.8px */
+    .gap-3 { gap: 1.2rem !important; }   /* 19.2px */
+    .gap-4 { gap: 1.6rem !important; }   /* 25.6px */
+    .gap-5 { gap: 2rem !important; }     /* 32px */
+    .gap-6 { gap: 2.4rem !important; }   /* 38.4px */
+
+    .mt-1 { margin-top: 0.4rem !important; }   /* 6.4px */
+    .mt-2 { margin-top: 0.8rem !important; }   /* 12.8px */
+    .mt-3 { margin-top: 1.2rem !important; }   /* 19.2px */
+    .mt-4 { margin-top: 1.6rem !important; }   /* 25.6px */
+    .mt-5 { margin-top: 2rem !important; }     /* 32px */
+    .mt-6 { margin-top: 2.4rem !important; }   /* 38.4px */
+
+    .mb-1 { margin-bottom: 0.4rem !important; }   /* 6.4px */
+    .mb-2 { margin-bottom: 0.8rem !important; }   /* 12.8px */
+    .mb-3 { margin-bottom: 1.2rem !important; }   /* 19.2px */
+    .mb-4 { margin-bottom: 1.6rem !important; }   /* 25.6px */
+    .mb-5 { margin-bottom: 2rem !important; }     /* 32px */
+    .mb-6 { margin-bottom: 2.4rem !important; }   /* 38.4px */
+}
+
+/* Celulares (máx. 768px) -> 3/5 del base */
+@media (max-width: 768px) {
+    .gap-1 { gap: 0.3rem !important; }   /* 4.8px */
+    .gap-2 { gap: 0.6rem !important; }   /* 9.6px */
+    .gap-3 { gap: 0.9rem !important; }   /* 14.4px */
+    .gap-4 { gap: 1.2rem !important; }   /* 19.2px */
+    .gap-5 { gap: 1.5rem !important; }   /* 24px */
+    .gap-6 { gap: 1.8rem !important; }   /* 28.8px */
+
+    .mt-1 { margin-top: 0.3rem !important; }   /* 4.8px */
+    .mt-2 { margin-top: 0.6rem !important; }   /* 9.6px */
+    .mt-3 { margin-top: 0.9rem !important; }   /* 14.4px */
+    .mt-4 { margin-top: 1.2rem !important; }   /* 19.2px */
+    .mt-5 { margin-top: 1.5rem !important; }   /* 24px */
+    .mt-6 { margin-top: 1.8rem !important; }   /* 28.8px */
+
+    .mb-1 { margin-bottom: 0.3rem !important; }   /* 4.8px */
+    .mb-2 { margin-bottom: 0.6rem !important; }   /* 9.6px */
+    .mb-3 { margin-bottom: 0.9rem !important; }   /* 14.4px */
+    .mb-4 { margin-bottom: 1.2rem !important; }   /* 19.2px */
+    .mb-5 { margin-bottom: 1.5rem !important; }   /* 24px */
+    .mb-6 { margin-bottom: 1.8rem !important; }   /* 28.8px */
+}
+
+/* Celulares pequeños (máx. 480px) -> 2/5 del base */
+@media (max-width: 480px) {
+    .gap-1 { gap: 0.2rem !important; }   /* 3.2px */
+    .gap-2 { gap: 0.4rem !important; }   /* 6.4px */
+    .gap-3 { gap: 0.6rem !important; }   /* 9.6px */
+    .gap-4 { gap: 0.8rem !important; }   /* 12.8px */
+    .gap-5 { gap: 1rem !important; }     /* 16px */
+    .gap-6 { gap: 1.2rem !important; }   /* 19.2px */
+
+    .mt-1 { margin-top: 0.2rem !important; }   /* 3.2px */
+    .mt-2 { margin-top: 0.4rem !important; }   /* 6.4px */
+    .mt-3 { margin-top: 0.6rem !important; }   /* 9.6px */
+    .mt-4 { margin-top: 0.8rem !important; }   /* 12.8px */
+    .mt-5 { margin-top: 1rem !important; }     /* 16px */
+    .mt-6 { margin-top: 1.2rem !important; }   /* 19.2px */
+
+    .mb-1 { margin-bottom: 0.2rem !important; }   /* 3.2px */
+    .mb-2 { margin-bottom: 0.4rem !important; }   /* 6.4px */
+    .mb-3 { margin-bottom: 0.6rem !important; }   /* 9.6px */
+    .mb-4 { margin-bottom: 0.8rem !important; }   /* 12.8px */
+    .mb-5 { margin-bottom: 1rem !important; }     /* 16px */
+    .mb-6 { margin-bottom: 1.2rem !important; }   /* 19.2px */
+}
+
+
+/* 
+    ANIMATIONS GENERIC 
+        depends on the change of this variable in the different associated 
+        classes --max-anim-vertical-height
+*/
+@keyframes slideOpenToggle {
+    from {
+        max-height: 0;
+        opacity: 1;
+    }
+    to {
+        max-height: var(--max-height-vertical-anim);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slideCloseToggle {
+    from {
+        max-height: var(--max-height-vertical-anim);
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 1;
+        /* display: none; */
+    }
+}
+
+/* 
+    Useful basic styles for all templates
+*/
+
+.overlay {
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    z-index: var(--z-index-overlay);
+    /* pointer-events: none;  Prevents interference when not visible
+    pointer-events: all;  Allows interaction when visible */
+}

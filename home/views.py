@@ -22,3 +22,10 @@ def home(request):
 def help_mp(request):
     users = CustomUser.objects.filter(is_superuser=False)
     return render(request, 'home/help_mp.html', {'users': users})
+
+
+
+
+
+
+
