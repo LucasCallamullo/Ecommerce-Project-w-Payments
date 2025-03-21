@@ -1,134 +1,152 @@
 
 
+.grid-container-3 {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr 1fr;
+    gap: 10px;
+}
+
+.grid-container-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+/* Estilos base para móviles (hasta 480px) */
+.grid-container-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 50px;
+    row-gap: 30px;
+}
+
+.grid-second-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 30px;
+}
+
+/* Tablets (mín. 481px) */
+@media (min-width: 481px) {
+
+    .grid-container-main {
+        grid-template-columns: 1.1fr 0.9fr;
+        margin-top: 0;
+        gap: 16px;
+        row-gap: 16px;
+    }
+
+    .grid-second-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dekstop (mín. 993px) */
+@media (min-width: 993px) {
+
+    .grid-container-3 {
+        display: grid;
+        grid-template-columns: 0.8fr 1.1fr 1fr 0.5fr;
+    }
+
+    .grid-container-main {
+        grid-template-columns: 3.3fr 6.7fr;
+        gap: 16px;
+    }
+
+    .grid-second-col {
+        gap: 16px;
+        grid-template-columns: 4.5fr 2.2fr;
+    }
+}
+
+
 /* Contenedor principal */
-#prod-container {
+.prod-container {
     width: 100%;
-    height: 450px; /* Altura fija para distribuir correctamente */
-    display: flex;
-    flex-direction: column; /* Asegura que los hijos se distribuyan en columnas */
+    height: 450px;
     border: 2px solid var(--text-secondary);
     background-color: var(--bg-primary);
+
+    display: grid;
+    grid-template-rows: 380px 66px;
+    position: relative;
 }
 
 /* Contenedor de imagen */
 .prod-main-img-container {
-    flex: 9; /* Ocupa el 90% del contenedor */
     width: 100%;
     overflow: hidden;
     position: relative;
+    background-color: var(--white-color);
 }
 
 .prod-main-img-container img {
     width: 100%;
     height: 100%;
-    object-fit: contain;   /* o cover probar */
-    background-color: var(--bg-primary);
+    object-fit: scale-down;   /* o cover probar */
 }
 
-/* Botón de la esquina superior derecha */
-.prod-main-corner-box {
+.corner-box {
     position: absolute;
     top: 0;
     right: 0;
-    width: 50px;
-    height: 50px;
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+    width: 40px;
+    height: 40px;
     z-index: 10;
-    border: none;
+    background-color: var(--white-color);
+    
 }
 
-.prod-main-corner-box i {
-    font-size: var(--font-xl);
+/* Desktop */
+@media (min-width: 993px) {
+    .corner-box {
+        transition: background-color 0.3s ease, color 0.3s ease; /* Agrega transición */
+    }
+    
+    .corner-box:hover,
+    .corner-box:active {
+        background-color: var(--black-color);
+        color: var(--white-color);
+    }
 }
 
-.prod-main-corner-box:hover {
-    background-color: var(--bg-secondary);
-}
-
-/* Contenedor de flechas */
-#prod-container figcaption {
-    flex: 1; /* Ocupa el 10% del contenedor */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 10px;
-    background-color: var(--bg-primary);
-}
 
 /* Botones de flechas */
 .arrow-button {
     width: 40px;
     height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--bg-secondary);
     color: var(--text-primary);
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
     border-radius: 50%;
-    transition: background-color 0.3s ease;
-}
-
-.arrow-button:hover {
-    background-color: var(--bg-hover);
-}
-
-.arrow-button.left {
-    margin-left: 10px;
-}
-
-.arrow-button.right {
-    margin-right: 10px;
-}
-
-
-/* columna de imagenes sobre puestas */
-.prod-small-images-row {
-    display: flex;
-    flex-direction: row;
-    width: 85%;
+    border: 1px solid var(--text-secondary);
 }
 
 .prod-small-image-container {
-    width: 25%;
-    max-width: 25%;
     height: 120px;
     max-height: 120px;
-    background-color: var(--bg-primary);
-    display: flex; /* Centra el contenido dentro del contenedor */
-    align-items: center; /* Centrado vertical */
-    justify-content: center; /* Centrado horizontal */
+    background-color: var(--white-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--text-secondary);
+    transition: border-color 0.3s ease;
+    
+    cursor: pointer;
+}
 
-    border: 2px solid transparent; /* Borde inicial transparente */
-    transition: border-color 0.3s ease; /* Animación para el borde */
+.prod-small-image-container.active {
+    border: 2px solid var(--text-secondary);
+    border-color: var(--black-color);
+    transform: scale(1.02);
+    transition: transform 0.2s ease
 }
 
 .prod-small-image {
     width: 100%;
     max-height: 100%;
-    background-size: contain; /* Asegura que la imagen llene el espacio */
-    background-position: center; /* Centra la imagen */
-    border: none;
-    background-color: var(--bg-primary);
-    cursor: pointer; /* Indica que son interactuables */
+    background-size: contain;
+    background-position: center;
 }
-
-.prod-small-image-container:hover {
-    border-color: var(--text-primary); /* Cambia el borde al pasar el mouse */
-}
-
-.prod-small-image-container.active {
-    border-color: var(--text-primary);
-    transform: scale(1.01);
-    transition: transform 0.1s ease
-}
-
 
 /* Flechas de navegación en el overlay */
 .arrow-button.left-overlay,
@@ -137,243 +155,238 @@
     top: 50%;
     transform: translateY(-50%);
     background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
+    color: var(--white-color);
     padding: 10px;
-    cursor: pointer;
-    font-size: 24px;
     z-index: 2;
 }
 
 .arrow-button.left-overlay {
-    left: 20px;
+    left: 5px;    /* mobile 20 */
 }
 
 .arrow-button.right-overlay {
-    right: 20px;
+    right: 5px;    /* mobile 20 */
 }
 
 /* Asegúrate de que el contenedor tenga un tamaño y sea relativo para contener la imagen */
 #image-container {
     position: relative;
-    overflow: hidden; /* Esto oculta cualquier parte de la imagen que se desplace fuera del contenedor */
-    width: 50%;
-    max-width: 80%;
+    overflow: hidden;
+
+    width: 75%;    /* mobile 50 */
+    max-width: 80%;    /* mobile 50 */
     height: 70vh;
     max-height: 70vh;
-    display: flex; /* Usamos flexbox para centrar la imagen */
-    justify-content: center; /* Centra la imagen horizontalmente */
-    align-items: center; /* Centra la imagen verticalmente */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     background-repeat: no-repeat;
     background-position: center;
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="black" stroke-width="3" fill="white" /><line x1="15" y1="25" x2="35" y2="25" stroke="black" stroke-width="3"/><line x1="25" y1="15" x2="25" y2="35" stroke="black" stroke-width="3"/></svg>') 16 16, auto;
+    background-color: var(--white-color);
 }
-
-#image-container.zoom-in-cursor {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="black" stroke-width="3" fill="white" /><line x1="15" y1="25" x2="35" y2="25" stroke="black" stroke-width="3"/><line x1="25" y1="15" x2="25" y2="35" stroke="black" stroke-width="3"/></svg>') 16 16, auto;
-}
-
-#image-container.zoom-out-cursor {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="black" stroke-width="3" fill="white" /><line x1="15" y1="25" x2="35" y2="25" stroke="black" stroke-width="3"/></svg>') 16 16, auto;
-}
-
 
 /* Fondo oscuro */
 .fullscreen-overlay {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 500;
+}
+
+.btn-corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 55px;     /* mobile 55 */
+    height: 55px;    /* mobile 55 */
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--white-color);
+}
+
+/* Desktop (mín. 769px) */
+@media (min-width: 769px) {
+    .arrow-button.left-overlay {
+        left: 20px;    /* mobile 20 */
+    }
+    
+    .arrow-button.right-overlay {
+        right: 20px;    /* mobile 20 */
+    }
+
+    #image-container {
+        width: 50%;    /* mobile 50 */
+        max-width: 80%;    /* mobile 50 */
+        height: 70vh;    /* mobile 70 */
+        max-height: 70vh;    /* mobile 70 */
+    }
+    
+    .btn-corner {
+        width: 55px;     /* mobile 55 */
+        height: 55px;    /* mobile 55 */
+    }    
 }
 
 
 /*
         Product card info stuff - SECOND COLUMN
 */
+.btn-categories {
+    padding: 4px 8px;
+}
+
 .product-info {
-    background-color: var(--bg-primary); /* Fondo gris claro para el contenedor */
-    display: flex;
-    flex-direction: column; /* Alinea los elementos en columna */
+    display: grid;
+    padding: 5px 10px;
+    background-color: var(--bg-primary);
+    gap: 5px;
+    border: 1px ridge var(--text-secondary);
+    background-color: var(--bg-primary);
 }
 
-.product-info p {
-    color: var(--text-secondary); 
-    font-size: var(--font-small);
-    margin: 0;
-    padding: 0;
-}
-
+.product-info p,
 .product-info span {
     color: var(--text-secondary); 
-    font-size: var(--font-small);
-    margin: 0;
-    padding: 0;
-}
-
-.product-info .brand-value {
-    color: var(--main-color) !important; /* Especificidad aumentada */
+    font-size: var(--font-small-plus);
 }
 
 /* payment stuff */
 .payment-info-box {
-    border: 2px solid #ddd; /* Borde gris claro alrededor del recuadro */
+    border: 1px ridge var(--text-secondary);
     background-color: var(--bg-primary);
-    padding: 5px; /* Espaciado interno */
-    max-width: 95%; /* Ancho máximo del recuadro */
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
-}
-
-.payment-info-content {
-    display: flex;
-    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
+    padding: 5px;
 }
 
 .payment-icon img {
-    width: 50px; /* Ajusta el tamaño del icono */
+    width: 50px;
     height: auto;
-    align-items: flex-start; /* Alinea el contenido al principio del contenedor */
 }
-
 
 .payment-logo img {
-    max-width: 50%; /* Ajusta la imagen al ancho del contenedor */
+    max-width: 60%;
     height: auto;
 }
 
-
-
 /*
-            TERCERA COLUMNA - columnar precio
+    TERCERA COLUMNA - columnar precio
 */
-.payment-container {
-    border-left: 2px solid var(--main-color);
-}
-
-.payment-child-container {
-    width: 100%;
-    padding: 5%;
+/* Estilos base para móviles (hasta 480px) */
+/* Styles for small mobile phones */
+.cont-mobile-detail {
+    border: 1px ridge var(--text-secondary);
     background-color: var(--bg-primary);
-    display: grid;
-    grid-template-rows: auto auto; /* Dos filas automáticas */
-    text-align: left; /* Asegura que el span esté alineado a la izquierda */
-}
-
-.price-tag {
-    font-size: var(--font-xl); /* Tamaño de fuente del texto */
-    font-weight: bold; /* Texto en negrita */
-    text-align: center;
-}
-
-.payment-child-container span {
-    color: var(--text-primary);
-    font-size: var(--font-x-small);
-    font-weight: bold;
-    padding: 2%;
+    padding: 20px 50px;    /* mobile */
+    height: min-content;
 }
 
 .bank-child-container {
-    width: 100%;
     background-color: var(--bg-primary);
     display: grid;
-    grid-template-rows: auto auto; /* Dos filas automáticas */
+    grid-template-rows: auto auto;
+    
     text-align: left;
-    border: 2px solid var(--text-primary); /* Borde del recuadro */
+    border: 2px solid var(--text-primary);
 }
 
-.bank-child-container span {
+.bank-child-container b {
     color: var(--text-primary);
-    font-size: var(--font-x-small);
-    font-weight: bold;
-    padding: 2%;
+    padding: 4px;
 }
 
 .bank-child-container img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
+    /* mobile */
+    height: 50px; 
 }
 
-
 /* Contenedor interno para los botones y el input */
-.quantity-container-detail {
-    display: flex; /* Flexbox para los botones y el input */
-    align-items: center; /* Alineación vertical centrada */
-    border: 2px solid var(--text-primary);
-    transition: border-color 0.3s;
+.product-container-conts {
+    border: 1px solid var(--text-primary);
+    width: 50%;    /* mobile 30 */
     height: 50px;
 }
 
-/* Botones de incremento y decremento */
-.prod-btn-qty {
-    color: var(--text-secondary);
-    font-size: var(--font-medium);
-    font-weight: bold;
-    width: 30%;
-    max-width: 30%;
-    height: 100%;
-    padding: 1%;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+.product-container-conts button {
+    color: var(--text-primary);
+    width: 30%; /* mobile */
 }
 
-/* Efecto hover en los botones */
-.prod-btn-qty:hover {
-    color: var(--text-primary); /* Cambia el color del texto */
-    font-size: var(--font-medium);
+.product-container-conts button:active {
+    transform: scale(0.95);
 }
-
-/* Botón al hacer clic */
-.prod-btn-qty:active {
-    background-color: var(--bg-primary);
-    transform: scale(0.95); /* Simula un efecto de presionado */
-    border: none;
-}
-
-/* Campo de entrada (input) */
-.quantity-container-detail:focus-within {
-    border-color: var(--focus-color); /* Cambia el color del borde cuando el input está enfocado */
-}
-
 
 #prod-input-qty {
-    text-align: center; /* Texto centrado */
-    font-size: var(--font-small);
+    text-align: center;
+    font-size: var(--font-small-plus);
     color: var(--text-primary);
     border: none;
     outline: none;
-    width: 40%;
+    width: 40%; /*  mobile */
     height: 100%;
-    max-width: 40%;
     background-color: transparent;
 }
-/* button to add to cart */
+
 .btn-add-item {
-    color: #ffffff;
-    background-color: var(--main-color);
+    width: 50%;    /*  mobile */
+    height: 50px;
+}
+
+.btn-add-item span {
     font-size: var(--font-normal);
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    border: none; /* Elimina el borde */
+}
+
+/* Tablets (mín. 481px) */
+@media (min-width: 481px) {
+    /* Styles for tablets */
+    .cont-mobile-detail {
+        padding: 15px 20px;    /* mobile */
+    }
+
+    .bank-child-container img {
+        height: 55px; /* mobile */
+    }
+    
+    /* Contenedor interno para los botones y el input */
+    .product-container-conts {
+        width: 40%;    /* mobile 30 */
+    }
+    
+    .btn-add-item {
+        width: 60%; /*  mobile */
+    }
+}
+
+/* Escritorio (mín. 769px) */
+@media (min-width: 769px) {
+    /* Styles for desktops */
+    .cont-mobile-detail {
+        padding: 15px 15px;    /* mobile */
+    }
+
+    .bank-child-container img {
+        height: auto; /* mobile */
+    }
+    
+    /* Contenedor interno para los botones y el input */
+    .product-container-conts {
+        width: 30%;    /* mobile */
+    }
+    
+    .btn-add-item {
+        width: 70%; /*  mobile */
+    }
+}
+
+
+/* description stuff */
+.cont-detail-desc {
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-add-item:hover {
-    background-color: var(--text-secondary)
-}
-
-.btn-add-item:active {
-    border: 2px solid var(--main-color);
+    flex-direction: column;
+    gap: 5px;
+    
+    border: 2px solid var(--text-secondary);
     background-color: var(--bg-primary);
-    color: var(--text-primary);
+
+    padding: 15px 20px;
 }

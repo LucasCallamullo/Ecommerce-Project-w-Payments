@@ -4,29 +4,33 @@
 
 <!-- Toggle button -->
 <div class="btn btn-mobile" id="nav-toggle">
-    <i class="ri-menu-line"></i>
+    <i class="ri-menu-line icon-medium"></i>
 </div>
 
 <!-- ICON SEARCH -->
-<button class="btn btn-mobile" id="top-btn-search">
-    <i class="ri-search-line"></i>
+<button class="btn btn-mobile" id="top-btn-search" aria-expanded="false">
+    <i class="ri-search-line icon-medium"></i>
 </button>
 
-<!-- Search Form (hidden by default) -->
+<!-- Search Form (hidden by default)  -->
 <div class="search-bar-mobile" id="search-bar-mobile" data-state="null">
-    <div class="container-space-between gap-3 py-1">
-        <form class="top-bar-search" action="{% url 'product_top_search' %}" method="GET">
-            <input type="text" name="topQuery" placeholder="Buscar...">
+    
+    <form class="d-flex top-bar-search" action="{% url 'product_top_search' %}" method="GET">
 
-            <button class="btn btn-mobile" type="submit">
-                <i class="ri-search-line"></i>
+        <input class="text-medium" type="text" name="topQuery" placeholder="Buscar...">
+
+        <div class="d-flex">
+            <button class="btn" type="submit">
+                <i class="ri-search-line icon-medium"></i>
             </button>
-        </form>
-        
-        <button class="btn btn-mobile" id="back-search-form">
-            <i class="ri-close-line"></i>
-        </button>
-    </div>
+
+            <button class="btn" type="button" id="back-search-form">
+                <i class="ri-close-line icon-xl"></i>
+            </button>
+        </div>
+
+    </form>
+    
 </div>
 
 <!-- Logo -->
@@ -34,15 +38,17 @@
     <img src="{% static 'img/ico/logo.jpg' %}" class="logo" alt="logo">
 </a>
 
-<!-- Icon reserver -->
-<button class="theme-toggle btn btn-mobile">
-    <i class="theme-icon ri-moon-line"></i>
+<!-- Icon Cart Overlay -->
+<button class="btn btn-mobile cart-button" aria-expanded="false"">
+    <i class="ri-shopping-cart-2-line icon-medium"></i>
 </button>
+{% include "cart/widget_cart.html" %}
 
 <!-- Icon user login -->
-<button class="btn btn-mobile">
-    <i class="ri-user-3-line"></i>
+<button class="btn btn-mobile user-button" aria-expanded="false">
+    <i class="ri-user-3-line icon-medium"></i>
 </button>
+{% include "users/widget_login.html" %}
 
 
 <!-- Content of toggle -->
@@ -51,21 +57,19 @@
     <div class="container-menu-mobile">
         <ul class="nav__list">
             <!-- Close button from toggle button -->
-            <li class="drop-item-mobile">
-                <div class="container-space-between">
-                    <strong> Menú </strong>
-                    <button class="btn btn-menu-mobile" id="nav-close">
-                        <i class="ri-close-large-line"></i>
-                    </button>
-                </div>
+            <li class="drop-item-mobile container-space-between">
+                <strong> Menú </strong>
+                <button class="btn btn-menu-mobile" id="menu-mobile-close">
+                    <i class="ri-close-large-line icon-small"></i>
+                </button>
             </li>
             
             <li>
                 <!-- Botón para desplegar el menú -->
                 <button class="dropdown-btn" aria-expanded="false">
-                    <span> Barrios </span>
+                    <b> Nuestros Productos </b>
                     <div class="btn btn-menu-mobile">
-                        <i class="ri-arrow-down-s-line arrow-drop"></i>
+                        <i class="ri-arrow-down-s-line icon-small arrow-drop"></i>
                     </div>
                 </button>
 
@@ -76,9 +80,9 @@
                     <!-- Item with sub menu -->
                     {% if subcategories %}
                         <button class="dropdown-btn bg-secondary" aria-expanded="false">
-                            <span>{{ category.name }}</span>
+                            <b> {{ category.name }} </b>
                             <div class="btn btn-menu-mobile">
-                                <i class="ri-arrow-down-s-line arrow-drop"></i>
+                                <i class="ri-arrow-down-s-line icon-small arrow-drop"></i>
                             </div>
                         </button>
 
@@ -86,26 +90,29 @@
                         <ul class="dropdown-menu" data-state="null">
                         {% for subcat in subcategories %}
                             {% if forloop.first %}
-                            <li class="sub-item-mobile justify-start">
-                                <a href="{% url 'pl_category' category.slug %}">
-                                    Todos
+                            <li class="sub-item-mobile">
+                                <a href="{% url 'pl_category' category.slug %}" 
+                                class="container-space-between w-100 h-100">
+                                    <b>Todos</b>
                                 </a>
                             </li>  
                             {% endif %}
                                 
-                            <li class="sub-item-mobile justify-start">
-                                <a href="{% url 'pl_subcategory' category.slug subcat.slug %}">
-                                    {{ subcat.name }}
+                            <li class="sub-item-mobile">
+                                <a href="{% url 'pl_subcategory' category.slug subcat.slug %}" 
+                                class="container-space-between w-100 h-100">
+                                    <b>{{ subcat.name }}</b>
                                 </a>
                             </li>
                         {% endfor %}
                         </ul>
 
                     {% else %}
-                        <!-- Item with sub menu -->
-                        <div class="drop-item-mobile justify-start bg-secondary"> 
-                            <a href="{% url 'pl_category' category.slug %}">
-                                {{ category.name }}
+                        <!-- Item without sub menu -->
+                        <div class="drop-item-mobile bg-secondary"> 
+                            <a href="{% url 'pl_category' category.slug %}"
+                            class="container-space-between w-100 h-100">
+                                <b>{{ category.name }}</b>
                             </a>
                         </div>
                     {% endif %}
@@ -114,43 +121,48 @@
                 </ul>
             </li>
 
-            <li class="drop-item-mobile justify-start">
-                <a href="{% url 'Home' %}">
-                    <span>Home</span>
+            <li class="drop-item-mobile">
+                <a href="{% url 'Home' %}" class="container-space-between w-100 h-100">
+                    <b>Home</b>
                 </a>
             </li>
 
-            <li class="drop-item-mobile justify-start">
-                <a href="#">
-                    <span>About Us</span>
+            <li class="drop-item-mobile">
+                <a href="#" class="container-space-between w-100 h-100">
+                    <b>About Us</b>
                 </a>
             </li>
     
-            <li class="drop-item-mobile justify-start">
-                <a href="#" target="_blank">
-                    <span>Contact</span>
+            <li class="drop-item-mobile">
+                <a href="#" class="container-space-between w-100 h-100">
+                    <b>Contact</b>
                 </a>
             </li>
         </ul>
     </div>
 
     <!-- Iconos -->
-    <div class="cont-menu-icons">
-        <a href="{{ store.google_url }}" target="_blank" class="nav__social-link">
-            <i class="ri-whatsapp-line"></i>
+    <div class="cont-menu-icons gap-5">
+        <a href="{{ store.google_url }}" target="_blank" class="btn text-primary">
+            <i class="ri-whatsapp-line icon-medium"></i>
         </a>
 
-        <a href="{{ store.ig_url }}" target="_blank" class="nav__social-link">
-            <i class="ri-instagram-line"></i>
+        <a href="{{ store.ig_url }}" target="_blank" class="btn text-primary">
+            <i class="ri-instagram-line icon-medium"></i>
         </a>
 
-        <a href="{{ store.tt_url }}" target="_blank" class="nav__social-link">
-            <i class="ri-tiktok-fill"></i>
+        <a href="{{ store.tt_url }}" target="_blank" class="btn text-primary">
+            <i class="ri-tiktok-fill icon-medium"></i>
         </a>
 
-        <a href="{{ store.fb_url }}" target="_blank" class="nav__social-link">
-            <i class="ri-facebook-box-fill"></i>
+        <a href="{{ store.fb_url }}" target="_blank" class="btn text-primary">
+            <i class="ri-facebook-box-fill icon-medium"></i>
         </a>
+
+        <!-- Icon reserver -->
+        <button class="theme-toggle btn text-primary">
+            <i class="theme-icon ri-moon-line icon-medium"></i>
+        </button>
     </div>
 
 </div>

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
 
     <link href="{% static 'home/css/home.css' %}" rel="stylesheet">
+    <link href="{% static 'products/css/products_carousel.css' %}" rel="stylesheet">
         
 {% endblock %}
 
@@ -48,140 +49,8 @@
 <!-- Content -->
 {% block main_content %}
 
+    {% include "products/products_carousel.html" %}
     
-    <div class="w-100 mt-3">
-    {% for category, products in products_by_category.items %}
-        <!-- title of each swiper container -->
-        <div class="carousel-title">
-            <div class="c-title">
-                <span> {{ category }} </span>
-            </div>
-    
-            <div class="d-flex gap-1"> 
-                <!-- Buttons will be handled with Swiper -->
-                <div class="swiper-button-prev-product" id="prev-{{ forloop.counter }}">
-                    <i class="ri-arrow-left-s-line"></i>
-                </div>
-                <div class="swiper-button-next-product" id="next-{{ forloop.counter }}">
-                    <i class="ri-arrow-right-s-line"></i>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Swiper Carousel Container -->
-        <div class="swiper-products" id="swiper-{{ forloop.counter }}">
-            <div class="swiper-wrapper">
-                {% for product in products %}
-                
-                <figure class="swiper-slide carousel-product-item" data-index="{{ forloop.counter0 }}" onclick="openModal({{ product.id }})">
-                    
-                    <!-- Contenedor de productos -->
-                    <div class="image-container" data-url="{% url 'product_detail' product.id product.slug %}">
-                        <!-- Imagen del Producto -->
-                        <img src="{{ product.main_image }}" alt="{{ product.name }}">
-
-                        <!-- Botón de la esquina -->
-                        <button class="btn corner-box" data-modal-id="modal-{{ product.id }}">
-                            <i class="ri-focus-mode icon-medium"></i>
-                        </button>
-                    </div>
-
-
-                    <figcaption class="carousel-product-data">
-                        <a href="{% url 'product_detail' product.id product.slug %}">
-                            {{ product.name }}
-                        </a>
-        
-                        <div class="container-space-between">
-                            <div class="d-flex gap-1"> 
-                                <strong>{{ product.stars|intdot }}</strong>
-                                <i class="ri-star-fill"></i>
-                            </div>
-
-                            <!-- TOP 10 BUTTON SIDE -->
-                            <button class="btn heart-button" data-index="{{ product.id }}">
-                                <i class="ri-heart-add-line icon-medium"></i>
-                            </button>
-                        </div>
-    
-                        <!-- Categoría y Subcategory -->
-                        <div class="container-space-between">
-                            {% if not product.available or product.stock == 0 %}
-                                <div class="bold-red">No disponible</div>
-                            {% elif product.stock <= 3 %}
-                                <div class="bold-orange">Pocas unidades</div>
-                            {% else %}
-                                <div class="bold-green">Disponible</div>
-                            {% endif %}
-                        </div>
-                        
-                        {% if product.discount %}
-                            <!-- descuento -->
-                            <div class="container-space-between">
-                                <strong>Descuento:</strong>
-                                <span class="bold-red">% {{product.discount}} OFF</span>
-                            </div>
-            
-                            <!-- Precios: Normal y Oferta -->
-                            <div class="container-space-between">
-                                <div class="price-line-through">Normal:</div>
-                                <div class="price-line-through">$ {{product.price|intdot}}</div>
-                            </div>
-    
-                            <!-- Precio con descuento (calculado por JavaScript) -->
-                            <div class="container-space-between">
-                                <div class="bold-red">Oferta:</div>
-                                <div class="bold-red">$ {{product.calc_discount|intdot}}</div>
-                            </div>
-                        
-                        {% else %}
-    
-                            <div class="container-space-between">
-                                <strong> $ {{ product.price|intdot }} </strong>
-                            </div>
-                          
-                        {% endif %}
-    
-                        
-                    </figcaption>
-    
-                    <!-- Botón de agregar al carrito -->
-                    <div class="carousel-extender-btn">
-                        <button class="btn gap-1 carousel-btn-carrito" data-index="{{product.id}}">
-                            <span>Agregar</span> 
-                            <i class="ri-shopping-basket-2-fill"></i>
-                        </button>
-                    </div>
-    
-                </figure>
-
-                {% endfor %}
-            </div>
-        </div>
-    {% endfor %}
-
-    </div>
-
-
-    <!-- Modales y Overlay (fuera del Swiper) -->
-    {% for category, products in products_by_category.items %}
-        {% for product in products %}
-        <div class="carousel-modal" id="modal-{{ product.id }}" data-state="null">
-            <button class="btn close-modal">
-                <i class="ri-close-line icon-medium"></i>
-            </button>
-            <h2>{{ product.name }}</h2>
-            <p>{{ product.description }}</p>
-            <p>Precio: ${{ product.price }}</p>
-        </div>
-        {% endfor %}
-    {% endfor %}
-    <div class="overlay" id="overlay-carousel"></div>
-
-
-    
-
-
 {% endblock main_content %}
 
 
@@ -189,12 +58,9 @@
 <!-- Cargas archivos .js propios de cada template/vista -->
 {% block extra_scripts %}
     
-
     <!-- Swiper JS sirve para el carousel -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 
-
     <script src="{% static 'home/js/home.js' %}"></script>
-        
-
+    <script src="{% static 'products/js/products_carousel.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,39 @@
+
+
+{% load custom_filters %}
+
+<div class="cart-cont-overlay" data-state="null">
+
+    <!-- Encabezado del carrito -->
+    <div class="container-space-between cart-header">
+        <h3>Mi Carrito</h3>
+        <button class="btn btn-close close-widget-cart">
+            <i class="ri-close-fill icon-medium"></i>
+        </button>
+    </div>
+
+    <!-- Contenido del carrito -->
+    <div class="cart-content">
+        {% include 'cart/cart_items.html' %}
+    </div>
+
+    <!-- Pie del carrito -->
+    <div class="cart-footer">
+        <div class="container-space-between w-100 mt-2 mb-2">
+            <h4>Total:</h4>
+            <h4 class="cart-w-total">${{ total_price|intdot }}</h4>
+        </div>
+
+        <div class="container-space-between w-100 gap-1">
+            <a class="btn btn-alt btn-w-cart-see" href="{% url 'cart_page_detail' %}">
+                <span>Ver Carrito </span>
+            </a>
+            <a class="btn btn-main btn-w-cart-finally" href="{% url 'order' %}">
+                <span> Finalizar </span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="overlay cart-overlay"></div>
+

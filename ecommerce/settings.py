@@ -227,14 +227,19 @@ REST_FRAMEWORK = {
 # ====================================================================
 
 # this is for deployment
-# ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['127.0.0.1', 'web-production-8e84.up.railway.app']
 
+ALLOWED_HOSTS = ['127.0.0.1', 'web-production-8e84.up.railway.app']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1',
     'https://web-production-8e84.up.railway.app',
 ]
+
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+    
+    BASE_URL_RAILWAY = "https://9de4-2803-9800-9884-be88-510-d019-adcf-abdf.ngrok-free.app"
+    CSRF_TRUSTED_ORIGINS.append(BASE_URL_RAILWAY)
 
 # CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
 # SESSION_COOKIE_SECURE = True

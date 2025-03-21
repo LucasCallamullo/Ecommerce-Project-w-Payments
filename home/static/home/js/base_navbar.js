@@ -1,5 +1,7 @@
 
 
+/// <reference path="../../../../home/static/home/js/base.js" />
+
 // ========================================================================
 //                   Main Nav Fixed DESKTOP
 // ========================================================================
@@ -17,12 +19,13 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const logoData = document.getElementById("logo-url");
     const logoUrl = logoData.getAttribute("data-img");
+    const homeUrl = logoData.getAttribute("data-url");
 
     // Create the dynamic logo container
     const logoContainer = document.createElement("div");
     logoContainer.classList.add("logo-container-fixed");
     logoContainer.innerHTML = `
-        <a href="#" class="w-100">
+        <a href="${homeUrl}" class="w-100">
             <img src="${logoUrl}" class="logo" alt="logo">
         </a>
     `;
@@ -56,55 +59,21 @@ document.addEventListener("DOMContentLoaded", function () {
 // Evento de anmimaciones en drop menu categories GENERAL DESKTOP AND MOBILE
 // ========================================================================
 document.addEventListener("DOMContentLoaded", function () {
+    // Configuración para los dropdowns
     const dropdownBtns = document.querySelectorAll(".dropdown-btn");
     const dropdownMenus = document.querySelectorAll(".dropdown-menu");
-    const arrow_drops = document.querySelectorAll(".arrow-drop");
-
-    // Mapa para almacenar eventos de cierre por botón
-    const closeMenuEvents = new Map();
-
-    // Función para manejar el cierre al hacer clic fuera
-    function closeMenuIfClickOutside(event, btn, menu, arrow_drop) {
-        const isExpanded = btn.getAttribute("aria-expanded") === "true";
-        if (isExpanded && !btn.contains(event.target) && !menu.contains(event.target)) {
-            handleMenuExpanded(btn, menu, arrow_drop, isExpanded);
-
-            // Remover evento específico del botón
-            document.removeEventListener("click", closeMenuEvents.get(btn)); 
-            closeMenuEvents.delete(btn);
-        }
-    }
-
-    function handleMenuExpanded(btn, menu, arrow_drop) {
-        toggleState(menu);
-        arrow_drop.classList.toggle("rotate");
-
-        const isExpanded = btn.getAttribute("aria-expanded") === "true";
-        btn.setAttribute("aria-expanded", !isExpanded);
-
-        if (!isExpanded) {
-            const closeEvent = (event) => closeMenuIfClickOutside(event, btn, menu, arrow_drop);
-
-            // Guardar en el mapa y agregar el listener
-            closeMenuEvents.set(btn, closeEvent);
-            document.addEventListener("click", closeEvent);
-        } else {
-            // Remover el evento específico de este botón
-            document.removeEventListener("click", closeMenuEvents.get(btn));
-            closeMenuEvents.delete(btn);
-        }
-    }
+    const arrowDrops = document.querySelectorAll(".arrow-drop"); // Seleccionar las flechas
 
     dropdownBtns.forEach((btn, index) => {
-        const menu = dropdownMenus[index];     // Relacionar el botón con su menú
-        const arrow_drop = arrow_drops[index]; // Relacionar el botón con su arrow
+        const menu = dropdownMenus[index]; // Relacionar el botón con su menú
+        const arrowDrop = arrowDrops[index]; // Relacionar el botón con su flecha
 
-        btn.addEventListener("click", function () {
-            handleMenuExpanded(btn, menu, arrow_drop);
+        // Configurar el comportamiento de "clic fuera"
+        setupClickOutsideClose(btn, menu, (isExpanded) => {
+            arrowDrop.classList.toggle("rotate", isExpanded); // Rotar la flecha
         });
     });
 });
-
 
 
 // ========================================================================
@@ -229,20 +198,12 @@ document.addEventListener("DOMContentLoaded", function() {
 //             MAIN NAV BAR MOBILE - MENU SHOW UTILS
 // ========================================================================
 document.addEventListener("DOMContentLoaded", function () {
-
-    const navToggle = document.getElementById('nav-toggle');
-    const navClose = document.getElementById('nav-close');
-    const navMenu = document.getElementById('nav-menu-mobile');
-    const overlay = document.getElementById('overlay-menu-mobile');
-
-    if (!navToggle || !navClose || !navMenu || !overlay) return;
-
     // This dict configure the events add and remove automatically
     setupToggleableElement({
-        toggleButton: navToggle,
-        closeButton: navClose,
-        element: navMenu,
-        overlay: overlay,
+        toggleButton: document.getElementById('nav-toggle'),
+        closeButton: document.getElementById('menu-mobile-close'),
+        element: document.getElementById('nav-menu-mobile'),
+        overlay: document.getElementById('overlay-menu-mobile'),
     });
 });
 
@@ -251,32 +212,34 @@ document.addEventListener("DOMContentLoaded", function () {
 //             MAIN NAV BAR MOBILE - SEARCH BAR MOBILE UTILS
 // ========================================================================
 document.addEventListener("DOMContentLoaded", function () {
-
     const searchButton = document.getElementById('top-btn-search');
     const searchForm = document.getElementById('search-bar-mobile');
     const backButton = document.getElementById('back-search-form');
 
-    // Stupid check
-    if (!searchButton || !searchForm || !backButton) return;
 
-    // Events
-    function outsideClickListener(event) {
-        if (!searchForm.contains(event.target) && event.target !== searchButton) {
-            closeSearch();
-        }
-    }
-
+    /**
+     * Closes the search form by toggling its visibility and updating the aria-expanded attribute.
+     */
     function closeSearch() {
         toggleState(searchForm);
-        document.removeEventListener('click', outsideClickListener);
-        backButton.removeEventListener('click', closeSearch);
+        const isExpanded = searchButton.getAttribute("aria-expanded") === "true";
+        searchButton.setAttribute("aria-expanded", !isExpanded);
     }
 
-    function openSearch() {
-        toggleState(searchForm);
-        document.addEventListener('click', outsideClickListener);
-        backButton.addEventListener('click', closeSearch);
-    }
-
-    searchButton.addEventListener('click', openSearch);
+    /**
+     * Sets up the click-outside behavior for the search form.
+     * When the search button is clicked, the form toggles visibility.
+     * If the user clicks outside the form, it closes automatically.
+     * Additionally, when the form is expanded, the back button can close it.
+     */
+    setupClickOutsideClose(searchButton, searchForm, (isExpanded) => {
+        if (isExpanded) {
+            // When the form is shown, enable the back button to close it
+            backButton.addEventListener('click', closeSearch);
+        } else {
+            // When the form is hidden, remove the event to avoid unnecessary listeners
+            backButton.removeEventListener('click', closeSearch);
+        }
+    });
 });
+

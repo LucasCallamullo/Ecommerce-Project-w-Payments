@@ -1,28 +1,46 @@
 
 
+/// <reference path="../../../../home/static/home/js/base.js" />
+
+
 /* ==========================================================================================
                    "Función" para Eventos de mostrar y ocultar el carrito
 ========================================================================================== */
-document.getElementById('cart-button').addEventListener('click', function() {
-    document.getElementById('cart-container').classList.add('show');
-    document.getElementById('overlay').classList.add('show');
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Recupera todos los botones y cart containers
+    const cartButtons = document.querySelectorAll('.cart-button');
+    const cartContainers = document.querySelectorAll('.cart-cont-overlay');
+    const cartOverlays = document.querySelectorAll('.cart-overlay');
+    const cartBtnCloses = document.querySelectorAll('.close-widget-cart');
+
+    // Verifica que haya la misma cantidad de botones y dropdowns
+    if (cartButtons.length !== cartContainers.length) {
+        console.error('La cantidad de botones y cart containers no coinciden.');
+    }
+
+    // Asocia cada botón con sus elementos correspondientes
+    cartButtons.forEach((cartButton, index) => {
+        const cartContainer = cartContainers[index];
+        const overlay = cartOverlays[index];
+        const buttonClose = cartBtnCloses[index];
+
+        // This dict configure the events add and remove automatically
+        setupToggleableElement({
+            toggleButton: cartButton,
+            closeButton: buttonClose,
+            element: cartContainer,
+            overlay: overlay,
+        });
+    });
 });
 
-document.getElementById('close-cart').addEventListener('click', function() {
-    document.getElementById('cart-container').classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
-});
-
-document.getElementById('overlay').addEventListener('click', function() {
-    document.getElementById('cart-container').classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
-});
 
 
 /* ==========================================================================================
                     Handle_Function para controlar los distintos eventos
 ========================================================================================== */
-async function handleCartActions(productId, action, value = 1) {
+async function handleCartActions(productId, action, value=1) {
     try {
         // Verificamos si estamos en la página del carrito
         const currentPage = window.location.pathname;
@@ -73,12 +91,29 @@ async function handleCartActions(productId, action, value = 1) {
         if (!data.flag_custom) return;    // This is a flag for verify some issues
 
         // This function update content with html responses
-        updateCart(data);
+        let index;
+        if (window.innerWidth <= 992) {
+            // Mobile: Activar el botón con index 0
+            index = 0;
+        } else {
+            // Desktop: Activar el botón con index 1
+            index = 1;
+        }
+
+        updateCart(data, index);
 
         // show the cart widget if you dont are in the cart-page-view
+        
         if ( !cartView ) {
-            document.getElementById('cart-container').classList.add('show');
-            document.getElementById('overlay').classList.add('show');
+            const cartContainers = document.querySelectorAll('.cart-cont-overlay');
+            let isOpenCart = cartContainers[index].getAttribute('data-state') === 'open';
+
+            if ( !isOpenCart ) {
+                const cartButtons = document.querySelectorAll('.cart-button');
+                cartButtons[index].click();
+            } else {
+                console.log('estaba abierto xd')
+            }
         }
 
         // if you are in the cart-view-page update the view
@@ -96,29 +131,28 @@ async function handleCartActions(productId, action, value = 1) {
 /* ==========================================================================================
                     Función para actualizar la vista del carrito
 ========================================================================================== */
-function updateCart(data) {
-    // actualiza el badge total
-    const badgeCantTotal = document.getElementById('badge-cart-button');
-    badgeCantTotal.textContent = `${data.qty_total}`;
+function updateCart(data, index) {
+    // Mobile: Activar el botón con index 0    // Desktop: Activar el botón con index 1
+    
+    if (index === 1) {
+        const badgeCantTotal = document.getElementById('badge-cart-button');
+        badgeCantTotal.textContent = `${data.qty_total}`;
+    }
+    
+    const cartTotals = document.querySelectorAll('.cart-w-total');
+    const cartContainers = document.querySelectorAll('.cart-content');
 
-    const carritoTotal = document.getElementById('carrito-total');
-    var precioTotal = formatNumberWithCommas(data.total);
-    carritoTotal.textContent = `$${precioTotal}`;
-    
+    const cartTotal = cartTotals[index];
+    const cartContent = cartContainers[index];
+
+    var totalPrice = formatNumberWithCommas(data.total);
+    cartTotal.textContent = `$${totalPrice}`;
+
     // Reemplaza el contenido con el nuevo HTML
-    const carritoContent = document.getElementById('cart-content');
-    carritoContent.innerHTML = data.widget_html; 
-    
+    cartContent.innerHTML = data.widget_html; 
+
     // Reasignar eventos después de actualizar el carrito
     assignButtonEvents();
-}
-
-function formatNumberWithCommas(number) {
-    // Convertir el número a string para trabajar con él
-    var parts = number.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // Unir la parte entera con la parte decimal, si existe
-    return parts.join(".");
 }
 
 
@@ -130,8 +164,7 @@ function assignButtonEvents() {
     document.querySelectorAll('.cart-item-btn-plus').forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-index');
-            const qty_add = 1;
-            handleCartActions(productId, 'add', qty_add);
+            handleCartActions(productId, 'add', 1);
         });
     });
 
@@ -139,12 +172,11 @@ function assignButtonEvents() {
     document.querySelectorAll('.cart-item-btn-minus').forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-index');
-            const qty_substract = 1;
-            handleCartActions(productId, 'subtract', qty_substract);
+            handleCartActions(productId, 'subtract', 1);
         });
     });
 
-    document.querySelectorAll('.cart-btn-remove-item').forEach(button => {
+    document.querySelectorAll('.cart-item-btn-remove').forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-index');
             handleCartActions(productId, 'remove');
@@ -162,23 +194,9 @@ function handleRemove(itemId) {
 assignButtonEvents();
 
 
-/* ==========================================================================================
-// Función para obtener el valor del cookie por nombre actua como nuestro csrf token
-========================================================================================== */
-// Esta funcion se aplica en widget_carrito como en crud_to_cart.js de producto js
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Comprueba si el cookie tiene el nombre deseado
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                // Extrae y decodifica el valor del cookie
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
+
+
+
+
+
+

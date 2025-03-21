@@ -14,87 +14,82 @@
 {% block main_content %}
 
 <!-- Primera fila -->
-<div class="d-flex mt-3 mb-4 gap-3">
-    <div class="col-lg-12">
-        <button class="btn-paralelogramo px-lg-3"
-            onclick="window.location.href='{% url 'product_list' %}'">
-            <span> Todos Nuestros Productos </span>
-        </button>
-        
-        {% if category %}
-            <button class="btn-paralelogramo px-lg-3"
-            onclick="window.location.href='{% url 'pl_category' category.slug %}'">
-                <span> 
-                    {{ category.name }}
-                </span>
-            </button>
-        {% endif %}
-        
+<div class="d-flex mt-3 mb-3 gap-1">
+    <a class="btn btn-paralelogramo d-lg-block" href="{% url 'product_list' %}">
+        <span> Todos Nuestros Productos </span>
+    </a>
+    
+    {% if category %}
+        <a class="btn btn-paralelogramo" href="{% url 'pl_category' category.slug %}">
+            <span>{{ category.name }}</span>
+        </a>
+    {% endif %}
 
-        {% if subcategory %}
-            <button class="btn-paralelogramo px-lg-3"
-            onclick="window.location.href='{% url 'pl_subcategory' category.slug subcategory.slug %}'">
-                <span> 
-                    {{ subcategory.name }}
-                </span>
-            </button>
-        {% endif %}
-    </div>
+    {% if subcategory %}
+        <a class="btn btn-paralelogramo" href="{% url 'pl_subcategory' category.slug subcategory.slug %}">
+            <span>{{ subcategory.name }}</span>
+        </a>
+    {% endif %}
 </div>
 
-<div class="d-flex gap-3">
+<div class="grid-container-main">
 
     <!-- PRIMERA COLUMNA -->
-    <div class="col-lg-4">
-
-        <figure id="prod-container">
+    <div>
+        <figure class="prod-container mb-2" id="prod-container">
             <!-- Contenedor de imagen principal -->
             <div class="prod-main-img-container">
                 <img id=prod-main-image class="prod-image-preview prod-zoomed"
                     src="{{ main_image_url }}" alt="{{ product.name }}">
 
                 <!-- Botón de la esquina -->
-                <button class="prod-main-corner-box" id="zoom-button">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                <button class="btn corner-box" id="zoom-button">
+                    <i class="ri-focus-mode icon-medium"></i>
                 </button>
 
                 <!-- 
                 Contenedor para la imagen en pantalla completa 
                 -->
-                <div id="fullscreen-overlay" class="fullscreen-overlay px-5 gap-5"
-                    data-index="{{product.id}}">
+                <div id="fullscreen-overlay" class="overlay fullscreen-overlay"
+                data-zoom-in="{% static 'img/zoom-in-line.svg' %}" 
+                data-zoom-out="{% static 'img/zoom-out-line.svg' %}"
+                data-index="{{product.id}}">
+
+                    <button class="btn btn-corner zoom-corner"> 
+                        <i class="ri-zoom-in-line icon-xl"></i>
+                    </button>
 
                     <!-- Flecha izquierda -->
-                    <button class="arrow-button left-overlay">
-                        <i class="fas fa-chevron-left"></i>
+                    <button class="btn arrow-button left-overlay">
+                        <i class="ri-arrow-drop-left-line icon-xl"></i>
                     </button>
 
                     <!-- Contenedor para la imagen (nuevo contenedor agregado) -->
-                    <div id="image-container" class="p-0 m-0"> </div>
+                    <div id="image-container"></div>
 
                     <!-- Flecha derecha -->
-                    <button class="arrow-button right-overlay">
-                        <i class="fas fa-chevron-right"></i>
+                    <button class="btn arrow-button right-overlay">
+                        <i class="ri-arrow-drop-right-line icon-xl"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Flechas de navegación -->
-            <figcaption class=" justify-content-center align-items-center gap-5">
+            <figcaption class="justify-center gap-3">
                 <!-- Flecha izquierda -->
-                <button class="arrow-button left">
-                    <i class="fas fa-chevron-left"></i>
+                <button class="btn arrow-button left">
+                    <i class="ri-arrow-drop-left-line icon-xl"></i>
                 </button>
                 
                 <!-- Flecha derecha -->
-                <button class="arrow-button right">
-                    <i class="fas fa-chevron-right"></i>
+                <button class="btn arrow-button right">
+                    <i class="ri-arrow-drop-right-line icon-xl"></i>
                 </button>
             </figcaption>
         </figure>
         
         <!-- Contenedor de abajo con las imagenes -->
-        <div class="prod-small-images-row gap-3 mt-3">
+        <div class="grid-container-4">
             <figure class="prod-small-image-container">
                 <img class="prod-small-image" src="{{ main_image_url }}" alt="{{ product.name }}">
             </figure>
@@ -108,101 +103,164 @@
         </div>
     </div>
 
-
     <!-- SEGUNDA COLUMNA -->
-    <div class="col-lg-5 px-3">
+    <div class="grid-second-col">
+        <div class="d-flex-col gap-2">
+            <h3>{{ product.name }}</h3>
 
-        <h3 class="mb-2 px-1 col-11">{{ product.name }}</h3>
+            <div class="d-flex gap-1">
+                {% if category %}
+                <a class="btn btn-alt btn-categories" href="{% url 'pl_category' category.slug %}">
+                    {{ category.name }}
+                </a>
+                {% endif %}
 
-        <!-- Cuadros de Stock Y Marca -->
-        <div class="d-flex mt-4 gap-2">
-            <div class="product-info gap-1 p-2 col-lg-2">
-                <p>Cod:</p>
-                <span># 100{{product.id}}</span>
-            </div>
-
-            <div class="product-info gap-1 p-2 col-lg-3">
-                <p>Marca:</p>
-                <a href="#" class="brand-value"><strong>{{product.brand}}</strong></a>
-            </div>
-
-            <div class="product-info gap-1 p-2 col-lg-4">
-                <p>Stock:</p>
-
-                {% if product.stock > 4 %}
-                    <span style="color: green;"><strong>DISPONIBLE</strong></span>
-                {% elif product.stock == 0 %}
-                    <span style="color: red;"><strong>NO STOCK</strong></span>
-                {% else %}
-                    <span style="color: orange;"><strong>STOCK BAJO</strong></span>
+                {% if subcategory %}
+                <a class="btn btn-alt btn-categories" href="{% url 'pl_subcategory' category.slug subcategory.slug %}">
+                    {{ subcategory.name }}
+                </a>
                 {% endif %}
             </div>
-        </div>
 
-        <!-- Cuadro de metodo de pago -->
-        <div class="payment-info-box mt-3">
-            <div class="mt-1 payment-info-content">
-                <div class="payment-icon px-4">
-                    <!-- Aquí puedes reemplazar el enlace del icono con el adecuado -->
-                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tarjeta-de-credito-bloqueada-12012016-9801418.png"
-                            alt="Icono de Tarjetas">
+            <!-- Cuadros de Stock Y Marca -->
+            <div class="grid-container-3">
+                <div class="product-info">
+                    <p>Cod:</p>
+                    <span># 100{{product.id}}</span>
                 </div>
-                <div class="payment-text">
-                    <p>Medios de Pagos</p>
-                    <a href="#"><p>Ver medios de pago</p></a>
+
+                <div class="product-info">
+                    <p>Marca:</p>
+                    <a href="#" class="bold-main">
+                        {{product.brand}}
+                    </a>
+                </div>
+
+                <div class="product-info">
+                    <p>Stock:</p>
+
+                    {% if product.stock > 4 %}
+                        <strong class="bold-green">Disponible</strong>
+                    {% elif product.stock == 0 %}
+                        <strong class="bold-red">No Stock</strong>
+                    {% else %}
+                        <strong class="bold-orange">Stock Bajo</strong>
+                    {% endif %}
                 </div>
             </div>
-            <div class="mt-1 payment-logo">
-                <img src="https://www.shutterstock.com/image-vector/rivne-ukraine-may-25-2023-260nw-2308151527.jpg"
-                        alt="Logo de Medios de Pago">
+
+            <!-- Cuadro de metodo de pago -->
+            <div class="payment-info-box d-flex-col gap-1">
+                <div class="d-flex gap-3">
+                    <div class="payment-icon">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tarjeta-de-credito-bloqueada-12012016-9801418.png"
+                        alt="Icono de Tarjetas">
+                    </div>
+                    
+                    <div class="d-flex-col gap-1">
+                        <span class="text-start">Medios de Pagos</span>
+                        <a href="#" class="text-start">Ver medios de Pago</a>
+                    </div>
+                </div>
+
+                <div class="payment-logo">
+                    <img src="https://www.shutterstock.com/image-vector/rivne-ukraine-may-25-2023-260nw-2308151527.jpg"
+                            alt="Logo de Medios de Pago">
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- TERCERA COLUMNA -->
-    <div class="col-lg-3 payment-container px-4">
-
-        <div class="payment-child-container">
-            <p class="price-tag">
-                <strong>${{ product.price|intdot }}</strong>
-            </p>
-            <span>
-                PRECIO ESPECIAL EFECTIVO O TRANSFERENCIA
-            </span>
-        </div>
-
-        <div class="bank-child-container mt-3">
-            <span> Promociones Bancarias </span>
-            <img src="https://firebasestorage.googleapis.com/v0/b/foxtienda-ee7dc.appspot.com/o/1058%2Flogos%2F73479-logos-promos-tarjetas-10.jpg?alt=media&token=983ec195-3d1f-4516-bafc-4ac19610a26d"
-                        alt="Logo de Medios de Pago">
-        </div>
-
-        <!-- Recuadro de botones -->
-        <form class="d-flex mt-4" method="POST" id="product-detail-form">
-            {% csrf_token %}
-
-            <div class="quantity-container-detail px-1 justify-content-between col-5">
-                <button type="button" class="btn prod-btn-qty" onclick="decrement(this)">
-                    -
-                </button>
-
-                <input type="text" class="form-control" id="prod-input-qty" value="1" min="1">
-
-                <button type="button" class="btn prod-btn-qty" onclick="increment(this)">
-                    +
-                </button>
+        <!-- TERCERA COLUMNA -->
+        <div class="d-flex-col gap-3 cont-mobile-detail">
+            <div class="d-flex-col gap-1">
+                <strong class="text-xl justify-center">
+                    $ {{ product.price|intdot }}
+                </strong>
+                <b class="text-lil-small text-center">
+                    PRECIO ESPECIAL EFECTIVO O TRANSFERENCIA
+                </b>
             </div>
 
-            <div class="col-1"> <input type="hidden" name="product_id" value="{{ product.id }}"> </div>
+            <div class="bank-child-container">
+                <b class="justify-center"> Promociones Bancarias </b>
+                <img src="https://firebasestorage.googleapis.com/v0/b/foxtienda-ee7dc.appspot.com/o/1058%2Flogos%2F73479-logos-promos-tarjetas-10.jpg?alt=media&token=983ec195-3d1f-4516-bafc-4ac19610a26d"
+                    alt="Logo de Medios de Pago" class="w-100">
+            </div>
 
-            <button class="btn-add-item gap-1 col-6" type="submit">
-                <span>Agregar</span>
-                <i class="fas fa-shopping-cart"></i>
-            </button>
-        </form>
+            <form class="d-flex gap-1" method="POST" id="product-detail-form"
+            data-index="{{product.id}}">
+                {% csrf_token %}
 
+                <!-- Contador -->
+                <div class="product-container-conts container-space-between">
+                    <button type="button" class="btn prodd-btn-minus" data-index="{{value.id}}">
+                        <i class="ri-subtract-fill icon-lil-small"></i>
+                    </button>
+
+                    <input type="text" id="prod-input-qty" value="1" min="1">
+                    
+                    <button type="button" class="btn prodd-btn-plus" data-index="{{value.id}}">
+                        <i class="ri-add-fill icon-lil-small"></i>
+                    </button>
+                </div>
+
+                <button class="btn btn-main btn-add-item gap-1" type="submit">
+                    <span>Agregar</span>
+                    <i class="ri-shopping-cart-2-line icon-medium"></i>
+                </button>
+            </form>
+        </div>
 
     </div>
+</div>
+
+<div class="cont-detail-desc mt-5 mb-5">
+    <p>Este es un texto de ejemplo de cómo se vería una descripción de producto.</p>
+    <p>100% enfocado en el rendimiento, este producto es una opción tope de gama para los usuarios más exigentes.</p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <p> • Diseño ergonómico y moderno.</p>
+    <p> • Materiales de alta calidad para mayor durabilidad.</p>
+    <p> • Tecnología avanzada para un rendimiento óptimo.</p>
+    <p> • Fácil de usar y compatible con múltiples dispositivos.</p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <p><strong>DISEÑO ERGONÓMICO</strong></p>
+    <p>Con un diseño pensado para la comodidad del usuario, este producto se adapta perfectamente a tus necesidades diarias. Su forma ergonómica reduce la fatiga y mejora la experiencia de uso.</p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <p><strong>MATERIALES PREMIUM</strong></p>
+    <p>Fabricado con materiales de alta resistencia, este producto está diseñado para durar. Cada componente ha sido cuidadosamente seleccionado para garantizar la máxima calidad.</p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <p><strong>TECNOLOGÍA AVANZADA</strong></p>
+    <p>Equipado con la última tecnología, este producto ofrece un rendimiento excepcional. Ya sea para trabajo, estudio o entretenimiento, este dispositivo está listo para superar tus expectativas.</p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <p><strong>FÁCIL DE USAR</strong></p>
+    <p>Con una interfaz intuitiva y una configuración sencilla, este producto es ideal para usuarios de todos los niveles. Además, es compatible con una amplia gama de dispositivos.</p>
+
+    <p></p>
+    <p></p>
+    <p></p>
+    <p><strong>ESPECIFICACIONES TÉCNICAS</strong></p>
+    <p> • Peso: 300 g</p>
+    <p> • Dimensiones: 150 x 80 x 30 mm</p>
+    <p> • Material: Plástico ABS de alta resistencia</p>
+    <p> • Compatibilidad: Windows, macOS, Linux</p>
+    <p> • Conectividad: USB-C, Bluetooth 5.0</p>
+    <p> • Batería: Duración de hasta 20 horas</p>
+    <p> • Garantía: 2 años</p>
 </div>
 
 

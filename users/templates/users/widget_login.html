@@ -1,58 +1,51 @@
 
 
-<button class="btn btn-header" id="user-button" aria-haspopup="true" aria-expanded="false" aria-label="User Menu">
-    <i class="fas fa-user"></i>
-</button>
-
-
 <!-- Contenido del dropdown -->
-<div class="dropdown-menu p-3" id="user-dropdown" aria-labelledby="user-button">
+<div class="user-dropdown" data-state="null">
 
     <!-- Cuando el usuario ya esta logeado visualiza esto -->
     {% if user.is_authenticated %}
 
         <!-- Botón de Registro -->
-        <a href="{% url 'user_profile' %}" class="btn-widget-register">
-            <i class="fas fa-user-circle"></i>
+        <a href="{% url 'user_profile' %}" class="mb-2 gap-2 btn btn-widget-register">
+            <i class="ri-shield-user-line icon-medium"></i>
             <span> {{ user.email }} </span>
         </a>
 
-        <form id="close-session" class="widget-register-form" method="POST" action="{% url 'close_session' %}">
+        <form class="widget-close-form" method="POST" action="{% url 'close_session' %}">
             {% csrf_token %}
-            <button type="submit">
-                <i class="fas fa-door-open"></i>
-                <span class="ms-2">Cerrar Sesión</span>
+            <button type="submit" class="btn gap-2 btn-widget-register-alt">
+                <i class="ri-door-open-fill icon-medium"></i>
+                <span>Cerrar Sesión</span>
             </button>
         </form>
 
     {% else %}
         <!-- Cuando el usuario no esta logeado verá esto -->
         
-        <form id="widget-register-form" class="widget-register-form" action="{% url 'widget_login' %}">
+        <form class="widget-register-form mb-1" action="{% url 'widget_login' %}">
             {% csrf_token %}
 
             <!-- Campo de Email -->
-            <div class="mb-3">
-                <label for="email" class="form-label">    Email    </label>
+            <div class="mb-2">
+                <label for="email" class="justify-start mb-1">Email:</label>
                 <input type="email" name="email" required>
             </div>
         
             <!-- Campo de Password -->
-            <div class="mb-3">
-                <label for="password" class="form-label">    Password    </label>
+            <div class="mb-2">
+                <label for="password" class="justify-start mb-1">Password:</label>
                 <input type="password" name="password" required>
-                
             </div>
         
             <!-- Botón de Login -->
-            <button type="submit" class="btn btn-primary w-100">    Login    </button>
+            <button type="submit" class="btn btn-widget-register">
+                Ingresar
+            </button>
         </form>
             
-        
-        <hr>
-
         <!-- Botón de Registro -->
-        <a href="{% url 'register_user_page' %}" class="btn-widget-register">
+        <a href="{% url 'register_user_page' %}" class="btn btn-widget-register-alt">
             Register
         </a>
 

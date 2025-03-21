@@ -1,54 +1,58 @@
 
 
+/// <reference path="../../../../home/static/home/js/base.js" />
+
 // ========================================================================
 //                   Evento de clic en el botón de usuario
 // ========================================================================
-document.getElementById('user-button').addEventListener('click', function(event) {
-    var dropdown = document.getElementById('user-dropdown');
+document.addEventListener('DOMContentLoaded', () => {
 
-    // Verifica si el dropdown está actualmente visible
-    if (dropdown.classList.contains('show')) {
-        // Si está visible, quita la clase 'show' y añade 'hide' para iniciar la animación de cierre
-        dropdown.classList.remove('show');
-        dropdown.classList.add('hide');
-    } else {
-        // Si no está visible, quita la clase 'hide' y añade 'show' para iniciar la animación de apertura
-        dropdown.classList.remove('hide');
-        dropdown.classList.add('show');
-        dropdown.style.display = 'block';
+    // Recupera todos los botones y dropdowns
+    const userButtons = document.querySelectorAll('.user-button');
+    const dropdowns = document.querySelectorAll('.user-dropdown');
+
+    // Verifica que haya la misma cantidad de botones y dropdowns
+    if (userButtons.length !== dropdowns.length) {
+        console.error('La cantidad de botones y dropdowns no coincide.');
     }
 
-    // Evita que el evento se propague y cierre el dropdown al hacer clic dentro de él
-    event.stopPropagation();
-});
+    // Asocia cada botón con su dropdown correspondiente
+    userButtons.forEach((userLoginButton, index) => {
+        const dropdown = dropdowns[index]; // Dropdown correspondiente
 
-// Evento de clic en cualquier parte del documento
-document.addEventListener('click', function(event) {
-    var dropdown = document.getElementById('user-dropdown');
-    var button = document.getElementById('user-button');
+        userLoginButton.addEventListener('click', function (event) {
+            event.stopPropagation(); // Evita que el evento se propague
 
-    // Verifica si el clic no se hizo dentro del dropdown ni del botón
-    if (!dropdown.contains(event.target) && !button.contains(event.target)) {
-        // Si el dropdown está visible, quita la clase 'show' y añade 'hide' para iniciar la animación de cierre
-        if (dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-            dropdown.classList.add('hide');
-        }
-    }
-});
+            const isExpanded = userLoginButton.getAttribute('aria-expanded') === 'true';
+            // retorna false y false != true --> isExpanded queda en false
+            userLoginButton.setAttribute('aria-expanded', !isExpanded);
 
-// Evita que el dropdown se cierre al hacer clic dentro de él
-document.getElementById('user-dropdown').addEventListener('click', function(event) {
-    event.stopPropagation();
-});
+            // Cambia el estado del dropdown
+            toggleState(dropdown);
 
-document.getElementById('user-dropdown').addEventListener('animationend', function(event) {
-    var dropdown = document.getElementById('user-dropdown');
-    
-    // Verifica si la animación que terminó fue 'slideUp'
-    if (event.animationName === 'slideUp') {
-        dropdown.style.display = 'none'; // Oculta el dropdown después de la animación
-    }
+            // Evita que el dropdown se cierre al hacer clic dentro de él
+            dropdown.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        });
+    });
+
+    // Evento de clic en cualquier parte del documento
+    document.addEventListener('click', function (event) {
+        userButtons.forEach((userLoginButton, index) => {
+            const dropdown = dropdowns[index]; // Dropdown correspondiente
+
+            // Verifica si el clic no se hizo dentro del dropdown ni del botón
+            if ( !dropdown.contains(event.target) ) {
+                const isExpanded = userLoginButton.getAttribute('aria-expanded') === 'true';
+                if (isExpanded) {
+                    // Cambia el estado del dropdown
+                    toggleState(dropdown);
+                    userLoginButton.setAttribute('aria-expanded', !isExpanded);
+                }
+            }
+        });
+    });
 });
 
 
@@ -72,7 +76,6 @@ async function handleFormActions(form, actionType) {
                 },
 
                 body: JSON.stringify(jsonData),
-
             });
 
             const data = await response.json();     // get data response
@@ -121,21 +124,6 @@ async function handleFormActions(form, actionType) {
 }
 
 
-function showErrorAlerts(errors, delay=1200) {
-    let delay_total = 0;
-    for (let field in errors) {
-        if (errors.hasOwnProperty(field)) {
-            errors[field].forEach((error) => {
-                setTimeout(function() {
-                    openAlert(`${field}: ${error}`, "red", delay);
-                }, delay_total);
-
-                // Incrementa el retraso para la siguiente alerta
-                delay_total += delay; 
-            });
-        }
-    }
-}
 
 
 // ============================================================================
@@ -143,18 +131,23 @@ function showErrorAlerts(errors, delay=1200) {
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
     // Captura el formulario de login
-    const loginForm = document.getElementById('widget-register-form');
-    if (loginForm) {
-        handleFormActions(loginForm, "Login");
-    } else {
-        console.error("Form widget-register-form is not available.");
-    }
+    
+    const formsRegister = document.querySelectorAll('.widget-register-form')
+    formsRegister.forEach((form) => {
+        if (form) {
+            handleFormActions(form, "Login");
+        } else {
+            console.error("Form widget-register-form is not available.");
+        }
+    });
 
     // Captura el formulario de cierre de sesión
-    const closeSessionForm = document.getElementById('close-session');
-    if (closeSessionForm) {
-        handleFormActions(closeSessionForm, "Close");
-    } else {
-        console.error("Form close-session is not available.");
-    }
+    const formsClose = document.querySelectorAll('.widget-close-form')
+    formsClose.forEach((form) => {
+        if (form) {
+            handleFormActions(form, "Close");
+        } else {
+            console.error("Form close-session is not available.");
+        }
+    });
 });

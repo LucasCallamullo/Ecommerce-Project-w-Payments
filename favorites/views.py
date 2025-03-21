@@ -20,8 +20,6 @@ class ToggleFavoriteProduct(APIView):
         
         user = request.user
         
-        print("entramos acaa siuu")
-        
         if not user.is_authenticated:
             return Response({'detail': 'please login session for save products.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -30,7 +28,6 @@ class ToggleFavoriteProduct(APIView):
         if not product_id:    # stupid check
             return Response({'detail': 'Product ID is required or not found'}, status=status.HTTP_400_BAD_REQUEST)
 
-        print("previo products acaa siuu")
         product = Product.objects.get(id=product_id)
 
         # Verifica si el producto ya está marcado como favorito

@@ -1,104 +1,109 @@
 
 
+/// <reference path="../../../../home/static/home/js/base.js" />
+
 // ========================================================================
 //            function buttons input and logic to add product
-// ========================================================================
-// Increment and decrement button handlers
-function increment(button) {
-    const input = button.closest('.quantity-container-detail').querySelector('#prod-input-qty');
-    let currentValue = parseInt(input.value, 10);
+// =======================================================================
+document.addEventListener("DOMContentLoaded", function () {
+    // Seleccionar los botones de incremento y decremento
+    const incrementButton = document.querySelector('.prodd-btn-plus');
+    const decrementButton = document.querySelector('.prodd-btn-minus');
 
-    // Validar si el valor es un número válido
-    if (isNaN(currentValue) || currentValue <= 0) {
-        currentValue = 1
-    } else {
-        currentValue += 1;
+    // Verificar si los botones existen antes de agregar los eventos
+    if (incrementButton && decrementButton) {
+        // Agregar evento de clic al botón de incremento
+        incrementButton.addEventListener('click', function () {
+            increment(this);
+        });
+
+        // Agregar evento de clic al botón de decremento
+        decrementButton.addEventListener('click', function () {
+            decrement(this);
+        });
     }
-    input.value = currentValue;
-}
 
-function decrement(button) {
-    const input = button.closest('.quantity-container-detail').querySelector('#prod-input-qty');
-    let currentValue = parseInt(input.value, 10);
+    // Función para incrementar el valor
+    function increment(button) {
+        const input = button.closest('.product-container-conts').querySelector('#prod-input-qty');
+        let currentValue = parseInt(input.value, 10);
 
-    // Validar si el valor es un número válido
-    if (isNaN(currentValue) || currentValue <= 1) {
-        currentValue = 1;
-    } else {
-        currentValue -= 1;
+        // Validar si el valor es un número válido
+        if (isNaN(currentValue) || currentValue <= 0) {
+            currentValue = 1;
+        } else {
+            currentValue += 1;
+        }
+        input.value = currentValue;
     }
-    input.value = currentValue;
-}
 
+    // Función para decrementar el valor
+    function decrement(button) {
+        const input = button.closest('.product-container-conts').querySelector('#prod-input-qty');
+        let currentValue = parseInt(input.value, 10);
+
+        // Validar si el valor es un número válido
+        if (isNaN(currentValue) || currentValue <= 1) {
+            currentValue = 1;
+        } else {
+            currentValue -= 1;
+        }
+        input.value = currentValue;
+    }
+});
 
 // Function to add products with buttons sent as forms using the CSRF token
 document.getElementById('product-detail-form').addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevent the form from submitting the traditional way
+    event.preventDefault();
 
-    // Correctly accessing the product_id
-    const productId = this.querySelector('input[name="product_id"]').value;
+    const productId = this.getAttribute('data-index');
 
-    // Get quantity of the product
     const input = document.getElementById('prod-input-qty');
     let currentValue = parseInt(input.value, 10);
     
-    // Simple validation check
     if (isNaN(currentValue) || currentValue <= 0) {
-        // This generic function is called from home/base/base.js
         openAlert('Ingrese un numero válido.', 'red', 1000);
         return;
     }
 
-    // This function is called from cart/widget_carrito.js
     handleCartActions(productId, 'add', currentValue);
 });
 
 
+
 // ========================================================================
-//               Para cambiar las imagens del contenedor main
+//               Para cambiar las imágenes del contenedor main
 // ========================================================================
-document.querySelectorAll(".prod-small-image-container").forEach(container => {
-    container.addEventListener("click", function () {
-
-        // Eliminar la clase 'active' de todos los contenedores
-        document.querySelectorAll(".prod-small-image-container").forEach(item => {
-            item.classList.remove("active");
-        });
-
-        // Agregar la clase 'active' al contenedor de la imagen clickeada
-        container.classList.add("active");
-
-        // Reemplazar la img en la contenedor main
-        const image = container.querySelector(".prod-small-image");
-        if (image) {
-            const imageUrl = image.src;
-            document.getElementById("prod-main-image").src = imageUrl;
-        }
-    });
-});
-
-
 document.addEventListener("DOMContentLoaded", function () {
-    // Seleccionar el primer contenedor de imagen y agregarle la clase 'active'
-    const firstContainer = document.querySelector(".prod-small-image-container");
-    if (firstContainer) {
-        firstContainer.classList.add("active");
-    }
-    // Seleccionamos todas las imágenes pequeñas
+    // Seleccionar todas las imágenes pequeñas
     const smallImages = document.querySelectorAll(".prod-small-image-container");
     let currentIndex = 0; // Índice de la imagen actual
 
     // Función para cambiar la imagen principal
     function changeMainImage(index) {
+        // Actualizar el índice actual
+        currentIndex = index;
+
+        // Obtener la URL de la imagen pequeña seleccionada
         const imageUrl = smallImages[index].querySelector(".prod-small-image").src;
         document.getElementById("prod-main-image").src = imageUrl;
 
         // Actualizar la clase 'active' en la imagen seleccionada
-        smallImages.forEach((container) => {
-            container.classList.remove("active");
+        smallImages.forEach((container, i) => {
+            if (i === index) {
+                container.classList.add("active");
+            } else {
+                container.classList.remove("active");
+            }
         });
-        smallImages[index].classList.add("active");
     }
+
+    // Agregar evento de clic a cada imagen pequeña
+    smallImages.forEach((container, index) => {
+        container.addEventListener("click", function () {
+            changeMainImage(index); // Cambiar la imagen principal al hacer clic
+        });
+    });
 
     // Flecha izquierda
     document.querySelector(".arrow-button.left").addEventListener("click", function () {
@@ -125,7 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Efectos de zoom
+// ========================================================================
+//               Zoom effects
+// ========================================================================
 window.onload = () => {
     const overlay = document.getElementById('fullscreen-overlay');
     const productId = parseInt(overlay.getAttribute('data-index'), 10);
@@ -133,21 +140,26 @@ window.onload = () => {
     const zoomButton = document.getElementById('zoom-button');
     const leftArrow = document.querySelector('.left-overlay');
     const rightArrow = document.querySelector('.right-overlay');
+
+    const cornerZoom = document.querySelector('.zoom-corner');
+    
+    const zoomInIcon = overlay.getAttribute('data-zoom-in');
+    const zoomOutIcon = overlay.getAttribute('data-zoom-out');
+
     let currentIndex = 0;
     let images = [];
-    let isZoomed = false;       // Estado del zoom
-    let isDragging = false;     // Estado del arrastre
-    let startX, startY;         // Posiciones iniciales del mouse
-    let offsetX = 50, offsetY = 50;     // Posición inicial del fondo (en porcentaje)
+    let isZoomed = false;
+    let isDragging = false;
+    let startX, startY;
+    let offsetX = 50, offsetY = 50;
 
-    // Consultar el endpoint para obtener las imágenes
+    // Obtener las imágenes del producto
     fetch(`/products-images/${productId}/`)
         .then(response => response.json())
         .then(data => {
             if (data.images && data.images.length > 0) {
                 images = data.images;
-                console.log(images)
-                updateBackgroundImage(); // Cargar la primera imagen como fondo
+                updateBackgroundImage();
             } else {
                 console.error("No images found for this product.");
             }
@@ -159,45 +171,64 @@ window.onload = () => {
     // Actualizar la imagen de fondo
     function updateBackgroundImage() {
         imageContainer.style.backgroundImage = `url(${images[currentIndex]})`;
-        imageContainer.style.backgroundSize = isZoomed ? '200%' : 'contain'; // Ajustar tamaño del fondo
-        imageContainer.style.backgroundPosition = `${offsetX}% ${offsetY}%`; // Posición inicial
+        imageContainer.style.backgroundSize = isZoomed ? '200%' : '100%';
+        imageContainer.style.backgroundPosition = `${offsetX}% ${offsetY}%`;
+    }
+
+    // Cambiar el cursor según el estado del zoom
+    function updateCursor() {
+        if (isZoomed) {
+            imageContainer.style.cursor = `url('${zoomOutIcon}'), auto`; // Cursor de zoom out
+        } else {
+            imageContainer.style.cursor = `url('${zoomInIcon}'), auto`; // Cursor de zoom in
+        }
+    }
+
+    // Restablecer el estado de zoom y arrastre
+    function resetZoomAndDrag() {
+        isZoomed = false;
+        isDragging = false;
+        offsetX = 50;
+        offsetY = 50;
+        updateBackgroundImage();
+        updateCursor();
     }
 
     // Navegar a la imagen anterior
     leftArrow.addEventListener('click', () => {
         currentIndex = (currentIndex - 1 + images.length) % images.length;
-        resetZoomAndDrag(); // Restablece el estado de zoom y arrastre
+        resetZoomAndDrag();
         updateBackgroundImage();
     });
 
     // Navegar a la imagen siguiente
     rightArrow.addEventListener('click', () => {
         currentIndex = (currentIndex + 1) % images.length;
-        resetZoomAndDrag(); // Restablece el estado de zoom y arrastre
+        resetZoomAndDrag();
         updateBackgroundImage();
     });
 
     // Abrir la imagen en pantalla completa
     zoomButton.addEventListener('click', () => {
-        overlay.style.display = 'flex'; // Muestra el contenedor
-        resetZoomAndDrag(); // Restablece el estado
+        overlay.style.display = 'flex';
+        resetZoomAndDrag();
     });
 
     // Cerrar la pantalla completa al hacer clic en el fondo oscuro
     overlay.addEventListener('click', (event) => {
         if (event.target === overlay) {
-            overlay.style.display = 'none'; // Oculta el contenedor
-            imageContainer.classList.remove('zoom-out-cursor'); // Restaura el cursor
-            imageContainer.classList.add('zoom-in-cursor'); // Restaura el cursor
-            resetZoomAndDrag(); // Restablece el estado de zoom y arrastre
+            overlay.style.display = 'none';
+            resetZoomAndDrag();
         }
     });
 
     // Hacer zoom al hacer clic en el contenedor
+    cornerZoom.addEventListener('click', (event) => {
+        imageContainer.click();
+    });
+
     imageContainer.addEventListener('click', (event) => {
         if (isZoomed && isDragging) {
-            imageContainer.classList.remove('zoom-out-cursor'); // Restaura el cursor
-            imageContainer.classList.add('zoom-in-cursor'); // Restaura el cursor
             resetZoomAndDrag();
             return;
         }
@@ -205,39 +236,74 @@ window.onload = () => {
         isDragging = true;
         startX = event.clientX;
         startY = event.clientY;
-        imageContainer.classList.remove('zoom-in-cursor'); // Restaura el cursor
-        imageContainer.classList.add('zoom-out-cursor'); // Restaura el cursor
 
-        isZoomed = !isZoomed; // Alternar el estado de zoom
-
-        // Cambiar el tamaño del fondo
-        imageContainer.style.backgroundSize = isZoomed ? '200%' : 'contain'; 
-        offsetX = 50; // Restablecer posición del fondo al centro
-        offsetY = 50;
-        imageContainer.style.backgroundPosition = `${offsetX}% ${offsetY}%`; // Aplicar la posición inicial
+        isZoomed = !isZoomed;
+        updateBackgroundImage();
+        updateCursor();
     });
 
-    window.addEventListener('mousemove', (event) => {
-        if (isDragging && isZoomed) {
-            const deltaX = event.clientX - startX;
-            const deltaY = event.clientY - startY;
+   // Función para manejar el inicio del arrastre (ratón y toque)
+    function startDrag(event) {
+        if (isZoomed) {
+            isDragging = true;
 
-            // Ajustar la posición del fondo basado en el movimiento del mouse
-            offsetX = Math.min(Math.max(offsetX + deltaX / 5, 0), 100); // Limitar entre 0% y 100%
-            offsetY = Math.min(Math.max(offsetY + deltaY / 5, 0), 100); // Limitar entre 0% y 100%
+            // Obtener las coordenadas iniciales
+            if (event.type === 'touchstart') {
+                event.preventDefault(); // Evitar el desplazamiento de la página
+                startX = event.touches[0].clientX;
+                startY = event.touches[0].clientY;
+            } else {
+                startX = event.clientX;
+                startY = event.clientY;
+            }
+        }
+    }
+
+    // Función para manejar el movimiento durante el arrastre (ratón y toque)
+    function moveDrag(event) {
+        if (isDragging && isZoomed) {
+            let clientX, clientY;
+
+            // Obtener las coordenadas actuales
+            if (event.type === 'touchmove') {
+                event.preventDefault(); // Evitar el desplazamiento de la página
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            } else {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            }
+
+            // Calcular el desplazamiento
+            const deltaX = clientX - startX;
+            const deltaY = clientY - startY;
+
+            // Actualizar la posición del fondo
+            offsetX = Math.min(Math.max(offsetX + deltaX / 5, 0), 100);
+            offsetY = Math.min(Math.max(offsetY + deltaY / 5, 0), 100);
 
             imageContainer.style.backgroundPosition = `${offsetX}% ${offsetY}%`;
 
-            startX = event.clientX;
-            startY = event.clientY;
+            // Actualizar las coordenadas iniciales
+            startX = clientX;
+            startY = clientY;
         }
-    });
-
-    function resetZoomAndDrag() {
-        isZoomed = false;
-        isDragging = false;
-        offsetX = 50; // Centrar la imagen
-        offsetY = 50;
-        updateBackgroundImage();
     }
+
+
+    // Función para manejar el fin del arrastre (ratón y toque)
+    function endDrag() {
+        isDragging = false;
+    }
+
+    // Eventos para ratón
+    imageContainer.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', moveDrag);
+    window.addEventListener('mouseup', endDrag);
+
+    // Eventos para toque
+    imageContainer.addEventListener('touchstart', startDrag, { passive: false });
+    window.addEventListener('touchmove', moveDrag, { passive: false });
+    window.addEventListener('touchend', endDrag);
+
 };

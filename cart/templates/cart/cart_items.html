@@ -2,34 +2,49 @@
 
 {% load custom_filters %}
 
-
 {% for key, value in carrito.items %}
-    <div class="cart-item mb-3">
-        <img src="{{value.image}}" alt="Product Image">
+
+    <div class="cart-item mb-5">
+
+        <!-- Imagen del Producto -->
+        <div class="cart-img-ref">
+            <a class="w-100 h-100" href="#">
+                <img src="{{value.image}}" alt="Product Image">
+            </a>
+        </div>
+
 
         <div class="cart-item-info">
-            <div class="cart-span-cont"> 
-                <span> {{ value.name }} </span>
-                <span> {{ value.qty }} × ${{ value.price|intdot }} = ${{ value.price|multiply:value.qty }} </span>
+            
+            <div class="cart-item-title">
+                <h5 class="mb-1"> {{ value.name }} </h5>
 
-                <!-- Botón de eliminar en la esquina superior derecha -->
-                <button class="btn cart-btn-remove-item" data-index="{{ value.id }}">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="d-flex text-start gap-1">
+                    <span>{{ value.qty }}</span>
+                    <i class="ri-close-line"></i>
+                    <strong>${{ value.price|intdot }}</strong>
+                    <!-- <i class="ri-equal-line"></i>
+                     <strong>${ { value. price | multiply:value.qty } }</strong> -->
+                </div>
             </div>
+            
+            <!-- Botón de eliminar en la esquina superior derecha -->
+            <button class="btn btn-close cart-item-btn-remove" data-index="{{value.id}}">
+                <i class="ri-close-fill icon-medium"></i>
+            </button>
 
             <!-- Contador y botón de eliminar -->
-            <div class="cart-item-conts">
-                <button class="btn cart-item-btn-minus" data-index="{{ value.id }}">
-                    <i class="fa-solid fa-minus"></i>
+            <div class="cart-container-conts container-space-between">
+                <button class="btn cart-item-btn-minus" data-index="{{value.id}}">
+                    <i class="ri-subtract-fill icon-small"></i>
                 </button>
-                
+
                 <span class="cart-item-qty">
                     {{value.qty}}
                 </span>
-
+                
                 <button class="btn cart-item-btn-plus" data-index="{{value.id}}">
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="ri-add-fill icon-small"></i>
                 </button>
             </div>
         </div>

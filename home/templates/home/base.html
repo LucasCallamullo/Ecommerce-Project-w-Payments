@@ -3,7 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, 
+    maximum-scale=1.0, user-scalable=no">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">	
+	
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+     
+    , 
+    interactive-widget=resizes-content -->
 
     {% load static %}
 
@@ -35,6 +45,9 @@
     <link href="{% static 'home/css/basic.css' %}" rel="stylesheet"> 
     <link href="{% static 'home/css/base.css' %}" rel="stylesheet"> 
     <link href="{% static 'home/css/base_navbar.css' %}" rel="stylesheet"> 
+
+    <link href="{% static 'users/css/widget_login.css' %}" rel="stylesheet"> 
+    <link href="{% static 'cart/css/widget_cart.css' %}" rel="stylesheet"> 
     
     <!-- For More CSS Modules -->
     {% block extra_head %}
@@ -44,12 +57,12 @@
     {% endblock %}
 </head>
 
-
 <body>
+<div class="page-mobile">
+
 
     <!-- HEADER -->
     <header>
-
         <!--  NAV MOBILE  -->
         <nav class="mobile-nav container-page gap-1">
             {% include 'home/mobile_nav.html' %}
@@ -68,45 +81,49 @@
             </div>
 
             <!-- Search Bar -->
-            <form class="second-col justify-start top-bar-search" 
-            action="{% url 'product_top_search' %}" method="GET">
-
-                <input type="text" placeholder="Buscar..." 
-                name="topQuery" aria-label="Search">
-                    
-                <button class="btn" type="submit">
-                    <i class="ri-search-line"></i>
-                </button>
-            </form>
+            <div class="second-col justify-center">
+                <form class="top-bar-search container-space-between" 
+                action="{% url 'product_top_search' %}" method="GET">
+    
+                    <input type="text" placeholder="Buscar..." 
+                    name="topQuery" aria-label="Search">
+                        
+                    <button class="btn" type="submit">
+                        <i class="ri-search-line icon-small"></i>
+                    </button>
+                </form>
+            </div>
+            
 
             <!--  Iconos -->
             <div class="third-col d-flex justify-end gap-3">
-                <a href="{{ store.google_url }}" target="_blank" class="nav__social-link">
-                    <i class="ri-whatsapp-line"></i>
+                <a href="{{ store.google_url }}" target="_blank" class="text-white nav__social-link">
+                    <i class="ri-whatsapp-line icon-medium"></i>
                 </a>
 
-                <a href="{{ store.ig_url }}" target="_blank" class="nav__social-link">
-                    <i class="ri-instagram-line"></i>
+                <a href="{{ store.ig_url }}" target="_blank" class="text-white nav__social-link">
+                    <i class="ri-instagram-line icon-medium"></i>
                 </a>
 
-                <a href="{{ store.tt_url }}" target="_blank" class="nav__social-link">
-                    <i class="ri-tiktok-fill"></i>
+                <a href="{{ store.tt_url }}" target="_blank" class="text-white nav__social-link">
+                    <i class="ri-tiktok-fill icon-medium"></i>
                 </a>
 
-                <a href="{{ store.fb_url }}" target="_blank" class="nav__social-link">
-                    <i class="ri-facebook-box-fill"></i>
+                <a href="{{ store.fb_url }}" target="_blank" class="text-white nav__social-link">
+                    <i class="ri-facebook-box-fill icon-medium"></i>
                 </a>
             </div>
         </nav>
 
 
         <!-- Main nav bar ( categories - list links - register icon ) -->
-        <nav class="d-flex main-nav" id="main-nav">
+        <nav class="main-nav" id="main-nav">
             <div class="container-page">
                 <ul class="d-flex w-100 h-100" id="main-nav-list">
 
                     <!-- to pass image url to the script -->
-                    <li class="d-none" id="logo-url" data-img="{% static 'img/ico/logo.jpg' %}"></li>
+                    <li class="d-none" id="logo-url" data-img="{% static 'img/ico/logo.jpg' %}"
+                    data-url="{% url 'Home'%}"></li>
                     
                     <!-- drop down menu - hoods -->
                     <li class="first-col dropdown justify-start">
@@ -140,20 +157,29 @@
 
                     <!-- icons sections-->
                     <li class="third-col d-flex justify-end gap-2">
+
+                        <!-- Icon Dark mode -->
                         <button class="theme-toggle btn btn-main-nav">
-                            <i class="theme-icon ri-moon-line"></i>
+                            <i class="theme-icon ri-moon-line icon-medium"></i>
                         </button>
             
-                        <button class="btn btn-main-nav">
-                            <i class="ri-shopping-cart-2-line"></i>
-                            <!-- { % include "cart/widget_carrito.html" % } -->
+                        <!-- Icon Cart Overlay -->
+                        <button class="btn btn-main-nav cart-button" aria-expanded="false"">
+                            <i class="ri-shopping-cart-2-line icon-medium"></i>
+                            
+                            <!-- Badge para mostrar el número de productos -->
+                            <span class="cart-badge" id="badge-cart-button">
+                                {{   total_items  }}
+                            </span>
                         </button>
+                        {% include "cart/widget_cart.html" %}
             
                         <!-- Icon user login -->
-                        <button class="btn btn-main-nav">
-                            <i class="ri-user-3-line"></i>
-                            <!-- { % include "users/widget_login.html" % } -->
+                        <button class="btn btn-main-nav user-button" aria-expanded="false">
+                            <i class="ri-user-3-line icon-medium"></i>
                         </button>
+                        {% include "users/widget_login.html" %}
+                        
                     </li>
                 </ul>
             </div>
@@ -169,6 +195,9 @@
 
         <!-- we limit the page container to the main content. -->
         <div class="container-page"> 
+
+            <button class="btn btn-main" onclick="forceReload()">Recargar sin caché</button>
+
             {% block main_content %}
         
             {% endblock main_content %}
@@ -294,6 +323,9 @@
     <!-- Almacena el estado de autenticación en un div oculto -->
     <div id="auth-status" data-register-user="{{ user.is_authenticated|lower }}" hidden></div>
 
+
+</div>
+
     <!-- Bootstrap Bundle with Popper 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -303,7 +335,7 @@
     <script src="{% static 'home/js/base_navbar.js' %}"></script>
 
     <!-- JavaScript for Carrito Widget -->
-    <script src="{% static 'cart/js/widget_carrito.js' %}"></script>
+    <script src="{% static 'cart/js/widget_cart.js' %}"></script>
     
     <!-- JavaScript for users Widget -->
     <script src="{% static 'users/js/widget_login.js' %}"></script>
@@ -313,6 +345,7 @@
         <!-- You load your own .js files for each template/view, this is useful since they are 
         loaded later of the base scripts leaving their functions as global -->
     {% endblock extra_scripts %}
+
 
 </body>
 </html>

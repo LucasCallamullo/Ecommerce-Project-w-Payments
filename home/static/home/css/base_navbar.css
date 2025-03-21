@@ -4,267 +4,300 @@
                 HEADER & TOP NAV 
 =============================================    */
 .top-nav {
-    display: flex;
-    height: 65%;
-    max-height: 65%;
+    display: none; /* Ocultar en móviles */
 }
 
 .logo {
     height: 100%;
     max-height: 100%;
-    
     width: 100%;
     max-width: 100%;
     object-fit: cover;
 }
 
-/* Celulares (máx. 768px) */
-@media screen and (max-width: 768px) {
+/* Desktop (mín. 993px) */
+@media (min-width: 993px) {
     .top-nav {
-        display: none !important;
+        display: flex;
+        height: 65%;
+        max-height: 65%;
     }
 }
-
 
 /* 
     TOP BAR SEARCH
 */
 .top-bar-search {
-    height: 40% !important;
-    
-    display: flex;
-    justify-content: space-between;
-
-    background-color: #fff;
-    border-radius: 20px; /* Bordes redondeados */
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border-radius: 0;    /* mobile */
+    width: 100%;    /* mobile */
+    height: 100%;
 }
 
-/* Estilo del campo de entrada */
 .top-bar-search input {
-    color: var(--black-color);
-    font-size: var(--font-normal);
-
+    height: 100%;
     padding-left: 3%;
-    width: 95%;
-    
+    width: calc(100% - 83px);
     border: none;
-    outline: none;     /* Elimina el contorno al enfocar */
+    outline: none;     /* Elimina el contorno al enfocar  */
     background-color: transparent;
 }
 
 .top-bar-search input:focus {
     outline: none;
     box-shadow: none;
-    color: var(--black-color);
 }
 
-/* Estilo del botón */
 .top-bar-search button {
-    width: auto;
-    cursor: pointer;
+    width: 40px;
+    height: 100%;
     color: var(--black-color);
-    font-size: var(--font-normal); 
-    font-weight: var(--font-bold-weight);
-
-    border: none;
-    background-color: transparent;
 }
 
-/* Celulares (máx. 768px) */
-@media screen and (max-width: 768px) {
+#back-search-form {
+    width: 42px;
+    border-left: solid 1px var(--text-secondary);
+}
 
+/* Hide the search form by default */
+.search-bar-mobile {
+    position: absolute;
+    display: block;
+    
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    
+    z-index: var(--z-index);
+
+    background-color: var(--white-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    /* transition: max-height 0.3s ease, opacity 0.3s ease;  height: 100%; */
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease, opacity 0.3s ease;
+}
+
+.search-bar-mobile[data-state="closed"] {
+    display: block;
+    height: 0; /* Cerrado */
+    opacity: 0;
+}
+
+.search-bar-mobile[data-state="open"] {
+    display: block;
+    height: var(--height-header); /* Abierto (ej: 68px o 25vh) */
+    opacity: 1;
+}
+
+/* Desktop (min. 993px) */
+@media (min-width: 993px) {
     .top-bar-search {
-        margin-left: 0%;
-        width: 85% !important;
-        height: 100% !important;
-        border-radius: 0;
-    }
-
-    .top-bar-search input {
-        height: 100%;
-        font-size: var(--font-xl); 
-        padding-left: 3%;
-    }
-
-    .top-bar-search button {
-        font-size: var(--font-xl); 
-        font-weight: var(--font-bold-weight);
+        min-height: 40%;
+        height: 40%;
+        width: 90%;
+        padding-right: 1%;
+        border-radius: 20px;
     }
     
-    #back-search-form {
-        color: var(--black-color);
-        width: 15% !important;
-        border-left: solid 1px var(--text-secondary);
-        font-size: var(--font-xxl) !important;
-    }
-
-    /* 
-        Hide the search form by default 
-    */
-    .search-bar-mobile {
-        position: absolute;
-        display: none;
-        
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-
-        z-index: var(--z-index);
-
-        background-color: var(--white-color);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        transition: max-height 0.5s ease, opacity 0.5s ease; 
-    }
-
-    .search-bar-mobile[data-state="closed"] {
-        display: block;
-        overflow: hidden;
-        /* we change the value of the generic variable for the vertical animation */
-        --max-height-vertical-anim: var(--height-header);
-        animation: slideCloseToggle 0.5s ease forwards; 
-    }
-
-    .search-bar-mobile[data-state="open"] {    
-        display: block;
-        max-height: var(--height-header);
-        /* we change the value of the generic variable for the vertical animation */
-        --max-height-vertical-anim: var(--height-header);
-        animation: slideOpenToggle 0.5s ease forwards;
+    .top-bar-search input {
+        font-size: var(--font-normal);
     }
 }
 
-/*
+
+/* ========================================================================
     Main Nav Bar
-*/
+======================================================================== */
+/* Estilos base (móvil) */
 .main-nav {
-    height: 35%;
-    max-height: 35%;
-}
-
-
-/* Celulares (máx. 768px) */
-@media screen and (max-width: 768px) {
-    .main-nav {
-        display: none !important;
-    }
+    display: none;
 }
 
 .nav__list {
     display: flex;
-    height: var(--height-item-main-nav);
-}
+    flex-direction: column;    /* mobile edit */
+    height: auto;     /* mobile edit */
+    max-height: 100%;
 
-.nav__link {
-    position: relative;
-    color: var(--white-color);
-    font-weight: var(--font-bold-weight);
-    align-items: center;
-    transition: opacity .4s;
-}
-  
-.nav__link span {
-    position: relative;
-    transition: margin .4s;
-}
-
-.nav__link span::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 0;
-    height: 2px;
-    background-color: var(--white-color);
-    transition: width .4s ease-out;
-}
-
-/* Animation link on hover */
-.nav__link:hover span::after {
+    overflow-y: auto;
     width: 100%;
 }
 
-/* Sibling fade animation */
-.nav__list:has(.nav__link:hover) .nav__link:not(:hover) {
-    opacity: .4;
-}
+/* Media queries para pantallas más grandes (tablet, desktop) */
+@media (min-width: 993px) {
+    .main-nav {
+        display: flex;
+        height: 35%;
+        max-height: 35%;
 
-/* effect icons top*/
-.nav__social-link {
-    color: var(--white-color);
-    font-size: calc(var(--font-medium) + 0.25rem );
-    transition: transform .4s;
-}
+        align-items: center;
+        text-align: center;
+    }
 
-.nav__social-link:hover {
-    transform: translateY(-.25rem);
+    .nav__list {
+        flex-direction: row; /* mobile edit */
+        height: var(--height-item-main-nav); /* mobile edit */
+    }
+
+    /* Effect icons top */
+    .nav__social-link {
+        transition: transform .4s;
+    }
+
+    .nav__social-link:active,
+    .nav__social-link:hover {
+        transform: translateY(-.25rem);
+    }
+
+    .nav__link {
+        position: relative;
+        color: var(--white-color);
+        font-weight: var(--font-bold-weight);
+        align-items: center;
+        transition: opacity .4s;
+    }
+    
+    .nav__link span {
+        position: relative;
+        transition: margin .4s;
+    }
+    
+    .nav__link span::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 0;
+        height: 2px;
+        background-color: var(--white-color);
+        transition: width .4s ease-out;
+    }
+    
+    /* Animation link on hover */
+    .nav__link:hover span::after {
+        width: 100%;
+    }
+    
+    /* Sibling fade animation */
+    .nav__list:has(.nav__link:hover) .nav__link:not(:hover) {
+        opacity: .4;
+    }
+
+    /* 
+        Buttons main nav
+    */
+    .btn-main-nav {
+        width: 40px;
+        height: 40px;
+        max-height: 100%;
+        color: var(--white-color);
+        background-color: var(--main-color);
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-main-nav:hover,
+    .btn-main-nav:active,
+    .btn-main-nav:focus {
+        background-color: var(--main-light-color);
+    }
 }
 
 /* =====================================================================================
                             BARRA DROP CONTENT TIPO PRODUCTO todo
 /* ===================================================================================== */
 /* Main dropdown button */
-.dropdown-btn {
+.dropdown-btn,
+.drop-item-mobile,
+.sub-item-mobile {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    cursor: pointer;
+    justify-content: space-between;
+    position: relative;
 
-    color: var(--text-primary) !important;
-    background-color: var(--bg-primary) !important;
-    font-size: var(--font-small);
-    box-shadow: none;
-
-
-    /* this is to match the logo due to the extra border */
-    padding: 3%;
-    border: 2px solid var(--main-color);
-    margin-left: -2px;    
-    width: calc(100% + 4px);
-
+    padding-left: 5%;
+    width: 100%;
     height: var(--height-item-main-nav); 
     max-height: var(--height-item-main-nav);
+
+    font-size: var(--font-small-plus);
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+
+    border: none;
+    border-bottom: 1px solid var(--text-secondary);
+
+    transition: color 0.3s ease;
 }
 
-.dropdown-btn .ri-menu-line {
-    font-size: var(--font-normal) !important;
-    font-weight: var(--font-bold-weight) !important;
+.btn-menu-mobile {
+    color: var(--text-primary);
+    height: var(--height-item-main-nav); 
+    width: calc(var(--height-item-main-nav) + 1px);
+    border-left: 1px solid var(--text-secondary);
 }
 
-.dropdown-btn i {
-    color: var(--text-secondary) !important;
+.sub-item-mobile {
+    border-left: 1px solid var(--text-secondary);
+    background-color: var(--bg-secondary-dark);
+    margin-left: 7%;
+    width: 93%;
+    max-width: 93%;
 }
 
-.dropdown-btn:hover i {
-    color: var(--text-primary) !important;
+.dropdown-btn:active i { color: var(--text-primary) !important; }
+
+/* Add animation for the arrow icon when the dropmenu opens  */
+.arrow-drop { transition: transform 0.3s ease; }
+.rotate { transform: rotate(180deg); }
+
+/* Styles for large desktops (mín. 993px to max. infinite) */
+@media (min-width: 993px) {
+    .dropdown-btn {
+        cursor: pointer;    /* edit mobile */
+        border: 2px solid var(--main-color);    /* edit mobile */
+        padding: 3%;
+        margin-left: -2px;    
+        width: calc(100% + 4px);
+    }
+
+    .dropdown-btn:hover i {
+        color: var(--text-primary) !important;
+    }
 }
+
 
 /* 
     Drop down main categories menu
 */
-.dropdown-menu {
+/* MOBILE */
+.dropdown-menu { 
     display: none;
-    position: absolute;
+    position: relative; /* edit mobile */
+    box-shadow: none; /* edit mobile */
+    border: none;    /* edit mobile */
+    margin: 0;    /* edit mobile */
+    width: 100%;    /* edit mobile */
+    height: auto;    /* edit mobile */
+    max-height: 40vh;    /* edit mobile */
+
+    /* general stuff */
     opacity: 0;
     pointer-events: none;
-
-    width: 100%;
-    background-color: var(--bg-secondary);
-    /* box-shadow: offset-x offset-y blur-radius spread-radius color; */
-    box-shadow: 2px 2px 5px 0px var(--black-color); 
-
-    border: 2px solid var(--main-color);
-    margin-left: -2px;
-    width: calc(100% + 4px);
-    
-    border-top: none;
+    background-color: var(--bg-primary);
     z-index: var(--z-index);
-    max-height: 70vh;
 
     /* should be added to the class in general not to the animation   */
     overflow-y: auto; 
     scrollbar-width: none; /* Hide the bar in Firefox */
     -ms-overflow-style: none; /* Hide the bar in Internet Explorer/Edge */
+
+    /* should be added to the class in general not to the animation 
+    see .show and .hide events for more info */
+    --max-height-vertical-anim: 50vh;
 }
 
 .dropdown-menu::-webkit-scrollbar {
@@ -286,153 +319,57 @@
     animation: slideCloseToggle 0.6s ease forwards; 
 }
 
-/* Elementos del menú */
-.dropdown-menu a {
-    color: var(--text-primary) !important;
-    font-size: var(--font-small) !important;
+.bg-secondary {
+    background-color: var(--bg-secondary-light) !important;
 }
 
-.dropdown-item,
-.sub-dropdown-item {
-    width: 100%;
-    cursor: pointer;
-    background-color: var(--bg-primary);
-    border-bottom: 1px solid var(--main-color);
-    
-    padding: 3%;
-    height: var(--height-item-main-nav); 
-    max-height: calc(var(--height-item-main-nav) - 6.2px);
+.not-border-bottom {
+    border-bottom: 1px transparent !important;
 }
 
-.dropdown-item:hover,
-.sub-dropdown-item:hover {
-    background-color: var(--bg-secondary-mobile);
-    opacity: 1;
-}
-
-/* Submenú  */
-.sub-dropdown-content {
-    display: none;
-    width: calc(var(--width-first-col) - 5%);
-
-    background-color: var(--bg-primary);
-    border: 2px solid var(--main-color);
-    box-shadow: 1px 1px 5px 0px var(--black-color); 
-
-    max-height: 50vh;
-    overflow-y: auto;
-}
-
-/* Agregar la animación para el ícono de la flecha cuando se abre el dropmenu  */
-.arrow-drop {
-    transition: transform 0.3s ease;
-    font-size: var(--font-normal-plus) !important;
-}
-.rotate { 
-    transform: rotate(180deg); 
-}
-
-/* 
-    Buttons main nav
-*/
-.btn-main-nav {
-    width: 40px;
-    height: 40px;
-    max-height: 100%;
-    background-color: var(--main-color);
-    color: var(--white-color);
-    font-size: var(--font-medium);
-}
-
-.btn-main-nav:hover,
-.btn-main-nav:active,
-.btn-main-nav:focus {
-    background-color: var(--main-light-color);
-}
-
-/* Celulares (máx. 768px) */
-@media screen and (max-width: 768px) {
-
-    .dropdown-btn,
-    .drop-item-mobile {
-        cursor: none;
-        border: none;
-        margin: 0;
-        padding: 0;
-        border-bottom: 1px solid var(--text-secondary);
-
-        padding-left: 5%;
-        width: 100%;
-        height: var(--height-item-main-nav); 
-        max-height: var(--height-item-main-nav);
-        min-height: var(--height-item-main-nav);
-
-        font-size: var(--font-normal-plus);
-        font-weight: var(--font-bold-weight);
-
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        
-        color: var(--text-primary) !important;
-        background-color: var(--bg-primary) !important;
-    }
-
-    .drop-item-mobile a,
-    .dropdown-btn i {
-        color: var(--text-primary) !important;
-        font-size: var(--font-normal-plus) !important;
-        font-weight: var(--font-bold-weight) !important;
-    }
-
-    /* Drop down menu de categories principal */
+/* Styles for large desktops (mín. 993px to max. infinite) */
+@media (min-width: 993px) {
     .dropdown-menu {
+        position: absolute;        /* edit mobile */
+        width: 100%;    /* edit mobile */
+        box-shadow: 2px 2px 5px 0px var(--black-color);     /* edit mobile */
+        border: 2px solid var(--main-color);    /* edit mobile */
+        margin-left: -2px;    /* edit mobile */
+        width: calc(100% + 4px);    /* edit mobile */
+        border-top: none;    /* edit mobile */
+        max-height: 70vh;    /* edit mobile */
+    }
+
+    /* Submenú  */
+    .sub-dropdown-content {
         display: none;
-        position: relative;
-        box-shadow: none; 
+        width: calc(var(--width-first-col) - 5%);
 
-        margin: 0;
-        width: 100%;
-        height: auto;
-        max-height: 40vh;
-        /* should be added to the class in general not to the animation 
-        see .show and .hide events for more info */
-        --max-height-vertical-anim: 50vh;
+        background-color: var(--bg-primary);
+        border: 2px solid var(--main-color);
+        box-shadow: 1px 1px 5px 0px var(--black-color); 
 
+        max-height: 50vh;
         overflow-y: auto;
-        border: none;
     }
 
-    .bg-secondary {
-        background-color: var(--bg-secondary-light) !important;
-    }
+    .dropdown-item,
+    .sub-dropdown-item {
+        width: 100%;
+        cursor: pointer;
+        background-color: var(--bg-primary);
+        border-bottom: 1px solid var(--main-color);
+        font-size: var(--font-small-plus);
 
-    .not-border-bottom {
-        border-bottom: 1px transparent !important;
-    }
-    
-    .sub-item-mobile {
-        border: none;
-        border-left: 1px solid var(--text-secondary);
-        border-bottom: 1px solid var(--text-secondary);
-        background-color: var(--bg-secondary-dark);
-        
-        margin-left: 7%;
-        width: 93%;
-
-        padding: 0;
-        padding-left: 5%;
+        padding: 3%;
         height: var(--height-item-main-nav); 
-        max-height: var(--height-item-main-nav);
-
-        font-size: var(--font-normal-plus);
-        font-weight: var(--font-bold-weight);
-        position: relative;
+        max-height: calc(var(--height-item-main-nav) - 6.2px);
     }
 
-    .sub-item-mobile a {
-        font-size: var(--font-normal-plus) !important;
-        font-weight: var(--font-bold-weight) !important;
+    .dropdown-item:hover,
+    .sub-dropdown-item:hover {
+        background-color: var(--bg-secondary-mobile);
+        opacity: 1;
     }
 }
 
@@ -440,125 +377,80 @@
 /* ===================================================================================
            NAVEMENU MOBILE CSS
 =================================================================================== */ 
-/* Navigation for mobile devices 
-@media screen and (max-width: 992px) */
+/* Navigation for mobile devices */
+/* mobile nav */
 .mobile-nav {
-    display: none;
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    position: relative;
+    padding: 1% 0%;
 }
 
-/* Celulares (máx. 768px) */
-@media screen and (max-width: 768px) {
+.btn-mobile {
+    width: 12%;
+    height: 100%;
+    color: var(--white-color);
+}
 
-    /* mobile nav */
+.logo-mobile {
+    height: 100%;
+    max-height: 100%;
+    width: 46%;
+    max-width: 46%;
+}
+
+/* hide menu mobile togle */
+.nav-menu-mobile {
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 85%;
+    height: 100vh;
+    background-color: var(--bg-primary);
+
+    transition: left 0.5s;
+    z-index: var(--z-index-plus);
+}
+
+.nav-menu-mobile[data-state="closed"] {
+    left: -100%;
+    top: 0;
+}
+
+.nav-menu-mobile[data-state="open"] {
+    left: 0;
+}
+
+.container-menu-mobile {
+    height: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    width: 100%;
+}
+
+/* container icons of menu toggle */
+.cont-menu-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 10%;
+    max-height: 10%;
+    width: 100%;
+
+    padding: 1% 7%;
+}
+
+/* Desktop (máx. 993px) */
+@media (min-width: 993px) {
     .mobile-nav {
-        width: 100%;
-        height: 100%;
-        max-height: 100%;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        
-        position: relative;
-        padding: 1% 0%;
-    }
-
-    .btn-mobile {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        justify-content: center;
-        width: 12%;
-        height: 100%;
-        background-color: transparent;
-        color: var(--white-color);
-        font-size: var(--font-xl);
-        font-weight: var(--font-bold-weight);
-    }
-
-    .logo-mobile {
-        height: 100%;
-        max-height: 100%;
-        width: 46%;
-        max-width: 46%;
-    }
-
-    /* hide menu mobile togle */
-    .nav-menu-mobile {
-        position: absolute;
-        left: -100%;
-        top: 0;
-        width: 85%;
-        height: 100vh;
-        background-color: var(--bg-primary);
-
-        transition: left 0.5s;
-        z-index: var(--z-index-plus);
-    }
-
-    .nav-menu-mobile[data-state="closed"] {
-        left: -100%;
-        top: 0;
-    }
-
-    .nav-menu-mobile[data-state="open"] {
-        left: 0;
-    }
-
-    .container-menu-mobile {
-        height: 90%;
-        max-height: 90%;
-        overflow-y: auto;
-        width: 100%;
-    }
-
-    /* container icons of menu toggle */
-    .cont-menu-icons {
-        display: flex;
-        align-items: center;
-
-        height: 10%;
-        max-height: 10%;
-        width: 100%;
-
-        padding: 1% 7%;
-        gap: 10%;
-    }
-
-    .nav__social-link {
-        color: var(--text-primary);  /* for color icons in menu toggle */
-    }
-
-    .btn-menu-mobile {
-        display: flex;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-
-        background-color: transparent;
-        color: var(--text-primary) !important;
-        font-size: var(--font-normal-plus);
-        font-weight: var(--font-bold-weight);
-
-        /*¨padding: 5% 6% !important; */
-        padding: 0 !important;
-        margin: 0 !important;
-
-        height: var(--height-item-main-nav); 
-        width: var(--height-item-main-nav);
-        border-left: 1px solid var(--text-secondary);
-    }
-
-    .nav__list {
-        flex-direction: column;
-
-        height: auto;
-        max-height: 100%;
-        overflow-y: auto;
-
-        width: 100%;
-        padding: 0;
-        margin: 0;
+        display: none;
     }
 }
 
@@ -570,21 +462,17 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 11vh !important;
+    height: 70px !important;    /* 11vh */
     background-color: var(--main-color);
-
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
-    
     transition: all 0.3s ease-in-out;
     transform: translateY(-10px);
     opacity: 0;
-
-    padding-left: 7%;
-    padding-right: 7%;
+    padding-left: 0%;
+    padding-right: 0%;
     margin: 0 auto;
     width: 100%;
     max-width: 100%;
-
     z-index: var(--z-fixed);
 }
 
@@ -594,10 +482,10 @@
 }
 
 /* for some reason this update correctly responsive so we keep this media */
-@media screen and (max-width: 1500px) {
+@media (min-width: 1500px) {
     .fixed-nav { 
-        padding-left: 0%;
-        padding-right: 0%;
+        padding-left: 7%;
+        padding-right: 7%;
     }
 }
 
@@ -607,6 +495,5 @@
     width: 18%;
     height: 50px;
     max-height: 100%;
-
     padding-right: 0.5%;
 }

@@ -1,0 +1,101 @@
+
+.user-dropdown {
+    display: block;
+    position: absolute;
+
+    right: 0;  /* El menú se alinea al borde derecho del botón */
+    left: auto;  /* Asegura que 'left' no afecte */
+    top: 100%;  /* El menú se despliega justo debajo del botón */
+    
+    /* box-shadow: offset-x offset-y blur-radius spread-radius color; */
+    background-color: var(--bg-primary);
+    box-shadow: 1px 1px 3px 0px var(--black-color); 
+
+    border: 3px solid var(--main-color);
+    
+    padding: 10px;
+    width: 250px;
+    
+    pointer-events: none;
+    opacity: 0;
+    max-height: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    z-index: var(--z-index-plus);
+
+    /* should be added to the class in general not to the animation   */
+    overflow: hidden;
+    scrollbar-width: none; /* Hide the bar in Firefox */
+    -ms-overflow-style: none; /* Hide the bar in Internet Explorer/Edge */
+}
+
+.user-dropdown::-webkit-scrollbar {
+    display: none; /* Hide the bar in Chrome, Safari and Edge */
+}
+
+.user-dropdown[data-state="open"] {
+    display: block;
+    pointer-events: all    ;
+    opacity: 1;
+    max-height: 60vh;
+}
+
+.user-dropdown[data-state="closed"] {
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    max-height: 0;
+}
+
+
+
+/* Estilo de los inputs y el botón dentro del dropdown */
+.widget-register-form input,
+.btn-widget-register,
+.btn-widget-register-alt {
+    width: 100%;
+    padding: 8px;
+    height: 40px;
+    font-size: var(--font-normal);
+}
+
+.btn-widget-register {
+    background-color: var(--main-light-color);
+    color: var(--white-color);
+    transition: transform ease 0.5s;
+    
+}
+
+.btn-widget-register-alt {
+    background-color: var(--text-secondary);
+    color: var(--white-color);
+    transition: transform ease 0.5s;
+}
+
+/* Tablets (máx. 992px) */
+@media screen and (min-width: 992px) {
+    .btn-widget-register:hover,
+    .btn-widget-register-alt:hover {
+        background-color: var(--main-color);
+        transform: scale(1.01);
+    }
+}
+
+
+@media screen and (max-width: 992px) {
+    
+    .widget-register-form input,
+    .btn-widget-register,
+    .btn-widget-register-alt {
+        width: 100%;
+        padding: 8px;
+        height: 30px;
+        font-size: var(--font-normal);
+    }
+
+
+    .btn-widget-register:active,
+    .btn-widget-register-alt:active {
+        background-color: var(--main-color);
+        transform: scale(1.02);
+    }
+}
