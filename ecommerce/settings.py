@@ -238,7 +238,7 @@ CSRF_TRUSTED_ORIGINS = [
 if DEBUG:
     ALLOWED_HOSTS = ['*']
     
-    BASE_URL_RAILWAY = "https://9de4-2803-9800-9884-be88-510-d019-adcf-abdf.ngrok-free.app"
+    BASE_URL_RAILWAY = "https://1a44-2803-9800-9884-be88-51d2-353b-2995-2c15.ngrok-free.app"
     CSRF_TRUSTED_ORIGINS.append(BASE_URL_RAILWAY)
 
 # CSRF_COOKIE_SECURE = True  # Railway usa HTTPS

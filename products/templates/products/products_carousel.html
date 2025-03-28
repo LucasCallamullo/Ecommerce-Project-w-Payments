@@ -28,7 +28,7 @@
             <div class="swiper-wrapper">
                 {% for product in productss %}
                 
-                <figure class="swiper-slide carousel-product-item" data-index="{{ forloop.counter0 }}" onclick="openModal({{ product.id }})">
+                <figure class="swiper-slide carousel-product-item" data-index="{{ forloop.counter0 }}">
                     
                     <!-- Contenedor de productos -->
                     <div class="image-container" data-url="{% url 'product_detail' product.id product.slug %}">
@@ -43,12 +43,12 @@
 
                     <figcaption class="carousel-product-data">
                         <a href="{% url 'product_detail' product.id product.slug %}">
-                            {{ product.name }}
+                            <b>{{ product.name }}</b>
                         </a>
         
                         <div class="container-space-between">
                             <div class="d-flex gap-1"> 
-                                <strong>{{ product.stars|intdot }}</strong>
+                                <b>{{ product.stars|intdot }}</b>
                                 <i class="ri-star-fill"></i>
                             </div>
 
@@ -65,54 +65,51 @@
                         </div>
     
                         <!-- Categoría y Subcategory -->
-                        <div class="container-space-between">
+                        <div class="d-flex">
                             {% if not product.available or product.stock == 0 %}
-                                <div class="bold-red">No disponible</div>
+                                <b class="bold-red">No disponible</b>
                             {% elif product.stock <= 3 %}
-                                <div class="bold-orange">Pocas unidades</div>
+                                <b class="bold-orange">Stock Bajo</b>
                             {% else %}
-                                <div class="bold-green">Disponible</div>
+                                <b class="bold-green">Disponible</b>
                             {% endif %}
                         </div>
                         
-                        {% if product.discount %}
-                            <!-- descuento -->
-                            <div class="container-space-between">
-                                <strong>Descuento:</strong>
-                                <span class="bold-red">% {{product.discount}} OFF</span>
-                            </div>
-            
-                            <!-- Precios: Normal y Oferta -->
-                            <div class="container-space-between">
-                                <div class="price-line-through">Normal:</div>
-                                <div class="price-line-through">$ {{product.price|intdot}}</div>
-                            </div>
-    
-                            <!-- Precio con descuento (calculado por JavaScript) -->
-                            <div class="container-space-between">
-                                <div class="bold-red">Oferta:</div>
-                                <div class="bold-red">$ {{product.calc_discount|intdot}}</div>
-                            </div>
-                        
-                        {% else %}
-    
-                            <div class="container-space-between">
-                                <strong> $ {{ product.price|intdot }} </strong>
-                            </div>
-                          
-                        {% endif %}
-    
-                        
+                        <div class="d-flex-col gap-1 w-100">
+                            {% if product.discount %}
+                                <!-- descuento -->
+                                <div class="container-space-between w-100">
+                                    <b>Descuento:</b>
+                                    <b class="bold-red">% {{product.discount}} OFF</b>
+                                </div>
+                
+                                <!-- Precios: Normal y Oferta -->
+                                <div class="container-space-between w-100">
+                                    <b class="price-line-through">Normal:</b>
+                                    <b class="price-line-through">$ {{product.price|intdot}}</b>
+                                </div>
+        
+                                <!-- Precio con descuento (calculado por JavaScript) -->
+                                <div class="container-space-between w-100">
+                                    <b class="bold-red">Oferta:</b>
+                                    <b class="bold-red">$ {{product.calc_discount|intdot}}</b>
+                                </div>
+                            {% else %}
+                                <b> $ {{ product.price|intdot }} </b>
+                            {% endif %}
+                        </div>
                     </figcaption>
     
                     <!-- Botón de agregar al carrito -->
-                    <div class="carousel-extender-btn">
-                        <button class="btn gap-1 carousel-btn-carrito" data-index="{{product.id}}">
-                            <span>Agregar</span> 
-                            <i class="ri-shopping-basket-2-fill"></i>
+                    <form class="carousel-extender-btn" method="POST" data-index="{{ product.id }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="" value="">
+
+                        <button class="btn btn-main btn-carousel-add-cart gap-1" type="submit">
+                            <b>Agregar</b> 
+                            <i class="ri-shopping-basket-2-fill icon-small"></i>
                         </button>
-                    </div>
-    
+                    </form>
                 </figure>
 
                 {% endfor %}
@@ -125,16 +122,14 @@
 
 <!-- Modales y Overlay (fuera del Swiper) -->
 {% for product in products %}
-<div class="carousel-modal" id="modal-{{ product.id }}" data-state="null">
-    <button class="btn close-modal">
-        <i class="ri-close-line icon-medium"></i>
-    </button>
-    <h2>{{ product.name }}</h2>
-    <p>{{ product.description }}</p>
-    <p>Precio: ${{ product.price }}</p>
-</div>
+    <div class="carousel-modal" id="modal-{{ product.id }}" data-state="null">
+        <button class="btn close-modal">
+            <i class="ri-close-line icon-medium"></i>
+        </button>
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <p>Precio: ${{ product.price }}</p>
+    </div>
 {% endfor %}
     
 <div class="overlay" id="overlay-carousel"></div>
-
-

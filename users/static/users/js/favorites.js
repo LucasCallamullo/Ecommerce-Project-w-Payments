@@ -5,7 +5,7 @@
 // ================================================================================
 function initSwiper () { 
     // el nombre de la clase  es el que define a que swiper corresponde esta config
-    const swiper = new Swiper('.swiper', {
+    const swiper = new Swiper(`#swiper-fav`, {
         loop: true, // Carrusel infinito
         navigation: {
             nextEl: '.swiper-button-next', // Botón "siguiente"

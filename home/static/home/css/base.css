@@ -77,80 +77,15 @@
 
 
 
-/* ================================================================================
-        Button flotante para volver al top de la pagina
-/* ================================================================================ */
-/* Tablets and desktop (min. 992px) */
-/* button */
-.back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: calc(50% - 20px);
-    
-    width: 40px;
-    height: 40px;
-
-    background-color: var(--text-primary);
-    color: var(--bg-primary);
-
-    border: none;
-    border-radius: 50%;
-
-    transition: opacity 0.3s, transform 0.3s;
-    opacity: 0;
-    transform: translateY(100px);
-    z-index: var(--z-index-plus);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.back-to-top:hover {
-    cursor: pointer;
-}
-
-/* Icon inside the button */
-.back-to-top i {
-    font-size: 20px;
-    z-index: 1; /* Ensures the icon is above the SVG */
-}
-
-/* Scroll progress (border fill) */
-.back-to-top .progress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg); /* Start from the top */
-}
-
-.back-to-top .progress circle {
-    fill: none;
-    stroke: var(--bg-primary); /* Border color */
-    stroke-width: 3px;
-    stroke-dasharray: 126;    /* Circumference of the circle (2 * π * r) */
-    stroke-dashoffset: 126;     /* Starts completely hidden */
-    transition: stroke-dashoffset 0.2s ease-in-out;
-}
-
-/* Mostrar el botón cuando se hace scroll */
-.back-to-top.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-
-
 /* ==========================================================================================
         Alerts - Estilos generales para el contenedor de la alerta
 ========================================================================================== */
 /* Contenedor de alertas */
 .alerts-container {
     position: fixed;
-    display: flex;
 
-    flex-direction: column-reverse; /* Cambiado a column-reverse para apilar desde abajo */
-
+    display: none;
+    pointer-events: none;
     bottom: 150px;     /* mobile */
     left: 50%;
     z-index: var(--z-index-plus);
@@ -161,6 +96,26 @@
 
     min-width: min-content;
     width: 100%;    /* mobile */
+
+    /* Prevent text selection */
+    -webkit-user-select: none; /* Safari/Chrome */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;         /* Standard syntax */
+    
+    /* Prevent touch callouts on mobile */
+    -webkit-touch-callout: none;
+}
+
+.alerts-container[data-state="closed"] {
+    display: none;
+    pointer-events: none;
+}
+
+.alerts-container[data-state="open"] {
+    display: flex;
+    flex-direction: column-reverse; /* Cambiado a column-reverse para apilar desde abajo */
+    pointer-events: all;
 }
 
 /* Estilo base para las alertas */
@@ -183,7 +138,6 @@
     transform: scale(0.9);
 }
 
-/* Mostrar alerta */
 .cont-custom-alert.show {
     display: block;
     pointer-events: auto;
@@ -212,4 +166,172 @@
     .cont-custom-alert {
         padding: 12px;  /* mobile */
     }
+}
+
+
+/* ================================================================================
+        Button flotante para volver al top de la pagina
+/* ================================================================================ */
+/* Tablets and desktop (min. 992px) */
+/* button */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    left: calc( var(--padding-container-page) - 50px );
+
+    width: 40px;
+    height: 40px;
+    color: var(--bg-primary);
+    background-color: var(--text-primary);
+    pointer-events: none;
+    border: none;
+    border-radius: 50%;
+
+    opacity: 0;
+    transform: translateY(100px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: var(--z-fixed);
+}
+
+.back-to-top:hover {
+    cursor: pointer;
+    pointer-events: all;
+}
+
+/* Scroll progress (border fill) */
+.back-to-top .progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* Start from the top */
+}
+
+.back-to-top .progress circle {
+    fill: none;
+    stroke: var(--bg-primary); /* Border color */
+    stroke-width: 3px;
+    stroke-dasharray: 126;    /* Circumference of the circle (2 * π * r) */
+    stroke-dashoffset: 126;     /* Starts completely hidden */
+    transition: stroke-dashoffset 0.2s ease-in-out;
+}
+
+/* Mostrar el botón cuando se hace scroll */
+.back-to-top.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+
+
+
+/* ================================================================================
+        Button flotante para volver al top de la pagina
+/* ================================================================================ */
+
+/* Animaciones */
+.floating-button[data-state="active"] [data-icon] {
+    animation: rotateToClose 0.4s ease-out forwards;
+}
+
+.floating-button[data-state="inactive"] [data-icon] {
+    animation: rotateToWsp 0.4s ease-out forwards;
+}
+
+@keyframes rotateToClose {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% { 
+        transform: rotate(180deg); 
+        opacity: 0;
+    }
+    51% {
+        opacity: 0;
+        transform: rotate(-180deg);
+    }
+    100% { 
+        transform: rotate(0deg); 
+        opacity: 1;
+    }
+}
+
+@keyframes rotateToWsp {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% { 
+        transform: rotate(180deg); 
+        opacity: 0;
+    }
+    51% {
+        opacity: 0;
+        transform: rotate(-180deg);
+    }
+    100% { 
+        transform: rotate(0deg); 
+        opacity: 1;
+    }
+}
+
+/* Botón flotante */
+.floating-button {
+    position: fixed;
+    bottom: 0;
+    right: calc(var(--padding-container-page));
+    width: 100px;
+    height: 60px;
+    background-color: #2db742;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 6px 8px 2px rgba(0, 0, 0, 0.14);
+    color: var(--white-color);
+    z-index: var(--z-fixed);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.floating-button:hover {
+    background-color: #25a635;
+}
+
+.floating-button i {
+    opacity: 1;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* Menú flotante */
+.floating-menu {
+    position: fixed;
+    bottom: 60px;
+    right: calc(var(--padding-container-page));
+    background: white;
+    border-radius: 12px 12px 0 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    z-index: var(--z-fixed);
+}
+
+.floating-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.whatsapp-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2db742;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.whatsapp-button:hover {
+    background-color: #f0f0f0;
 }

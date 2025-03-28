@@ -1,12 +1,35 @@
 
 
+/// <reference path="../../../../home/static/home/js/base.js" />
+
+
 // ================================================================================
 //                        Profile home Handle ajax 
 // ================================================================================
+/// <reference path="../../../../products/static/products/js/products_utils.js" />
+/// <reference path="../../../../products/static/products/js/products_carousel.js" />
+function initSwiperFavorites () { 
+    // el nombre de la clase  es el que define a que swiper corresponde esta config
+    const swiper = new Swiper(`#swiper-fav`, {
+        loop: true, // Evita acumulación de slides mal posicionados
+        autoplay: {
+            delay: 6000,
+            disableOnInteraction: false,
+        },
+        slidesPerView: "auto", // Se ajusta con el CSS
+        centeredSlides: false, // Evita que los slides se centren incorrectamente
+        grabCursor: true,
+        navigation: {
+            nextEl: `#next-fav`,
+            prevEl: `#prev-fav`,
+        },
+    });
+}
+
 function onloadEventsTabs(dataContent) {
     if (dataContent === "Second Tab") {
-        assignButtonsAddCartFavs();
-        initSwiper();
+        assignProductEvents();
+        initSwiperFavorites();
     }
 }
 
@@ -35,27 +58,16 @@ document.addEventListener('DOMContentLoaded', function () {
             contentDiv.style.display = 'block';
 
             try {
-                // Realiza la solicitud AJAX para cargar el contenido
                 const response = await fetch(`/profile/${dataContent.toLowerCase().replace(' ', '-')}/`);
                 const data = await response.json();
-                
-                // cargar los scripts propios del html que vienen desde la respuesta json
-                if (data.scripts) {
-                    data.scripts.forEach(scriptSrc => {
-                        const script = document.createElement('script');
-                        script.src = scriptSrc;
-                        script.defer = true;
-                        script.onload = () => onloadEventsTabs(dataContent);
-                        document.body.appendChild(script);
-                    });
-                }
-
-                // Inserta el contenido HTML en el div
-                contentDiv.innerHTML = data.html;
-
+            
+                // Limpia el contenedor y añade un wrapper interno
+                contentDiv.innerHTML = data.html; // Limpiar
+            
+                onloadEventsTabs(dataContent);
             } catch (error) {
                 console.error('Error loading content:', error);
-                contentDiv.innerHTML = `<p>Error loading content.</p>`;
+                contentDiv.innerHTML = '<p>Error loading content.</p>';
             }
         });
     });
@@ -66,5 +78,3 @@ document.addEventListener('DOMContentLoaded', function () {
         firstTab.click();
     }
 });
-
-

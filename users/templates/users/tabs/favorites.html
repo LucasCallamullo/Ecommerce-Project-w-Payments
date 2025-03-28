@@ -1,0 +1,130 @@
+
+
+{% load static %}
+{% load custom_filters %}
+
+<!-- title of each swiper container -->
+<div class="carousel-title">
+    <div class="c-title">
+        <span> Favoritos </span>
+    </div>
+
+    <div class="d-flex gap-1"> 
+        <!-- Buttons will be handled with Swiper -->
+        <div class="swiper-button-prev-product" id="prev-fav">
+            <i class="ri-arrow-left-s-line"></i>
+        </div>
+        <div class="swiper-button-next-product" id="next-fav">
+            <i class="ri-arrow-right-s-line"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Swiper Carousel Container -->
+<div class="swiper-products" id="swiper-fav">
+    <div class="swiper-wrapper">
+        {% for product in products %}
+        
+        <figure class="swiper-slide carousel-product-item" data-index="0">
+            
+            <!-- Contenedor de productos -->
+            <div class="image-container" data-url="{% url 'product_detail' product.id product.slug %}">
+                <!-- Imagen del Producto -->
+                <img src="{{ product.main_image }}" alt="{{ product.name }}">
+
+                <!-- Botón de la esquina -->
+                <button class="btn corner-box" data-modal-id="modal-{{ product.id }}">
+                    <i class="ri-focus-mode icon-medium"></i>
+                </button>
+            </div>
+
+            <figcaption class="carousel-product-data">
+                <a href="{% url 'product_detail' product.id product.slug %}">
+                    <b>{{ product.name }}</b>
+                </a>
+
+                <div class="container-space-between">
+                    <div class="d-flex gap-1"> 
+                        <b>{{ product.stars|intdot }}</b>
+                        <i class="ri-star-fill"></i>
+                    </div>
+
+                    <!-- Botón de la corazon -->
+                    {% if product.id in favorite_product_ids %}
+                        <button class="btn btn-like liked" data-index="{{product.id}}">
+                            <i class="ri-heart-fill icon-medium"></i>
+                        </button>
+                    {% else %}
+                        <button class="btn btn-like" data-index="{{product.id}}">
+                            <i class="ri-heart-line icon-medium"></i>
+                        </button>
+                    {% endif %}
+                </div>
+
+                <!-- Categoría y Subcategory -->
+                <div class="d-flex">
+                    {% if not product.available or product.stock == 0 %}
+                        <b class="bold-red">No disponible</b>
+                    {% elif product.stock <= 3 %}
+                        <b class="bold-orange">Stock Bajo</b>
+                    {% else %}
+                        <b class="bold-green">Disponible</b>
+                    {% endif %}
+                </div>
+                
+                <div class="d-flex-col gap-1 w-100">
+                    {% if product.discount %}
+                        <!-- descuento -->
+                        <div class="container-space-between w-100">
+                            <b>Descuento:</b>
+                            <b class="bold-red">% {{product.discount}} OFF</b>
+                        </div>
+        
+                        <!-- Precios: Normal y Oferta -->
+                        <div class="container-space-between w-100">
+                            <b class="price-line-through">Normal:</b>
+                            <b class="price-line-through">$ {{product.price|intdot}}</b>
+                        </div>
+
+                        <!-- Precio con descuento (calculado por JavaScript) -->
+                        <div class="container-space-between w-100">
+                            <b class="bold-red">Oferta:</b>
+                            <b class="bold-red">$ {{product.calc_discount|intdot}}</b>
+                        </div>
+                    {% else %}
+                        <b> $ {{ product.price|intdot }} </b>
+                    {% endif %}
+                </div>
+            </figcaption>
+
+            <!-- Botón de agregar al carrito -->
+            <form class="carousel-extender-btn" method="POST" data-index="{{ product.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="" value="">
+
+                <button class="btn btn-main btn-carousel-add-cart gap-1" type="submit">
+                    <b>Agregar</b> 
+                    <i class="ri-shopping-basket-2-fill icon-small"></i>
+                </button>
+            </form>
+        </figure>
+
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- Modales y Overlay (fuera del Swiper) -->
+{% for product in products %}
+    <div class="carousel-modal" id="modal-{{ product.id }}" data-state="null">
+        <button class="btn close-modal">
+            <i class="ri-close-line icon-medium"></i>
+        </button>
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <p>Precio: ${{ product.price }}</p>
+    </div>
+{% endfor %}
+    
+<div class="overlay" id="overlay-carousel"></div>
+

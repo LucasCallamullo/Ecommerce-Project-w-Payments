@@ -1,53 +1,55 @@
 
 
+
 {% if flag %}
     <h3>Datos de Retiro</h3>
 
-    <div class="row"> 
-        <div class="col">
-            <label for="name_retiro">Nombre quien retira</label>
+    <div class="cont-form-grid mt-2">
+        <div class="d-flex-col gap-1">
+            <label for="name_retiro"><b>Nombre quien retira</b></label>
             <input type="text" name="name_retiro">
         </div>
 
-        <div class="col">
-            <label for="dni_retiro">DNI quien retira</label>
+        <div class="d-flex-col gap-1">
+            <label for="dni_retiro"><b>DNI quien retira</b></label>
             <input type="text" name="dni_retiro">
         </div>
     </div>
-  
+
 {% else %}
-    
     <h3>Datos de Envío</h3>
-    <div class="row"> 
-        <div class="col">
-            <label for="province">Provincia</label>
-            <select name="province" id="id_province" class="form-control">
+
+    <div class="cont-form-grid mt-2">
+        <div class="d-flex-col gap-1">
+            <label for="province"><b>Provincia</b></label>
+            <select name="province" id="id_province">
                 {% for key, value in provinces %}
                     <option value="{{ key }}">{{ value }}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <div class="col">
-            <label for="city">Ciudad</label>
+        <div class="d-flex-col gap-1">
+            <label for="city"><b>Ciudad</b></label>
             <input type="text" name="city">
         </div>
     </div>
 
-    <div class="row"> 
-        <div class="col">
-            <label for="address">Domicilio Completo</label>
+    <div class="cont-form-grid mt-2">
+        <div class="d-flex-col gap-1">
+            <label for="address"><b>Domicilio Completo</b></label>
             <input type="text" name="address">
         </div>
-        <div class="col">
-            <label for="postal_code">Código Postal</label>
+        <div class="d-flex-col gap-1">
+            <label for="postal_code"><b>Código Postal</b></label>
             <input type="text" name="postal_code">
         </div>
     </div>
 
-    <div class="row"> 
-        <label for="detail">Detalles del Envío</label>
-        <input type="text" name="detail">
+    <div class="cont-form-grid mt-2">
+        <div class="d-flex-col gap-1">
+            <label for="detail"><b>Detalles del Envío</b></label>
+            <input type="text" name="detail">
+        </div>
     </div>
-
 {% endif %}

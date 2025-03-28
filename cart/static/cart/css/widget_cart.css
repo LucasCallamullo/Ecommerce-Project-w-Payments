@@ -93,8 +93,7 @@
     max-width: 35%;
     height: 100%;
     max-height: 100%;
-    
-    background-color: var(--white-color);
+    background-color: var(--bg-images);
 }
 
 .cart-img-ref img {
@@ -186,14 +185,6 @@
     .cart-cont-overlay {
         width: 50%;
     }
-    /*
-    .cart-content {
-        height: 82%;
-    }
-
-    .cart-footer {
-        height: 16%;
-    } */
 }
 
 /* Styles for large desktops (mín. 993px to max. infinite) */
@@ -208,7 +199,7 @@
     }
 
     .cart-item-btn-remove {
-        right: 10px;    /* mobile */
+        right: -3px;    /* mobile */
     }
 }
 

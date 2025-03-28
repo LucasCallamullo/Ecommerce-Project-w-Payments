@@ -9,10 +9,6 @@ from cart.utils import get_render_htmls
 from products.models import Product
 
 
-def some_url(request):
-    return JsonResponse({"data": "hola mundoo"})
-
-
 def add_product(request):
     if request.method == 'POST':
         # recupera valores de la solicitud fetch en widget_carrito.js
@@ -140,4 +136,15 @@ def remove_product(request):
         
 
 def cart_page_detail(request):
-    return render(request, "cart/cart_page_detail.html")
+    
+    user = request.user
+    favorite_product_ids = None
+    if user.is_authenticated:
+        # IDs de productos favoritos
+        favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
+    
+    context = {
+        'favorite_product_ids': favorite_product_ids
+    }
+    
+    return render(request, "cart/cart_page_detail.html", context)

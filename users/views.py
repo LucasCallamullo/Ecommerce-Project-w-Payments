@@ -54,6 +54,15 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 
 def profile_tab(request, tab_name):
+    """ 
+    cada condicion devuelve de forma asincrona mediante un fetch el html renderizado ademas de un javascript
+    asociado para poder utilizar en la pagina
+    """
+    
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({'error': 'Tab not found'}, status=404)
+    
     
     if tab_name == 'first-tab':
         user = request.user
@@ -66,26 +75,27 @@ def profile_tab(request, tab_name):
         
         context = { 'orders': orders }
         html_content = render_to_string('users/tabs/pedidos.html', context)
-        scripts = None
-        # scripts = ['/static/js/pedidos.js']  # Ruta al script
-        return JsonResponse({'html': html_content, 'scripts': scripts})
+        return JsonResponse({'html': html_content})
+        
 
     if tab_name == 'second-tab':
-        user = request.user
-        favorites = FavoriteProduct.objects.filter(user=user).select_related("product")
-        products = [fav.product for fav in favorites]
-        context = { 'products': products }
-        
-        html_content = render_to_string('users/tabs/favoritos.html', context)
-        scripts = ['/static/users/js/favoritos.js']
-        return JsonResponse({'html': html_content, 'scripts': scripts})
+        favorites = user.favorites.select_related('product').all()
+        context = {
+            'products': [f.product for f in favorites],
+            'favorite_product_ids': {f.product_id for f in favorites}
+        }
+        return JsonResponse({
+            'html': render_to_string('users/tabs/favorites.html', context)
+        })
+
 
     if tab_name == 'third-tab':
         
         context = {"none": None}
+        
         html_content = render_to_string('users/tabs/compras.html', context)
-        scripts = ['/static/js/compras.js']
-        return JsonResponse({'html': html_content, 'scripts': scripts})
+        
+        return JsonResponse({'html': html_content})
 
 
     return JsonResponse({'error': 'Tab not found'}, status=404)

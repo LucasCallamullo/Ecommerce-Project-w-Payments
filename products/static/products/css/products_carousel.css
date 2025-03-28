@@ -1,5 +1,12 @@
 
 
+.swiper-slide {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+
 /* =========================================================================================
             CAROUSEL PRODUCTS CONTAINERS
 /* ========================================================================================= */
@@ -96,74 +103,66 @@
 */
 .swiper-products {
     width: 100%;
+    max-width: 100%;
     overflow: hidden; /* Evita que el contenido desborde */
 }
 
 .swiper-products .swiper-wrapper {
     display: flex;
     width: 100%;
-    margin-left: 0.6%;    /* para agregar un efecto de adentro del contenedor */
-    height: 500px;
-    transition: transform 0.5s ease-in-out; /* Swiper gestiona esto automáticamente */
+    max-width: 100%;
+    margin-left: 0.6%;
+
+    transition: transform 0.2s ease-in-out;  /*  Swiper gestiona esto automáticamente */
+    height: 440px;
 }
 
 .carousel-product-item {
-    width: 48.5%;    /* edit mobile */
-    /* Adjusting the gap between slides should be done this way
-    to avoid continuous overflow if done with a gap */
-    margin-right: 1.5%;    /* edit mobile */
-
-    
-    flex-shrink: 0; /* Evita que las diapositivas se reduzcan */
-
-    min-height: 380px;
-    max-height: 380px;
+    cursor: grab;
     background: var(--bg-primary);
+    /* border: 1px solid #000;
+    border-radius: 2px; */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* border: 1px solid #000; */
-    
+
     user-select: none; 
     -webkit-user-select: none; /* Safari */ 
     -moz-user-select: none; /* Firefox */ 
     -ms-user-select: none; /* Internet Explorer/Edge */ 
-    cursor: grab;
+    
+    width: 48.5%;     /*  edit mobile */
+    /* Adjusting the gap between slides should be done this way
+    to avoid continuous overflow if done with a gap */
+    margin-right: 1.5% !important;    /*  edit mobile */
+
+    font-size: var(--font-small-plus);
+    flex-shrink: 0;  /* Evita que las diapositivas se reduzcan */
+    height: 100%;
+    max-height: 400px;
+
     position: relative;
-    overflow: visible; /* Permite que el contenido se muestre fuera del contenedor */
-    transition: height 0.3s ease-in-out; /* Suaviza la animación de expansión */
+    overflow: hidden;
 }
 
 /* Contenedor extensor para button */
 .carousel-extender-btn {
-    position: absolute;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    position: absolute;
 
-    width: 100%;
+    bottom: 0;
     left: 0;
-    bottom: -50px;
-    z-index: var(--z-fixed);
-
+    width: 100%;
     background-color: var(--bg-primary);
-    /* border: 1px solid #000; */
-
-    opacity: 1;    /* edit mobile */
-    pointer-events: auto;    /* edit mobile */
-    height: 50px; /* edit mobile */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);    /* edit mobile */
+    height: 50px;
 }
 
-/* Botón dentro del extensor */
-.carousel-btn-carrito {
-    background-color: var(--main-color);
-    color: var(--white-color);
-    font-size: var(--font-normal);
-    width: 70%;
-    padding: 7px 10px;
 
-    opacity: 1;    /* edit mobile */
-    pointer-events: auto;    /* edit mobile */
-    transform: scale(1);    /* edit mobile */
+/* Botón dentro del extensor */
+.btn-carousel-add-cart {
+    height: 32px;
+    width: 70%;
 }
 
 
@@ -175,42 +174,28 @@
     }
 }
 
+
 /* Styles for large desktops (mín. 993px to max. infinite) */
 @media (min-width: 993px) {
     .carousel-product-item {
         width: 23.5%;    /* edit mobile */
         margin-right: 1.5%;  /* edit mobile */
+        max-height: 380px;
+        transition: max-height 0.3s ease-in-out;
     }
 
-    .carousel-extender-btn { 
-        opacity: 0;    /* edit mobile */
-        pointer-events: none;    /* edit mobile */
-        height: 0; /* edit mobile */
-        box-shadow: none;    /* edit mobile */
-        transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, bottom 0.3s ease-in-out;
+    .carousel-product-item:hover {
+        max-height: 430px;
     }
 
-    .carousel-btn-carrito {
-        opacity: 0;
-        pointer-events: none;    /* edit mobile */
+    .carousel-extender-btn {
+        align-items: flex-start;
+        transform: translateY(100%); /* Oculta inicialmente */
+        transition: transform 0.3s ease;
     }
 
-    @media (min-width: 992px) {
-        /* Mostrar el extensor y el botón al pasar el mouse */
-        .carousel-product-item:hover .carousel-extender-btn,
-        .carousel-extender-btn:hover {
-            opacity: 1;
-            pointer-events: auto;
-            bottom: -50px; /* Mantén la posición de inicio */
-            height: 50px; /* Extiende la altura completa */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    
-        .carousel-product-item:hover .carousel-btn-carrito {
-            opacity: 1;
-            pointer-events: auto;
-            transform: scale(1);
-        }
+    .carousel-product-item:hover .carousel-extender-btn {
+        transform: translateY(0);
     }
 }
 
@@ -224,55 +209,42 @@
 .image-container {
     width: 100%;
     height: 160px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    background-color: var(--white-color);
 }
 
-.image-container img {
-    width: 100%;
-    height: 100%;
-    /* object-fit: cover; */
-    object-fit: scale-down;
+/* Estilos para el figcaption */
+.carousel-product-data {
+    /* nos quedan 380px - 160px(img height) -10px padding = 210px */
+    height: 320px;
+    max-height: 320px;
+
+    padding: 8px 10px 2px 10px; /*  padding: top right bottom left; */
+    background: var(--bg-primary);
+
+    display: grid;
+    grid-template-rows: 50px 32px 25px 85px; /*  edit mobile */
 }
 
-.corner-box {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    z-index: 1;
+
+/* Estilos para el precio normal */
+.price-line-through {
+    color: var(--text-secondary);
+    text-decoration: line-through; /* Tachado para mostrar que es el precio normal */
 }
 
-.corner-box:active {
-    color: var(--white-color);
-    background-color: var(--black-color);
-}
-
-/* Desktop - Se activa el hover */
+/* Tablets (máx. 992px) */
 @media (min-width: 992px) {
-    .image-container img {
-        transition: transform 3.0s ease;
-    }
-
-    .image-container img:hover {
-        transform: scale(1.7);
-    }
-
-    .corner-box:hover {
-        color: var(--white-color);
-        background-color: var(--black-color);
+    /* Estilos para el figcaption */
+    .carousel-product-data {
+        /* nos quedan 220px de altura -50px altura from extender button   170 */
+        grid-template-rows: 60px 32px 32px 85px; /* edit mobile */
     }
 }
+
 
 
 /* Estilos generales para el modal */
 .carousel-modal {
     display: none;
-
     position: fixed; 
     top: 50%;
     left: 50%;
@@ -294,101 +266,4 @@
 .carousel-modal[data-state="open"] {
     display: block;
     pointer-events: auto; /* Permite interacciones cuando el modal está abierto */
-}
-
-/* Estilos para el figcaption */
-.carousel-product-data {
-    padding: 3% 7% 0% 7%; /* padding: top right bottom left; */
-    background: var(--bg-primary);
-    font-size: var(--font-small-plus);
-
-    /* nos quedan 220px de altura -50px altura from extender button   170 */
-    display: grid;
-    grid-template-rows: 70px 35px 25px 30px 35px; /* edit mobile */
-}
-
-.carousel-product-data a {
-    color: var(--text-primary);
-    font-weight: var(--font-plus-weight);
-    text-transform: uppercase;
-}
-
-/* Estilos para el precio normal */
-.price-line-through {
-    font-size: var(--font-small-plus);
-    color: var(--text-secondary);
-    text-decoration: line-through; /* Tachado para mostrar que es el precio normal */
-}
-
-/* BTN LIKES and POP EFFECTS */
-.btn-like {
-    background: none;
-    border: none;
-    padding: 0.5rem;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-/* Ícono inactivo */
-.btn-like i {
-    color: var(--text-secondary);
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-/* Hover: Cambia el color y escala ligeramente */
-.btn-like:hover i {
-    color: var(--red-color);
-    transform: scale(1.1);
-}
-
-/* Activo (fa-solid, "me gusta") */
-.btn-like.liked i {
-    color: var(--red-color);
-    transform: scale(1.2);
-}
-
-/* Animación al hacer clic */
-.btn-like:active i {
-    transform: scale(0.9);
-}
-
-/* Clase para el ícono cuando está activo */
-.btn-like.liked i {
-    animation: like-pop 0.3s ease;
-}
-
-/* Animación de "pop" al dar like */
-@keyframes like-pop {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.3);
-    }
-    100% {
-        transform: scale(1.2);
-    }
-}
-
-.heart-button {
-    color: red;
-    width: 35px;
-    height: 35px;
-    transition: transform ease 0.5s;
-}
-
-.heart-button:active {
-    transform: scale(1.3);
-}
-
-/* Tablets (máx. 992px) */
-@media (min-width: 992px) {
-    /* Estilos para el figcaption */
-    .carousel-product-data {
-        /* nos quedan 220px de altura -50px altura from extender button   170 */
-        grid-template-rows: 55px 35px 25px 30px 35px; /* edit mobile */
-    }
-
-    .heart-button:hover {
-        transform: scale(1.1);
-    }
 }

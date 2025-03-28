@@ -242,6 +242,13 @@ function setupClickOutsideClose(triggerElement, targetElement, onToggle = () => 
  * @param {number} [timeout=1000] - The duration (in ms) before the alert is automatically removed.
  */
 function openAlert(message, color = 'green', timeout = 1000) {
+
+    const alertsContainer = document.getElementById('alerts-container');
+    // Open the door! open the container
+    if (alertsContainer.getAttribute('data-state') === 'closed') {
+        alertsContainer.setAttribute('data-state', 'open');
+    }
+
     // Determine the icon class based on the color
     const iconClass = color === 'red' ? 'ri-close-circle-line' : 'ri-checkbox-circle-line';
 
@@ -274,17 +281,30 @@ function openAlert(message, color = 'green', timeout = 1000) {
     alertBox.style.color = color;
     alertBox.style.backgroundColor = color;
 
-    const alertsContainer = document.getElementById('alerts-container');
     alertsContainer.appendChild(alertBox);
     alertBox.classList.add('show');
 
-    // Automatically remove the alert after the specified timeout
-    setTimeout(() => alertBox.remove(), timeout);
+    // Function to check if the alerts container is empty and close it if needed
+    const checkAndCloseContainer = () => {
+        // If there are no more alert elements inside the container
+        if (alertsContainer.children.length === 0) {
+            alertsContainer.setAttribute('data-state', 'closed');
+        }
+    };
 
-    // Add event listener to close buttons inside the alert
+    // Remove the alert after timeout period and check container state
+    setTimeout(() => {
+        alertBox.remove();
+        checkAndCloseContainer();
+    }, timeout);
+
+    // Add click event listeners to all close buttons in this alert
     const closeButtons = alertBox.querySelectorAll('button');
     closeButtons.forEach(button => {
-        button.addEventListener('click', () => alertBox.remove());
+        button.addEventListener('click', () => {
+            alertBox.remove();
+            checkAndCloseContainer();
+        });
     });
 }
 
@@ -293,44 +313,78 @@ function openAlert(message, color = 'green', timeout = 1000) {
 //                   Dark Mode Event Listener
 // ========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Get all theme toggle buttons and icons
     const themeToggleButtons = document.querySelectorAll('.theme-toggle');
     const themeIcons = document.querySelectorAll('.theme-icon');
-    
+    const htmlElement = document.documentElement;
+
     /**
-     * Updates the theme icons based on the current theme state.
-     * @param {boolean} isDarkMode - Indicates whether dark mode is enabled.
+     * Sets the theme and updates the UI
+     * @param {string} theme - 'auto', 'light', or 'dark'
      */
-    function updateThemeIcons(isDarkMode) {
+    function setTheme(theme) {
+        // Remove all theme classes first
+        htmlElement.classList.remove('light-mode', 'dark-mode');
+        
+        if (theme === 'auto') {
+            // Rely on system preference (no class added)
+            localStorage.removeItem('themePreference');
+        } else {
+            // Apply manual theme class
+            htmlElement.classList.add(`${theme}-mode`);
+            localStorage.setItem('themePreference', theme);
+        }
+        
+        // Update the icons to reflect current theme
+        updateThemeIcons(theme);
+    }
+
+    /**
+     * Updates the theme icons based on current theme
+     * @param {string} theme - Current theme mode
+     */
+    function updateThemeIcons(theme) {
+        // Determine if we're in dark mode (either manually or via system)
+        const isDark = theme === 'dark' || 
+                      (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        
+        // Toggle between moon (light) and contrast (dark) icons
         themeIcons.forEach(icon => {
-            // Toggle between moon icon (light mode) and contrast icon (dark mode)
-            icon.classList.toggle('ri-moon-line', !isDarkMode);
-            icon.classList.toggle('ri-contrast-2-line', isDarkMode);
+            icon.classList.toggle('ri-moon-line', !isDark);
+            icon.classList.toggle('ri-contrast-2-line', isDark);
         });
     }
-    
+
+    // Initialize theme from localStorage or use 'auto'
+    const savedTheme = localStorage.getItem('themePreference') || 'auto';
+    setTheme(savedTheme);
+
     /**
-     * Toggles dark mode on the page and updates the icons accordingly.
-     * It also stores the theme state in localStorage to persist the theme choice.
+     * Cycles through theme options: auto → light → dark → auto...
      */
-    function toggleTheme() {
-        const isDarkMode = document.body.classList.toggle('dark-mode');
+    function cycleTheme() {
+        const currentPreference = localStorage.getItem('themePreference') || 'auto';
     
-        updateThemeIcons(isDarkMode);
-        // Store the new theme state in localStorage only if it has changed
-        if (localStorage.getItem('darkMode') !== String(isDarkMode)) {
-            localStorage.setItem('darkMode', isDarkMode);
-        }
+        // Orden de ciclo: auto -> light -> dark -> light
+        const nextTheme = currentPreference === 'auto' ? 'light'
+                        : currentPreference === 'light' ? 'dark'
+                        : 'light';
+    
+        setTheme(nextTheme);
     }
     
-    // Attach event listeners to all theme toggle buttons
+    // Add click handlers to all toggle buttons
     themeToggleButtons.forEach(button => {
-        button.addEventListener('click', toggleTheme);
+        button.addEventListener('click', cycleTheme);
     });
 
-    // Check if dark mode was previously set in localStorage and apply it on page load
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    document.body.classList.toggle('dark-mode', isDarkMode);
-    updateThemeIcons(isDarkMode);
+    // Listen for system theme changes (optional)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        // Only update if we're in auto mode
+        if (!localStorage.getItem('themePreference')) {
+            updateThemeIcons('auto');
+        }
+    });
 });
 
 
@@ -351,8 +405,6 @@ function backToTheTop() {
  * Muestra u oculta el botón "Back to Top" y agrega/remueve el evento de clic.
  */
 function toggleBackToTopButton(show, backToTopBtn) {
-    
-
     if (show) {
         backToTopBtn.classList.add("show");
         if (!isBackToTopEventAdded) {
@@ -366,6 +418,8 @@ function toggleBackToTopButton(show, backToTopBtn) {
             isBackToTopEventAdded = false;
         }
     }
+
+    backToTopBtn.style.pointerEvents = show ? "all" : "none";
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -459,6 +513,86 @@ function formatNumberWithCommas(number) {
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     // Join the integer part with the decimal part, if it exists
     return parts.join(".");
+}
+
+
+
+
+// ========================================================================
+//                  Whatsap button
+// ========================================================================
+// Wait until the DOM is fully loaded before executing the script
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the DOM elements
+    const floatingButton = document.getElementById('floatingButton');
+    const floatingMenu = document.getElementById('floatingMenu');
+    const icon = floatingButton.querySelector('[data-icon]');
+
+    // Initial configuration
+    floatingButton.dataset.state = 'inactive'; // Set initial state
+    const iconActive = floatingButton.dataset.iconActive; // Get active icon class from data attribute
+    const iconInactive = floatingButton.dataset.iconInactive; // Get inactive icon class from data attribute
+
+    /**
+     * Toggles the button state between active and inactive
+     * - Changes the data-state attribute
+     * - Animates the icon change
+     * - Shows/hides the floating menu
+     */
+    function toggleButtonState() {
+        // Check current state
+        const isActive = floatingButton.dataset.state === 'active';
+        
+        // Update state (toggle between active/inactive)
+        floatingButton.dataset.state = isActive ? 'inactive' : 'active';
+        
+        // Change icon halfway through the animation (after 200ms)
+        setTimeout(() => {
+            // Switch between active/inactive icon classes
+            icon.className = isActive ? iconActive : iconInactive;
+            icon.classList.add('icon-xl');
+        }, 200);
+        
+        // Toggle menu visibility (show when becoming active, hide when becoming inactive)
+        floatingMenu.classList.toggle('show', !isActive);
+    }
+
+    // Event listeners
+
+    // Handle click on the floating button
+    floatingButton.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent event from bubbling up
+        toggleButtonState(); // Toggle the button state
+    });
+
+    // Handle clicks anywhere in the document
+    document.addEventListener('click', function() {
+        // If menu is currently shown, close it
+        if (floatingMenu.classList.contains('show')) {
+            toggleButtonState();
+        }
+    });
+});
+
+
+/**
+ * Smoothly scrolls to a section with temporary visual highlight
+ * @param {HTMLElement} section - DOM element to scroll to
+ * @param {string} [color='red'] - Border highlight color (default: red)
+ * @returns {void}
+ */
+function scrollToSection(section, color = 'red') {
+    if (!section) return; // Basic null check
+    
+    // Scroll with offset managed via CSS (scroll-margin-top)
+    section.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+    
+    // Temporary highlight effect (2 seconds)
+    section.style.boxShadow = `0 0 0 2px ${color}`;
+    setTimeout(() => section.style.boxShadow = '', 2000);
 }
 
 

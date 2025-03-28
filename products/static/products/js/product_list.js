@@ -1,7 +1,7 @@
 
 
-
-
+/// <reference path="../../../../home/static/home/js/base.js" />
+/// <reference path="../../../../products/static/products/js/products_utils.js" />
 
 // ==========================================================================
 //         AJAX FOR CARDS PRESENTED IN THE product_list
@@ -67,10 +67,7 @@ async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) 
         carritoContent.innerHTML = data.html_cards;
 
         // Reassign form events
-        imagesContainersEvents();
-        openModals();
-        formAddProductList();
-        buttonLikeEvents();
+        assignProductEvents();
             
     } catch (error) {
         console.error('Error:', error);
@@ -78,117 +75,30 @@ async function updateProductList(inputNow, topQuery, categoryId, subCategoryId) 
 }
 
 
-// =========================================================================
-//                        LIKES EFFECTS
-// =========================================================================
-function buttonLikeEvents() {
-    // Selecciona todos los formularios de los botones "me gusta"
+// ==========================================================================
+//        function to asign events
+// ==========================================================================
+function assignProductEvents() {
     document.querySelectorAll(".btn-like").forEach(button => {
-        button.addEventListener('click', function() {
-
-            if (AUTH_STATUS) {
-                const productId = button.getAttribute("data-index");
-                formButtonLikedProducts(button, productId);
-            } else {
-                openAlert('Debe logearse para guardar en Favoritos.', 'red', 2500);
-            }
-        });
+        btnLikeProductEvent(button);
     });
-};
 
-
-async function formButtonLikedProducts(button, productId) {
-    try {
-        // Realiza la solicitud POST usando Fetch
-        const response = await fetch('/favorites-products/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({
-                product_id: productId,
-            })
-        });
-
-        const data = await response.json();  // Espera la respuesta JSON del servidor
-
-        if (!response.ok) {
-            openAlert(data.detail, 'red', 1500);
-            return;
-        }
-
-        // Actualiza el botón de acuerdo con el estado
-        const isLiked = button.classList.contains("liked");
-        const icon = button.querySelector('i');
-        if (isLiked) {
-            button.classList.remove("liked");
-            openAlert('Producto eliminado como Favorito.', 'red', 1500)
-            icon.classList.replace("ri-heart-fill", "ri-heart-line");
-        } else {
-            button.classList.add("liked");
-            openAlert('Producto agregado como Favorito!', 'green', 1500)
-            icon.classList.replace("ri-heart-line", "ri-heart-fill");
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
-
-
-
-// Function to add products with buttons sent as forms using the CSRF token
-function formAddProductList() {
     document.querySelectorAll('.prod-extender-btn').forEach(form => {
-        form.addEventListener("submit", async function (event) {
-            event.preventDefault(); 
-            
-            // Correctly accessing the product_id
-            const productId = form.querySelector('input[name="product_id"]').value;
-            handleCartActions(productId, 'add', 1); 
-        });
+        formToAddProducts(form);
     });
-};
 
-
-function imagesContainersEvents() {
-    // Evento de clic en el contenedor de la imagen
     document.querySelectorAll('.image-container').forEach(image => {
-        image.addEventListener('click', function () {
-            const url = this.getAttribute('data-url');
-            window.location.href = url;
-        });
+        imageContainerClickEvent(image);
     });
-};
 
-
-function openModals() {
     const overlay = document.getElementById('overlay-products-modal');
-
-    // Configura los modales de productos
     document.querySelectorAll('.corner-box').forEach(button => {
-        const modalId = button.getAttribute('data-modal-id');
-        const modal = document.getElementById(modalId);
-
-        if (modal) {
-            setupToggleableElement({
-                toggleButton: button,
-                closeButton: modal.querySelector('.close-modal'),
-                element: modal,
-                overlay: overlay,
-                flagStop: true,
-            });
-        }
+        openProductModal(overlay, button)
     });
 };
-
 
 document.addEventListener('DOMContentLoaded', () => {
-    imagesContainersEvents();
-    openModals();
-    formAddProductList();
-    buttonLikeEvents();
+    assignProductEvents();
 });
 
 

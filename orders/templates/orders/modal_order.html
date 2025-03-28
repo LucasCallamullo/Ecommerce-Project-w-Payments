@@ -3,67 +3,88 @@
 {% load custom_filters %}
 
 
-
-
-
-
-<div class="mb-3 d-flex align-content-center align-items-center justify-content-between">
-    <h2 class="ms-2"> Tu Pedido </h2>
-    <button class="btn-order-close" id="close-modal">
-        <i class="fa-solid fa-xmark"></i>
+<div class="container-space-between modal-header">
+    <h2> Tu Pedido </h2>
+    <button class="btn btn-close" id="close-modal">
+        <i class="ri-close-fill icon-medium"></i>
     </button>
 </div>
-  
-<div class="container-modal-limit-order">
+
+
+<div class="container-modal">
+
     <div class="cart-view-header">
-        <div class="cart-col image-col"> </div>
-        <div class="cart-col cart-view-product">Producto</div>
-        <div class="cart-col justify-content-end">Precio</div>
-        <div class="cart-col justify-content-end">Cantidad</div>
-        <div class="cart-col justify-content-end">Sub-Total</div>
+        <b></b>    <!-- Image -->
+        <strong>Producto</strong>
+        <b class="justify-end">Precio</b>
+        <b class="justify-end">Cantidad</b>
+        <b class="justify-end">Sub-Total</b>
     </div>
 
 
-    <div class="cart-view-content" id="cart-view-content">
-
-        {% for key, value in carrito.items %}                 
-            <div class="cart-row">
-                <!-- Imagen del producto -->
-                <div class="cart-col image-col">
-                    <img src="{{ value.image }}" class="img-sm" alt="{{ value.name }}">
-                </div>
-
-                <!-- Nombre del producto -->
-                <div class="cart-col">
-                    <div class="cart-view-product-name">{{ value.name }}</div>
-                </div>
-
-                <!-- Precio -->
-                <div class="cart-col justify-content-end">
-                    <span>${{ value.price|intdot }}</span>
-                </div>
-
-                <!-- Catnidad -->
-                <div class="cart-col justify-content-end">
-                    <span>{{ value.qty }}</span>
-                </div>
-
-                <!-- Subtotal -->
-                <div class="cart-col justify-content-end">
-                    ${{ value.price|multiply:value.qty }}
-                </div>
+    {% for key, value in carrito.items %}                 
+        <div class="cart-row {% if forloop.last %} not-border-bottom {% endif %}">
+            <!-- Imagen del producto -->
+            <div class="image-container" data-url="{% url 'product_detail' value.id None %}">
+                <img src="{{ value.image }}" alt="{{ value.name }}">
+            </div>
+            
+            <!-- Nombre del producto -->
+            <div>
+                <strong class="text-mobile">{{ value.name }}</strong>
             </div>
 
-        {% endfor %}
+            <!-- Precio -->
+            <div>
+                <b class="text-mobile">$ {{ value.price|intdot }}.000</b>
+            </div>
 
+            <!-- Catnidad -->
+            <div class="d-flex gap-1">
+                <b><i class="ri-close-fill text-mobile"></i></b>
+                <b class="text-mobile">{{ value.qty }}</b>
+                <b><i class="ri-equal-fill text-mobile"></i></b>
+            </div>
+
+            <!-- Subtotal -->
+            <div>
+                <b class="text-mobile">$ {{ value.price|multiply:value.qty }}.000</b>  
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+
+<div class="modal-footer d-flex-col gap-1">
+    <div class="container-space-between d-flex-col gap-1">
+        <div class="d-flex gap-1"> 
+            <b class="d-lg-block text-mobile">Método de Pago:</b>
+            <b class="d-md-block text-mobile">Pago con:</b>
+            <b class="text-mobile payment-method">Ninguno</b>
+        </div>
+
+        <div class="d-flex gap-1"> 
+            <b class="d-lg-block text-mobile">Método de Envío:</b>
+            <b class="d-md-block text-mobile">Precio de Envío:</b>
+            <b class="d-lg-block text-mobile shipment-method">Ninguno</b>
+            <b class="d-lg-block"><i class="ri-equal-fill"></i></b>
+            <b class="text-mobile" id="shipment-price">Ninguno</b>
+        </div>
+    </div>
+    
+    <div class="container-space-between">
+        <button class="btn btn-main" id="btn-confirm-order-modal"> 
+            <b class="text-mobile">Confirmar Pedido </b>
+        </button>
+        
+        <div class="d-flex gap-2">
+            <b class="text-mobile">Total:</b>
+            <b class="text-mobile">$ {{total_price|intdot}}</b>
+        </div>
     </div>
 </div>
 
-<div class="d-flex align-content-center align-items-center justify-content-between mt-4">
-    <button class="btn-confirm-order" id="btn-confirm-order-modal"> 
-        Confirmar Pedido 
-    </button>
-    
-    <h3 class="gap-2"> Total: ${{ total_price|intdot }} </h3>
-</div>
+
+
 

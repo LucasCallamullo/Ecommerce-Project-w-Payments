@@ -7,14 +7,14 @@
     {% if user.is_authenticated %}
 
         <!-- Botón de Registro -->
-        <a href="{% url 'user_profile' %}" class="mb-2 gap-2 btn btn-widget-register">
+        <a href="{% url 'user_profile' %}" class="btn btn-main mb-2 gap-2 btn-widget-register">
             <i class="ri-shield-user-line icon-medium"></i>
             <span> {{ user.email }} </span>
         </a>
 
         <form class="widget-close-form" method="POST" action="{% url 'close_session' %}">
             {% csrf_token %}
-            <button type="submit" class="btn gap-2 btn-widget-register-alt">
+            <button type="submit" class="btn btn-alt gap-2 btn-widget-register-alt">
                 <i class="ri-door-open-fill icon-medium"></i>
                 <span>Cerrar Sesión</span>
             </button>
@@ -39,14 +39,14 @@
             </div>
         
             <!-- Botón de Login -->
-            <button type="submit" class="btn btn-widget-register">
+            <button type="submit" class="btn btn-main btn-widget-register">
                 Ingresar
             </button>
         </form>
             
         <!-- Botón de Registro -->
-        <a href="{% url 'register_user_page' %}" class="btn btn-widget-register-alt">
-            Register
+        <a href="{% url 'register_user_page' %}" class="btn btn-alt btn-widget-register-alt">
+            Registrarse
         </a>
 
     {% endif %}

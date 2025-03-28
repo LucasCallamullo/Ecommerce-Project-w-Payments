@@ -1,20 +1,26 @@
 
 
 // =====================================================================
-//                          Eventos del Payment
+//     Eventos del Payment y del envio
 // =====================================================================
-// Selecciona todos los botones de radio con el mismo nombre
+// Select all radio buttons with the name "payment"
 const paymentButtons = document.querySelectorAll('input[name="payment"]');
-const paymentSpan = document.getElementById('payment-method')
-let idPayment = 0
+const paymentSpans = document.querySelectorAll('.payment-method');
+let idPayment = 0; // Stores the selected payment method ID
 
-// Agrega un evento 'change' a cada botón de radio
+// Add 'change' event listener to each radio button
 paymentButtons.forEach(payment => {
     payment.addEventListener('change', (event) => {
         if (event.target.checked) {
-            // Aquí puedes manejar el evento cuando el botón de radio está seleccionado
-            paymentSpan.innerText = event.target.value
-            openAlert('Método de pago actualizado.', 'green')
+            // Update all payment method displays
+            paymentSpans.forEach(display => {
+                display.textContent = event.target.value;
+            });
+            
+            // Show success alert with selected payment method
+            openAlert(`Método de pago actualizado a ${event.target.value}.`, 'green', 2000);
+            
+            // Store the payment method ID from data attribute
             idPayment = event.target.getAttribute('data-index');
         }
     });
@@ -24,6 +30,54 @@ paymentButtons.forEach(payment => {
 // =====================================================================
 //                          Eventos de meotod de envio
 // =====================================================================
+// Retrieve shipping method elements
+const shippingButtons = document.querySelectorAll('input[name="envio"]');
+const shippinSpans = document.querySelectorAll('.shipment-method');
+const shippinPriceSpan = document.getElementById('shipment-price');
+let shippingMethodId = 0; // Stores selected shipping method ID
+
+// Add change event listeners to each shipping option
+shippingButtons.forEach(option => {
+    option.addEventListener('change', (event) => {
+        // Get selected method ID from data attribute
+        // ID 1 = "Store Pickup", ID 2+ = other methods
+        shippingMethodId = event.target.getAttribute('data-index');
+        
+        
+        // Update form based on selection
+        updateExtraForm(shippingMethodId);
+
+        let price = getShippinPrice(event.target.dataset.price);  // Using dataset instead of getAttribute
+        shippinPriceSpan.textContent = price === 'Gratis' ? price : `$ ${price}`;
+
+        // Update all payment method displays
+        shippinSpans.forEach(display => {
+            display.textContent = event.target.value;
+        });
+        
+        // Show success notification
+        openAlert(`Método de envío actualizado a ${event.target.value}.`, 'green', 2000);
+    });
+});
+
+function getShippinPrice(price) {
+    // Convert the string value to a number
+    const numericPrice = parseFloat(price);
+    
+    // Check if the price is 0
+    if (numericPrice === 0) {
+        return 'Gratis';
+    }
+    
+    // Check if it's a whole number to remove .00
+    if (Number.isInteger(numericPrice)) {
+        return formatNumberWithCommas(price);
+    }
+    
+    // Return the price with decimals if needed
+    return numericPrice.toString();
+}
+
 async function updateExtraForm(envioMethod) {
     try {
         const url = `/extra_form_ajax/?envioId=${encodeURIComponent(envioMethod)}`.replace(/\s+/g, '');
@@ -43,71 +97,71 @@ async function updateExtraForm(envioMethod) {
         const extraFormContent = document.getElementById('extra-form');
         extraFormContent.innerHTML = data.html;
 
+        scrollToSection(extraFormContent);
+
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
-// recuperar variables
-const enviosButtons = document.querySelectorAll('input[name="envio"]');
-const envioSpan = document.getElementById('envio-method')
-const extraForm = document.getElementById('extra_form');
-let envioMethodId = 0;
 
-enviosButtons.forEach(envio => {
-    envio.addEventListener('change', (event) => {
+// =============================================================================
+//            Eventos para abrir el modal
+// =============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    const btnOpenModal = document.getElementById('order-btn');
+    const btnCloseModal = document.getElementById('close-modal');
 
-        // 1 para "Retiro en local", 2 o + para el resto son los id
-        envioMethodId = event.target.getAttribute('data-index');
-        
-        // reemplazamos informacion 
-        updateExtraForm(envioMethodId)
-        envioSpan.innerText = event.target.value
-        openAlert('Método de envío actualizado.', 'green')
+    setupToggleableElement({
+        toggleButton: btnOpenModal,
+        closeButton: btnCloseModal,
+        element: document.getElementById('modal-content'),
+        overlay: document.getElementById('modal-overlay'),
     });
-});
 
+    const confirmButton = document.getElementById('confirm-order-btn');
+    const confirmButtonModal = document.getElementById('btn-confirm-order-modal');
+    let flagContinueModal = false;
 
-// =====================================================================
-//                 Eventos del Modal para confirmar
-// =====================================================================
-const confirmButton = document.getElementById('confirm-order-btn');
-const confirmButtonModal = document.getElementById('btn-confirm-order-modal');
+    confirmButton.addEventListener('click', () => {
+        flagContinueModal = flagsOrdersConfirm(); // Validate inputs
+        if (!flagContinueModal) return; // Stop if validation fails
+        
+        btnOpenModal.click(); // Open modal if validation passes
+    });
 
-// Función para abrir el modal
-confirmButton.addEventListener('click', () => {
-    flagsOrdersConfirm();
-});
+    confirmButtonModal.addEventListener('click', () => {
+        btnCloseModal.click(); // Close the modal first
+        
+        flagContinueModal = flagsOrdersConfirm(); // Re-validate
+        if (!flagContinueModal) return; // Stop if validation fails
+        
+        document.getElementById('submit-hidden').click(); // Submit form
+    });
 
-// Llamar a la función en el evento del botón de confirmación
-confirmButtonModal.addEventListener('click', () => {
-    flagsOrdersConfirm();
+    
+    const paymentSection = document.getElementById('payment-methods-section');
+    const shippingSection = document.getElementById('shipping-methods-section');
 
-    console.log(idPayment, envioMethodId);
+    function flagsOrdersConfirm() {
+        if (idPayment == 0) {
+            openAlert('No seleccionaste un Método de Pago.', 'red', 2000);
+            scrollToSection(paymentSection);
+            return false;
 
-    if (idPayment == 0 || envioMethodId == 0) {
-        openAlert('Te quedaste acá', 'red', 2000);
-        return;
+        } else if (shippingMethodId == 0) {
+            openAlert('No seleccionaste un Método de Envío.', 'red', 2000);
+            scrollToSection(shippingSection)
+            return false;
+        }
+        return true; // All validations passed
     }
 
-    const modalOverlay2 = document.getElementById('modal-overlay');
-    modalOverlay2.style.display = 'none';
 
-    // Simula el clic en el botón submit oculto
-    document.getElementById('submit-hidden').click();
+    // get the form and send to validate
+    const form = document.getElementById('form-order');
+    validFormOrderWithAlerts(form)
 });
-
-
-function flagsOrdersConfirm() {
-    if ( idPayment == 0 ) {
-        openAlert('Todavía no seleccionaste un método de pago.', 'red', 2000)
-    } else if ( envioMethodId == 0 ) {
-        openAlert('Todavía no seleccionaste un método de envío.', 'red', 2000)
-    } else {
-        const modalOverlay2 = document.getElementById('modal-overlay');
-        modalOverlay2.style.display = 'flex';
-    }
-}
 
 
 // =============================================================================
@@ -142,7 +196,8 @@ function validFormOrderWithAlerts(form) {
             const data = await response.json(); // Procesar la respuesta como JSON
 
             if (!response.ok) {    // If the response is not ok from the serializer
-                showErrorAlerts(data);        // If there is an accumulation of errors
+                // showErrorAlerts(data);        // If there is an accumulation of errors
+                openAlert("No hay suficiente stock para su carrito.", 'red', 1500);
                 return;
             }
 
@@ -167,39 +222,3 @@ function validFormOrderWithAlerts(form) {
         }
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // obtener el formulario y mandar a validarlo
-    const form = document.getElementById('form-order');
-    validFormOrderWithAlerts(form)
-});
-
-
-// =============================================================================
-//            Eventos para abrir el modal
-// =============================================================================
-function modalEvents() {
-    const orderButton = document.getElementById('order-btn');
-    const modalOverlay = document.getElementById('modal-overlay');
-    const closeModalButton = document.getElementById('close-modal');
-
-    // Función para abrir el modal
-    orderButton.addEventListener('click', () => {
-        modalOverlay.style.display = 'flex';
-    });
-
-    // Función para cerrar el modal
-    closeModalButton.addEventListener('click', () => {
-        modalOverlay.style.display = 'none';
-    });
-
-    // Cerrar el modal haciendo clic fuera del contenido
-    modalOverlay.addEventListener('click', (event) => {
-        if (event.target === modalOverlay) {
-            modalOverlay.style.display = 'none';
-        }
-    });
-}
-
-modalEvents()
-

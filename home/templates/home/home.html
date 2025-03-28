@@ -18,11 +18,8 @@
 {% endblock %}
 
 
-
-
 <!-- To place banners without the page limit -->
 {% block top_banner_image %}
-
     <!-- Carousel Headers -->
     <div class="swiper-container home-header-container">
         <div class="swiper-wrapper w-100 h-100">
@@ -41,7 +38,6 @@
         <!-- mostrar la paginación -->
         <div class="swiper-pagination"></div>
     </div>
-          
 {% endblock top_banner_image %}
 
 
@@ -54,13 +50,13 @@
 {% endblock main_content %}
 
 
-
 <!-- Cargas archivos .js propios de cada template/vista -->
 {% block extra_scripts %}
-    
     <!-- Swiper JS sirve para el carousel -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 
     <script src="{% static 'home/js/home.js' %}"></script>
+    
+    <script src="{% static 'products/js/products_utils.js' %}"></script>
     <script src="{% static 'products/js/products_carousel.js' %}"></script>
 {% endblock %}

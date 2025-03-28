@@ -12,7 +12,7 @@
 <!-- Contenido principal de la pagina -->
 {% block main_content %}
 
-<div class="d-flex mt-3 mb-3 gap-1">
+<div class="d-flex w-100 mt-3 mb-3 gap-1">
     <a class="btn btn-paralelogramo d-lg-block" href="{% url 'product_list' %}">
         <span> Todos Nuestros Productos </span>
     </a>
@@ -31,7 +31,7 @@
 
     {% if query %}
         <button class="btn btn-paralelogramo">
-            <span> Resultados de la busqueda: '{{ query }}'' </span>
+            <span>Resultados de la busqueda: '{{ query }}'</span>
         </button>
     {% endif %}
 </div>
@@ -42,7 +42,7 @@
         <!-- TOP 10 BUTTON SIDE -->
         <button class="btn-top-10 container-space-between justify-center btn btn-main gap-2">
             <i class="ri-star-fill icon-small"></i>
-            <span class="text-small">Top 10</span>
+            <b class="text-small">TOP 10</b>
         </button>
 
         <!-- Sidebar -->
@@ -104,9 +104,9 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content justify-start">
         <!-- Donde mostramos los resultados de AJAX Request -->
-        <div id="search-results" class="w-100">
+        <div id="search-results" class="w-100 h-100">
             {% include "products/products_list_cards.html" %}
         </div>
     </div>
@@ -118,6 +118,7 @@
 
 {% block extra_scripts %}
     <!-- JavaScript for Product Page -->
+    <script src="{% static 'products/js/products_utils.js' %}"></script>
     <script src="{% static 'products/js/product_list.js' %}"></script>
 {% endblock extra_scripts %}
 

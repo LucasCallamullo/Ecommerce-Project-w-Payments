@@ -10,117 +10,126 @@
 
 
 
-{% block content %}
+{% block main_content %}
 
-<!-- Primera fila -->
-<div class="d-flex mt-3 mb-4 gap-3">
-    <!-- top buttons -->
-    <a class="btn-paralelogramo px-lg-3" href="{% url 'Home' %}">
-        <span> Home </span>
+<div class="d-flex mt-3 mb-3 gap-1">
+    <a class="btn btn-paralelogramo" href="{% url 'Home' %}">
+        <span class="text-normal">Home</span>
     </a>
 
-    <a class="btn-paralelogramo px-lg-3" href="{% url 'register_user' %}">
-        <span> Registro </span>
-    </a>
+    <button class="btn btn-paralelogramo">
+        <span class="text-normal">Registro</span>
+    </button>
 </div>
 
 
-<!-- Segunda Fila -->
-<div class="d-flex"> 
-
+<div class="cont-page"> 
     <!-- Primera columna -->
-     <div class="col-4">
-        <div class="user-register-info">
-            <h2> Registrarse </h2>
-            <p>
-                Puedes registrarte como un usuario del sitio, podras gestionar tus compras, 
-                consultas y datos personales.
-            </p>
-            
-            {% if flag_to_login %}
-                <p>
-                    Por favor para continuar debe registrarse con una cuenta o puede logearse si asi
-                    lo desea
-                </p>
-            {% endif %}
-
-        </div>
-     </div>
-
-    <!-- Segunda columna -->
-    <form id="register-form" class="col-8 register-user-container" method="POST" action="{% url 'register_user' %}">
-        {% csrf_token %}
+    <div class="register-container cont-border">
+        <h2 class="mb-2"> Registrarse </h2>
+        <p>
+            Puedes registrarte como un usuario del sitio, podras gestionar tus compras, 
+            consultas y datos personales.
+        </p>
         
-        <!-- Fila para Email y Password { { form . email } }  { { form . password1 } } -->
-        <div class="d-flex"> 
-            <div class="col-6 mb-3">
-                <div class="register-container">
-                    <label for="email">E-mail</label>
-                    <input type="email" name="email" required>
-                    
-                </div>
-            </div>
+        {% if flag_to_login %}
+            <p>
+                Por favor para continuar debe registrarse con una cuenta o puede logearse si asi
+                lo desea
+            </p>
+        {% endif %}
+    </div>
 
-            <div class="col-6 mb-3">
-                <div class="register-container">
-                    <label for="password">Password</label>
+    <!-- Cuando el usuario ya esta logeado visualiza esto -->
+    {% if user.is_authenticated %}
+        <div class="w-100 d-flex">
+            <b>
+                No se como llegaste aca pero ya estas logeado...
+            </b>
+        </div>
+
+    <!-- Cuando el usuario no esta logeado verá esto -->
+    {% else %}
+        <form id="register-form" class="register-container cont-border mb-3" method="POST" 
+        action="{% url 'register_user' %}">
+            {% csrf_token %}
+            
+            <!-- Fila para Email y Password { { form . email } }  { { form . password1 } } -->
+            <div class="grid-form mb-3"> 
+                <div class="d-flex-col gap-1">
+                    <label for="email">
+                        <b class="justify-start">E-mail</b>
+                    </label>
+                    <input type="email" name="email" required>
+                </div>
+
+                <div class="d-flex-col gap-1">
+                    <label for="password">
+                        <b class="justify-start">Password</b>
+                    </label>
                     <input type="password" name="password" required>
                 </div>
             </div>
-        </div>
 
-        <!-- Fila para Nombre y Apellido -->
-        <div class="d-flex mb-3">
-            <div class="col-6">
-                <div class="register-container">
-                    <label for="first_name">Nombre</label>
+            <!-- Fila para Nombre y Apellido -->
+            <div class="grid-form mb-3">
+                <div class="d-flex-col gap-1">
+                    <label for="first_name">
+                        <b class="justify-start">Nombre</b>
+                    </label>
                     <input type="text" name="first_name" required>
                 </div>
-            </div>
 
-            <div class="col-6">
-                <div class="register-container">
-                    <label for="last_name">Apellido</label>
+                <div class="d-flex-col gap-1">
+                    <label for="last_name">
+                        <b class="justify-start">Apellido</b>
+                    </label>
                     <input type="text" name="last_name" required>
                 </div>
             </div>
-        </div>
 
-        <!-- Fila para Teléfono y Provincia -->
-        <div class="d-flex mb-3">
-            <div class="col-6">
-                <div class="register-container">
-                    <label for="cellphone">Celular</label>
+            <!-- Fila para Teléfono y Provincia -->
+            <div class="grid-form mb-3">
+                <div class="d-flex-col gap-1">
+                    <label for="cellphone">
+                        <b class="justify-start">Celular</b>
+                    </label>
                     <input type="text" name="cellphone" required>
                 </div>
-            </div>
 
-            <div class="col-6">
-                <div class="register-container">
-                    <label for="province">Provincia</label>
-                    <select name="province" id="id_province" class="form-control">
+                <div class="d-flex-col gap-1">
+                    <label for="province" class="justify-start"><b>Provincia</b></label>
+                    <select name="province" id="id_province">
                         {% for key, value in provinces %}
                             <option value="{{ key }}">{{ value }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
-        </div>
 
-        <!-- Fila para Dirección -->
-        <div class="d-flex">
-            <div class="col-6">
-                <div class="register-container">
-                    <label for="address">Dirección</label>
+            <!-- Fila para Dirección -->
+            <div class="grid-form mb-3">
+                <div class="d-flex-col gap-1">
+                    <label for="address">
+                        <b class="justify-start">Dirección</b>
+                    </label>
                     <input type="text" name="address" required>
                 </div>
             </div>
-        </div>
-        
-        <div class="d-flex">
-            <input type="submit" value="Registrarse" class="btn register-user-btn">
-        </div>
-    </form>
+            
+            <!-- buttons form 		 -->
+            <div class="grid-form mb-3">
+                <button type="submit" class="btn btn-main">
+                    <b>Crear</b>
+                </button>
+
+                <button type="button" class="btn btn-alt" id="have-account">
+                    <b>Ya tengo cuenta</b>
+                </button>
+            </div>
+        </form>
+     {% endif %}
+
 </div>
 
     
@@ -130,13 +139,6 @@
 
 {% block extra_scripts %}
 
-    <script>
-        // Realmente no ameritaba crear un archivo js por una funcion
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('register-form');
-            // esta funcion se llama desde widget_register.js que se precarga antes debido a que esta
-            // antes que este bloque en base.html
-            handleFormActions(form, "Register")
-        });
-    </script>
-{% endblock %}
+    <script src="{% static 'users/js/register_user.js' %}"></script>
+
+{% endblock extra_scripts %}

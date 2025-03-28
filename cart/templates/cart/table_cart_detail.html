@@ -6,76 +6,93 @@
 {% if carrito.items %}
   
     <div class="cart-view-header">
-        <div class="cart-col image-col"> </div>
-        <div class="cart-col cart-view-product">Product</div>
-        <div class="cart-col">Price</div>
-        <div class="cart-col">Quantity</div>
-        <div class="cart-col">Subtotal</div>
-        <div class="cart-col actions-col"> </div>
+        <div></div>
+        <div><b>Product</b></div>
+        <div><b>Price</b></div>
+        <div><b>Quantity</b></div>
+        <div><b>Subtotal</b></div>
+        <div></div>
     </div>
 
+    {% for key, value in carrito.items %}
+        <div class="cart-row {% if forloop.last %} not-border-bottom {% endif %}">
+            <!-- Imagen del producto -->
+            <div class="image-container" data-url="{% url 'product_detail' value.id None %}">
+                <img src="{{ value.image }}" alt="{{ value.name }}">
+            </div>
 
-    <div class="cart-view-content" id="cart-view-content">
+            <!-- Nombre del producto -->
+            <div class="justify-start mt-1">
+                <a href="#" class="text-primary text-lil-small">
+                    <b>{{ value.name }}</b>
+                </a>
+            </div>
 
-        {% for key, value in carrito.items %}                 
-            <div class="cart-row">
-                <!-- Imagen del producto -->
-                <div class="cart-col image-col">
-                    <a href="#">
-                        <img src="{{ value.image }}" class="img-sm" alt="{{ value.name }}">
-                    </a>
+            <!-- Precio -->
+            <div class="justify-start mt-1">
+                <b class="d-lg-block text-lil-small">$ {{ value.price|intdot }}</b>
+
+                <div class="d-flex d-md-block text-lil-small">
+                    <b>$ {{ value.price|intdot }}</b>
+                    <i class="ri-close-line"></i>
+                    <b>{{ value.qty }}</b>
+                    <i class="ri-equal-line"></i>
                 </div>
+            </div>
 
-                <!-- Nombre del producto -->
-                <div class="cart-col">
-                    <a href="#" class="cart-view-product-name">{{ value.name }}</a>
-                </div>
-
-                <!-- Precio -->
-                <div class="cart-col">
-                    <span>${{ value.price|intdot }}</span>
-                </div>
-
-                <!-- Cantidad -->
-                <div class="cart-col quantity-container-detail">
-                    <button class="prod-btn-qty cart-view-minus" data-index="{{value.id}}">
-                        -
+            <div class="justify-start mt-1">
+                <!-- Contador -->
+                <div class="product-container-conts d-flex gap-1">
+                    <button type="button" class="btn cart-view-minus" data-index="{{value.id}}">
+                        <i class="ri-subtract-fill icon-small"></i>
                     </button>
-                    <span class="prod-span-qty"> {{ value.qty }} </span>
-                    <button class="prod-btn-qty cart-view-plus" data-index="{{value.id}}">
-                        +
-                    </button>
-                </div>
 
-                <!-- Subtotal -->
-                <div class="cart-col">
-                    ${{ value.price|multiply:value.qty }}
-                </div>
+                    <input type="text" class="cart-view-input-qty" 
+                    id="cart-view-input-qty" value="{{value.qty}}" min="1" readonly>
 
-                <!-- Botones de acción -->
-                <div class="cart-col cart-view-btn-cont gap-3">
-                    <button class="btn btn-cart-view cart-view-btn-like" data-index="{{value.id}}">
-                        <i class="fa fa-heart"></i>
-                    </button>
-                    <button class="btn btn-cart-view cart-view-btn-delete" data-index="{{value.id}}">
-                        <i class="fas fa-times"></i>
+                    <button type="button" class="btn cart-view-plus" data-index="{{value.id}}">
+                        <i class="ri-add-fill icon-small"></i>
                     </button>
                 </div>
             </div>
 
-        {% endfor %}
+            <!-- Subtotal -->
+            <div class="justify-start mt-1">
+                <b class="text-lil-small">$ {{ value.price|multiply:value.qty }}</b>
+            </div>
 
-    </div>
+            <!-- Botones de acción -->
+            <div class="justify-start d-flex-col mt-1 gap-1">
+                <!-- Botón de la corazon -->
+                {% if value.id in favorite_product_ids %}
+                    <button class="btn btn-like liked" data-index="{{value.id}}">
+                        <i class="ri-heart-fill icon-medium"></i>
+                    </button>
+                {% else %}
+                    <button class="btn btn-like" data-index="{{value.id}}">
+                        <i class="ri-heart-line icon-medium"></i>
+                    </button>
+                {% endif %}
+
+
+                <button class="btn cart-view-btn-delete" data-index="{{value.id}}">
+                    <i class="ri-close-fill icon-medium"></i>
+                </button>
+            </div>
+        </div>
+    {% endfor %}
 
 {% else %}
     
-    <div class="view-cart-empty"> 
+    <div class="d-flex-col justify-center mt-2">
         <h1>Tu carrito esta vacío</h1>
-        <img src="{% static 'img/cart-view.png' %}" alt="Cartt">
+        <div class="w-100 justify-center">
+            <img src="{% static 'img/cart-view.png' %}" alt="Cartt">
+        </div>
     </div>
 
-    <a class="view-cart-empy-a" href="{% url 'product_list' %}">
-        Ver todos nuestros productos.
+    <a class="btn btn-main w-50" href="{% url 'product_list' %}">
+        <b>Ver todos nuestros productos.</b>
     </a>
 
 {% endif %}

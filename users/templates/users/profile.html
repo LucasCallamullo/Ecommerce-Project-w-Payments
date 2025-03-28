@@ -7,129 +7,138 @@
 <!-- For More CSS Modules -->
 {% block extra_head %}
 
-
-    <title> Profile {{ user.first_name }} {{ user.last_name }}</title>
-
+    <title> Profile | {{ user.first_name }} {{ user.last_name }}</title>
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <link href="{% static 'products/css/products_carousel.css' %}" rel="stylesheet">
 
+
+    
     <link href="{% static 'users/css/profile.css' %}" rel="stylesheet">
 
-{% endblock %}
+{% endblock extra_head %}
 
 
 <!-- Contenido principal de la pagina -->
-{% block content %}
+{% block main_content %}
 
-<div class="d-flex mt-3">
+<div class="cont-page mt-3 mb-3">
 
     <!-- tarjeta del usuario e INFO CONTACTO -->
-    <div class="col-3">
+    <aside class="w-100">
         <!-- Columna perfil + botones edit y logout -->
-        <div class="profile-info-container">
+        <div class="profile-info-container cont-border">
 
-            <img src="https://i.pinimg.com/736x/80/8d/03/808d03843400c4392b7891c1a6428104.jpg" alt="User Image Profile">
+            <img src="https://i.pinimg.com/736x/80/8d/03/808d03843400c4392b7891c1a6428104.jpg" 
+            alt="User Image Profile">
 
-            <span> {{ user.first_name }} {{user.last_name}} </span>
-            <span class="mt-1"> {{ user.email }} </span>
+            <div class="justify-center d-flex-col gap-1">
+                <span> {{ user.first_name }} {{user.last_name}} </span>
+                <span> {{ user.email }} </span>
+            </div>
 
-            <a href="#" class="mt-3 profile-btn-premium">
-                Premium Account
+            <a href="#" class="btn btn-alt profile-btn-premium">
+                <b>Premium Account</b>
             </a>
 
             <!-- BOTONES EDITAR Y LOGEARSE -->
-            <a href="#" class="mt-4 profile-btn-edit p-border-top">
-                <span>Reservado</span>
-                <i class="fa-solid fa-store"></i> 
-            </a>
-
-            <button class="profile-btn-edit" onclick="window.location.href='#'">
-                <span>Edit Account</span>
-                <i class="fas fa-cog"></i>
-            </button>
-        
-            <a href="#" class="profile-btn-edit p-border-bot">
-                <span>Logout</span>
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
+            <div class="d-flex-col w-100">
+                <button class="btn container-space-between profile-btn-edit p-border-top" 
+                onclick="window.location.href='#'">
+                    <b>Editar Datos</b>
+                    <i class="ri-settings-4-line icon-small"></i>
+                </button>
+            
+                <a href="#" class="container-space-between profile-btn-edit p-border-bot">
+                    <b>Cerrar Cesión</b>
+                    <i class="ri-logout-box-r-line icon-small"></i>
+                </a>
+            </div>
         </div>
         
         <!-- Tarjeta Info Contacto -->
-         <div class="profile-info-container mt-3">
-            
-            <h4 class="card-title">Contact</h4>
+        <div class="d-lg-block mt-3">
+            <div class="profile-info-container cont-border">
+                <b>Contacto</b>
 
-            <div class="mt-2 profile-btn-edit p-border-top p-contact">
-                <i class="fas fa-envelope me-2"></i> 
-                <span>{{ user.email }}</span>
-            </div>
-
-            <div class="profile-btn-edit p-contact">
-                <i class="fas fa-phone me-2"></i> 
-                <span>+54 9 {{ user.phone }}</span>
-            </div>
-
-            <div class="profile-btn-edit p-border-bot p-contact">
-                <i class="fa-solid fa-house me-2"></i> 
-                <span>{{user.address}}</span>
+                <div class="d-flex-col w-100">
+                    <div class="d-flex gap-1 profile-btn-edit p-border-top not-border-bottom">
+                        <i class="ri-mail-line icon-small"></i>
+                        <span>{{ user.email|default:"No hay E-mail." }}</span>
+                    </div>
+        
+                    <div class="d-flex gap-1 profile-btn-edit">
+                        <i class="ri-phone-line icon-small"></i>
+                        <span>
+                            {% if user.phone %} +54 9 {{ user.phone }}
+                            {% else %} No hay número.
+                            {% endif %}
+                        </span>
+                    </div>
+        
+                    <div class="d-flex gap-1 profile-btn-edit p-border-bot">
+                        <i class="ri-home-4-line icon-small"></i>
+                        <span>{{ user.address|default:"No hay dirección." }}</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </aside>
 
     <!-- CONTENIDO del perfil -->
-    <div class="col-9">
-        <div class="profile-column-tabs">
-            <!-- BANNER -->
-            <div class="banner-profile-cover">
-                <img src="https://i.pinimg.com/736x/3b/da/58/3bda585ceabcae86a826c57305d1ff39.jpg" 
-                    class="img-fluid" alt="cover">
-            </div>
-
-            <!-- ITEMS BANNER -->
-            <ul class="list-unstyled cover-menu">
-
-                <li class="active">
-                    <a href="#" data-content="First Tab">
-                        <i class="fas fa-clock"></i> Pedidos Pendientes
-                    </a>
-                </li>
-
-                <li class="white-border-right-left">
-                    <a href="#" data-content="Second Tab">
-                        <i class="fa fa-heart"></i> Productos Favoritos
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" data-content="Third Tab">
-                        <i class="fas fa-store"></i>Mis Compras
-                    </a>
-                </li>
-
-            </ul>
-
-            
-
-            <!-- DASHBOARD PRODUCTOS -->
-            <div id="first-tab"> </div>
-            
-            <div id="second-tab"> </div>
-
-            <div id="third-tab"> </div>
-            
+    <div class="profile-column-tabs">
+        <!-- BANNER -->
+        <div class="banner-profile-cover">
+            <img src="https://i.pinimg.com/736x/3b/da/58/3bda585ceabcae86a826c57305d1ff39.jpg" 
+                class="img-fluid" alt="cover">
         </div>
+
+        <!-- ITEMS BANNER -->
+        <ul class="d-flex-col cover-menu">
+            <li class="active">
+                <a class="justify-center gap-2 text-white" href="#" 
+                data-content="First Tab">
+                    <i class="ri-time-line icon-small"></i>
+                    <b>Pedidos Pendientes</b>
+                </a>
+            </li>
+
+            <li class="white-border-right-left">
+                <a class="justify-center gap-2 text-white" href="#" 
+                data-content="Second Tab">
+                    <i class="fa fa-heart icon-small"></i> 
+                    <b>Productos Favoritos</b>
+                </a>
+            </li>
+
+            <li>
+                <a class="justify-center gap-1 text-white" href="#" 
+                data-content="Third Tab">
+                    <i class="ri-store-2-line icon-small"></i>
+                    <b>Mis Compras</b>
+                </a>
+            </li>
+        </ul>
+
+        <!-- DASHBOARD PRODUCTOS -->
+        <div class="tab-content first-tab" id="first-tab"></div>
+
+        <div class="tab-content mt-2" id="second-tab"></div>
+
+        <div class="tab-content third-tab" id="third-tab"></div>
     </div>
+
 </div>
 
-{% endblock %}
+{% endblock main_content %}
 
 
 {% block extra_scripts %}
-
     <!-- Swiper JS sirve para el carousel -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="{% static 'products/js/products_utils.js' %}"></script>
+    <script src="{% static 'products/js/products_carousel.js' %}"></script>
 
     <script src="{% static 'users/js/profile.js' %}"></script>
-
-{% endblock %}
+{% endblock extra_scripts %}

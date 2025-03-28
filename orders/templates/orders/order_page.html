@@ -8,193 +8,185 @@
 
 
 {% block extra_head %}
-
 	<link rel="stylesheet" href="{% static 'orders/css/order_page.css' %}">
-
 {% endblock %}
 
 
 
-
-
-{% block content %}
+{% block main_content %}
 
 <!-- Primera fila -->
-<div class="d-flex mt-3 mb-4 gap-3">
-	<button class="btn-paralelogramo px-lg-3"
-		onclick="window.location.href='{% url 'Home' %}'">
-		<span> Home </span>
-	</button>
+<div class="d-flex mt-3 mb-3 gap-1">
+	<a class="btn btn-paralelogramo" href="{% url 'Home' %}">
+		<span class="text-normal"> Home </span>
+	</a>
 	
-	<button class="btn-paralelogramo px-lg-3"
-	onclick="window.location.href='{% url 'cart_page_detail' %}'">
-		<span> Mi Carrito </span>
-	</button>
+	<a class="btn btn-paralelogramo d-lg-block" href="{% url 'cart_page_detail' %}">
+		<span class="text-normal"> Mi Carrito </span>
+	</a>
 
-	<button class="btn-paralelogramo px-lg-3">
-		<span> Resumen Pedido </span>
+	<button class="btn btn-paralelogramo">
+		<span class="text-normal"> Resumen Pedido </span>
 	</button>
 </div>
 
 
-
-
-<div class="d-flex">
-	<div class="col-7"> 
+<div class="cont-order-page">
+	<div> 
 		<form id="form-order" class="form-container" method="POST" action="{% url 'valid_order_form' %}">
 			{% csrf_token %}
 			<h1> Tus Datos </h1>
 
 			<!-- Nombre y Apellido -->
-			<div class="row">
-				<div class="col">
-					<label for="first_name">Nombre</label>
+			<div class="cont-form-grid mt-2">
+				<div class="d-flex-col gap-1">
+					<label for="first_name"><b>Nombre</b></label>
 					<input type="text" name="first_name" required>
 				</div>
-				<div class="col">
-					<label for="last_name">Apellido</label>
+				<div class="d-flex-col gap-1">
+					<label for="last_name"><b>Apellido</b></label>
 					<input type="text" name="last_name" required>
 				</div>
 			</div>
 
 			<!-- Teléfono y Email -->
-			<div class="row">
-				<div class="col">
-					<label for="telefono-cod">Celular</label>
+			<div class="cont-form-grid mt-2">
+				<div class="d-flex-col gap-1">
+					<label for="telefono-cod"><b>Celular</b></label>
 					<input type="text" name="cellphone" required>
 				</div>
-				<div class="col">
-					<label for="email">Email</label>
+				<div class="d-flex-col gap-1">
+					<label for="email"><b>Email</b></label>
 					<input type="email" name="email" required>
 				</div>
 			</div>
 
 			<!-- DNI -->
-			<div class="row">
-				<div class="col">
-					<label for="dni">DNI</label>
+			<div class="cont-form-grid mt-2">
+				<div class="d-flex-col gap-1">
+					<label for="dni"><b>DNI</b></label>
 					<input type="text" name="dni" required>
 				</div>
 			</div>
 
 			<!-- Aclaración del pedido -->
-			<div class="row">
-				<div class="col">
-					<label for="detail_order">Aclaración del pedido</label>
+			<div class="w-100 mt-2 mb-3">
+				<div class="d-flex-col gap-1">
+					<label for="detail_order"><b>Aclaración del pedido</b></label>
 					<textarea name="detail_order"></textarea>
 				</div>
 			</div>
 
-			<hr class="mb-4">
-
-			<div id="extra-form">
+			<section id="extra-form">
 				<!-- { % include "orders/extra_form.html" % } -->
-			</div>
+			</section>
+
+			<div class="mb-2"></div>
 
 			<!-- Botón oculto que será disparado desde JavaScript -->
-			<button type="submit" id="submit-hidden" style="display: none;">Submit</button>
+			<button type="submit" id="submit-hidden" hidden></button>
 		</form>
 
-		<div class="container-confirm-btn">
-			<button class="mb-4" id="confirm-order-btn"> 
-				Confirmar Pedido 
+		<div class="form-container cont-confirm-btn">
+			<button class="btn btn-main" id="confirm-order-btn"> 
+				<b class="text-mobile">Confirmar Pedido</b> 
 			</button>
 		</div>
 	</div>
 
 
 	<!--  SEGUNDA COLUMNA   -->
+	<div class="d-flex-col gap-2 check-group">
 
+		<!-- Open Modal -->
+		<button class="btn btn-main mt-1 mb-2 justify-center" id="order-btn"> 
+			<b>Ver tu Pedido</b>
+		</button>
 
-	<div class="col-5"> 
-		<div class="check-group">
+		<div class="container-space-between"> 
+			<b>Metodo de Pago:</b>
+			<b class="payment-method">Ninguno</b>
+		</div>
 
-			<button class="mb-4" id="order-btn"> 
-				Ver tu Pedido
-			</button>
+		<div class="container-space-between"> 
+			<b>Metodo de Envío:</b>
+			<b class="shipment-method">Ninguno</b>
+		</div>
 
-			<div class="my-container-between"> 
-				<span> Metodo de Pago:  </span>
-				<span id="payment-method"> Ninguno </span>
-			</div>
+		<img alt="img mercado pago" class="mb-3 mt-3"
+		src="https://epicbikes.com.ar/wp-content/uploads/2019/09/mercadopago-logo-fondo-transparente-300x142.png">
 
-			<div class="my-container-between"> 
-				<span> Metodo de Envío:  </span>
-				<span id="envio-method"> Ninguno </span>
-			</div>
+		<!-- Comienza opciones 		 -->
+		<section id="payment-methods-section" class="d-flex-col gap-1">
+			<hr class="text-primary">
+			<b>Métodos de Pago</b>
 
-			<!-- Modal -->
-			<div id="modal-overlay">
-				<div id="modal-content">
-					{% include "orders/modal_order.html" %}
-				</div>
-			</div>
-
-			<img alt="va algo xd" class="mb-3 mt-3"
-			src="https://epicbikes.com.ar/wp-content/uploads/2019/09/mercadopago-logo-fondo-transparente-300x142.png">
-			
-			<!-- <img src="https://help.zazzle.com/hc/article_attachments/360010570753" alt="va algo xd"> -->
-			
-			<div class="order-title-contain"> 
-				<span>Metodos de Pago</span>
-			</div>
-			
 			{% for payment in payment_methods %}
-				<div class="label-container-order"> 
-					<label class="check check--radio">
-						<input type="radio" name="payment" 
-						value="{{ payment.name }}" data-index="{{ payment.id }}"/>
-
-						<div class="check__indicator"></div>
-						<span> {{ payment.name }} </span>
-					</label>
-
-					<p> {{ payment.description }} </p>
-				</div>
-			{% endfor %}
-
-			
-			<div class="order-title-contain"> 
-				<span>Metodos de Envío</span>
+			<div class="cont-label-options cont-border">
+			  
+			  	<label class="label-option mb-1">
+					<input type="radio" name="payment" 
+					value="{{ payment.name }}" data-index="{{ payment.id }}"
+					class="label-option__input">
+				
+					<span class="label-option__checkmark"></span>
+					
+					<div class="container-space-between w-100">
+						<b>{{ payment.name }}</b>
+					</div>
+				</label>
+			  
+				<p class="label-method__description">{{ payment.description }}</p>
 			</div>
+			{% endfor %}
+		</section>
+		
+		<section id="shipping-methods-section" class="d-flex-col gap-1">
+			<hr class="text-primary">
+			<b>Métodos de Envío</b>
 
 			{% for envio in envios_methods %}
-				<div class="label-container-order"> 
-					<label class="check check--radio">
-						<input type="radio" name="envio" 
-						value="{{ envio.name }}" data-index="{{ envio.id }}"/>
-						<div class="check__indicator"></div>
-						
-						<div class="d-flex justify-content-between w-100 me-3">
-							<span> {{ envio.name }} </span>
-						
+			<div class="cont-label-options cont-border">
+			  
+			  	<label class="label-option mb-1">
+					<input type="radio" name="envio" 
+					value="{{ envio.name }}" data-index="{{ envio.id }}" 
+					data-price="{{ envio.price|floatformat:'-2' }}"
+					class="label-option__input">
+				
+					<span class="label-option__checkmark"></span>
+					
+					<div class="container-space-between w-100">
+						<b>{{ envio.name }}</b>
+						<b>
 							{% if envio.price == 0 %}
-								<span> Gratis </span>
+							Gratis
 							{% else %}
-								<span> ${{ envio.price|intdot }} </span>
+							$ {{envio.price|intdot}}
 							{% endif %}
-						</div>
-
-						
-					</label>
-					<p> {{ envio.description }} </p>
-				</div>
+						</b>
+					</div>
+				</label>
+			  
+				<p class="label-method__description">{{ envio.description }}</p>
+			</div>
 			{% endfor %}
-
-			<hr>
-		</div>
+		</section>
+		
 	</div>
-
-	
-	
 </div>
+
+
+<div class="modal" id="modal-content">
+	{% include "orders/modal_order.html" %}
+</div>
+
+<div class="overlay" id="modal-overlay">
+	
+
+</div>
+
 {% endblock %}
-
-
-
-
-
-
 
 
 {% block extra_scripts %}

@@ -14,81 +14,81 @@
 {% endblock extra_head %}
     
 
-{% block content %}
+{% block main_content %}
 
 <!-- Primera fila -->
-<div class="d-flex mt-3 mb-4 gap-3">
+<div class="d-flex mt-3 mb-3 gap-1">
     <!-- top buttons -->
-    <button class="btn-paralelogramo px-lg-3" href="{% url 'Home' %}">
-        <span> Home </span>
-    </button>
+    <a class="btn btn-paralelogramo" href="{% url 'Home' %}">
+        <span class="text-normal"> Home </span>
+    </a>
 
-    <button class="btn-paralelogramo px-lg-3" href="#">
-        <span> Mi Carrito </span>
+    <button class="btn btn-paralelogramo">
+        <span class="text-normal"> Mi Carrito </span>
     </button>
 </div>
 
 
-<div class="d-flex">
+<div class="cont-page">
 
     <!-- Primera Columna -->
-    <div class="col-lg-8">
-
-        <div class="cart-view-container" id="cart-view-container">
+    <div>
+        
+        <!-- Container cart table -->
+        <div class="cart-view-container cont-border" id="cart-view-container">
             {% include "cart/table_cart_detail.html" %}
         </div>
         
-
         <!-- Container cupon stuff -->
-        <div class="container-coupon mt-4">
-            <form>
-                <div class="input-group">
-                    <input type="text" class="form-control" name=""
-                            placeholder="Have a coupon?">
+        <form class="container-coupon mt-4 mb-5">
+            <input type="text" class="form-control" name="" placeholder="Have a coupon?">
 
-                    <button class="input-group-append btn-coupon-apply" type="submit">
-                        Apply
-                    </button>
-                </div>
-            </form>
-        </div>
+            <button class="btn btn-main btn-coupon" type="submit">
+                <b class="text-lil-small">Aplicar</b>
+            </button>
+        </form>
     </div>
 
 
-
     <!-- Segunda Columna -->
-    <div class="col-lg-4">
-        <div class="cart-view-bg-cont"> 
-            <div class="cart-view-total-row">
-                <h5>Total:</h5>
-                <h5 id="total-cart-view">${{ total_price|intdot }}</h5>
+    <div>
+        <div class="cart-view-container-col-2 cont-border"> 
+            <div class="container-space-between mt-1 mb-2">
+                <b class="text-small">Total:</b>
+                <b class="text-small" id="total-cart-view">
+                    $ {{ total_price|intdot }}
+                </b>
             </div>
 
-            <div class="cart-view-total-row">
-                <h6>Discount:</h6>
-                <h6>- $0.00</h6>
+            <div class="container-space-between mb-2">
+                <b class="text-discount">Discount:</b>
+
+                <div class="d-flex gap-1">
+                    <b><i class="ri-subtract-fill text-discount"></i></b>
+                    <b class="text-discount">$ 0</b>
+                </div>
             </div>
 
-            <hr class="total-divider"> <!-- Línea divisoria -->
+            <hr class="mb-2">
 
-            <div class="cart-view-total-row">
-                <h5>Total:</h5>
-                <h5 id="total-cart-view2">${{ total_price|intdot }}</h5>
+            <div class="container-space-between mb-2">
+                <b class="text-small">Total:</b>
+                <b class="text-small" id="total-cart-view2">$ {{ total_price|intdot }}</b>
             </div>
 
-            <button class="btn-main mt-5" href="{% url 'order' %}">
-                Make Purchase
+            <button class="btn btn-main justify-center w-100 mb-1" href="{% url 'order' %}">
+                <b class="text-lil-small">Finalizar Compra</b>
             </button>
         </div>
     </div>
 
-
 </div>
 
-{% endblock %}
+{% endblock main_content %}
 
 
 {% block extra_scripts %}
     <!-- JavaScript for Product Page -->
+    <script src="{% static 'products/js/products_utils.js' %}"></script>
     <script src="{% static 'cart/js/cart_page_detail.js' %}"></script>
-{% endblock %}
+{% endblock extra_scripts %}

@@ -52,9 +52,9 @@
         </figcaption>
 
         <!-- Botón de agregar al carrito -->
-        <form class="prod-extender-btn" method="POST">
+        <form class="prod-extender-btn" method="POST" data-index="{{ product.id }}">
             {% csrf_token %}
-            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input type="hidden" name="" value="">
 
             <button class="btn gap-1 btn-main prod-add-button" type="submit">
                 <b>Agregar</b> 
@@ -63,12 +63,12 @@
         </form>
     </figure>
 
-    
- 
 {% empty %}
     
-    <h1> The queryset is empty, please search again. </h1>
-
+    <div class="d-flex">
+        <b>The queryset is empty, please search again.</b>
+    </div>
+    
 {% endfor %}
 </div>
 

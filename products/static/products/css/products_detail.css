@@ -316,7 +316,7 @@
     transform: scale(0.95);
 }
 
-#prod-input-qty {
+.prod-input-qty {
     text-align: center;
     font-size: var(--font-small-plus);
     color: var(--text-primary);
