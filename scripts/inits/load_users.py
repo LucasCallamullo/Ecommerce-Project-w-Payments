@@ -13,6 +13,21 @@ from users.models import CustomUser
 
 
 def load_users_init():
+    # Crear superusuario
+    user, created = CustomUser.objects.get_or_create(
+        email="admin@gmail.com",
+        defaults={
+            "password": make_password("1234"),
+            "first_name": "Admin",
+            "last_name": "SuperAdmin",
+            "is_active": True,
+            "is_staff": True,
+            "is_superuser": True,
+        }
+    )
+    
+    if created:
+        print(f'El Super usuario {user.email} Se creo exitosamente')
 
     # Crear usuarios de ejemplo
     users = [
@@ -36,22 +51,6 @@ def load_users_init():
             print(f'El usuario {user.email} Se creo exitosamente')
         else:
             print(f"El usuario {user.email} ya existia")
-        
-    # Crear superusuario
-    user, created = CustomUser.objects.get_or_create(
-        email="admin@gmail.com",
-        defaults={
-            "password": make_password("1234"),
-            "first_name": "Admin",
-            "last_name": "SuperAdmin",
-            "is_active": True,
-            "is_staff": True,
-            "is_superuser": True,
-        }
-    )
-    
-    if created:
-        print(f'El Super usuario {user.email} Se creo exitosamente')
 
     
 if __name__ == "__main__":

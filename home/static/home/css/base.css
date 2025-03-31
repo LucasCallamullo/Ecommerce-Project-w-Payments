@@ -159,7 +159,8 @@
 @media (min-width: 993px) {
     .alerts-container {
         bottom: 70px;     /* mobile */
-        width: 33%;    /* mobile */
+        width: 35%;    /* mobile */
+        min-width: min-content;    /* mobile */
     }
 
     /* Styles for large desktops */
@@ -273,13 +274,13 @@
 }
 
 /* Botón flotante */
-.floating-button {
+.floating-wsp-btn {
     position: fixed;
     bottom: 0;
     right: calc(var(--padding-container-page));
     width: 100px;
     height: 60px;
-    background-color: #2db742;
+    background-color: var(--green-wsp-color);
     border-radius: 20px 20px 0px 0px;
     box-shadow: 0px 6px 8px 2px rgba(0, 0, 0, 0.14);
     color: var(--white-color);
@@ -288,25 +289,28 @@
     transition: background-color 0.3s ease;
 }
 
-.floating-button:hover {
+.floating-wsp-btn:hover {
     background-color: #25a635;
 }
 
-.floating-button i {
+.floating-wsp-btn i {
     opacity: 1;
     transition: transform 0.3s ease;
     display: inline-block;
 }
 
 /* Menú flotante */
-.floating-menu {
+.floating-wsp-menu:hover {
+    box-shadow: 2px 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.floating-wsp-menu {
+
     position: fixed;
-    bottom: 60px;
+    bottom: 100px;
     right: calc(var(--padding-container-page));
-    background: white;
-    border-radius: 12px 12px 0 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-    padding: 10px;
+    background: var(--white-color);
+    border-radius: 12px 12px 12px 12px;
     opacity: 0;
     transform: translateY(20px);
     visibility: hidden;
@@ -314,24 +318,50 @@
     z-index: var(--z-fixed);
 }
 
-.floating-menu.show {
+.floating-wsp-menu.show {
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
 }
 
-.whatsapp-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #2db742;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
+
+.cont-wsp-float {
+    border-radius: 12px 12px 0 0;
+    background-color: var(--green-wsp-color);
+    color: var(--white-color);
+    padding: 12px 16px;
 }
 
-.whatsapp-button:hover {
-    background-color: #f0f0f0;
+.cont-wsp-float-white {
+    border-radius: 0 0 12px 12px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 16px 24px;
+}
+
+.cont-wsp-float-white img{
+    height: 64px;
+    width: 64px;
+    object-fit: cover;
+}
+
+.whatsapp-button {
+    padding: 8px 8px;
+    border-radius: 5px;
+    border-left: 4px solid var(--green-wsp-color);
+}
+
+.whatsapp-button .ri-whatsapp-line {
+    color: var(--green-wsp-color);
+}
+
+.whatsapp-button:hover,
+.whatsapp-button:active {
+    background-color: var(--bg-secondary);
+}
+
+
+
+.gray {
+    color: gray;
 }

@@ -106,6 +106,7 @@ class Product(models.Model):
     normalized_name = models.CharField(max_length=120, blank=True, null=True)
     
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    price_list = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     available = models.BooleanField(default=False, null=True, blank=True)
     stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     stock_reserved = models.PositiveIntegerField(default=0)

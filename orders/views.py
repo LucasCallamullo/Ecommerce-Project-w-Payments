@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from orders.models import ShipmentMethod, PaymentOrder
+from orders.models import ShipmentMethod, PaymentMethod
 
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -11,27 +11,6 @@ def order(request):
     """ 
         Esta vista se llama para ver el formulario (se valida con serializers), ver opciones
         de metodos de pago y envío, y actuar en consecuencia segun el metodo de pago y envío.
-    """
-    if not request.user.is_authenticated:
-        context = {'flag_to_login': True}
-        return render(request, "users/register_user.html", context)
-        
-    # Obtenemos los distintos envios y metodos de pago para actualizar dinamicamente
-    envios_methods = ShipmentMethod.objects.all()
-    payment_methods = PaymentOrder.objects.all()
-    
-    context = {
-        'envios_methods': envios_methods,
-        'payment_methods': payment_methods
-    }
-    
-    return render(request, "orders/order_page.html", context)
-
-
-def extra_form_ajax(request):
-    """
-        Esta vista nos permite agregar un formulario extra dinamicamente a nuestra vista segun el metodo
-        de envio que elija el usuario.
     """
     PROVINCIAS_CHOICES = [
         ('', 'Selecciona una provincia'),
@@ -61,15 +40,18 @@ def extra_form_ajax(request):
         ('Tucumán', 'Tucumán')
     ]
     
-    envioId = request.GET.get('envioId', '0')
-    flag = True if envioId == '1' else False
+    if not request.user.is_authenticated:
+        context = {'flag_to_login': True}
+        return render(request, "users/register_user.html", context)
+        
+    # Obtenemos los distintos envios y metodos de pago para actualizar dinamicamente
+    envios_methods = ShipmentMethod.objects.all()
+    payment_methods = PaymentMethod.objects.all()
     
     context = {
-        'flag': flag,
+        'envios_methods': envios_methods,
+        'payment_methods': payment_methods,
         'provinces': PROVINCIAS_CHOICES
     }
-    # renderizamos desde el servidor el extra form a agregar 
-    html_extra_form = render_to_string('orders/extra_form.html', context)
-        
-    return JsonResponse({'html': html_extra_form})
-
+    
+    return render(request, "orders/order_page.html", context)

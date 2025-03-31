@@ -453,29 +453,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ========================================================================
-//                   Show errors froms forms
-// ========================================================================
-function showErrorAlerts(errors, delay=1200) {
-    let delay_total = 0;
-    for (let field in errors) {
-        if (errors.hasOwnProperty(field)) {
-            errors[field].forEach((error) => {
-                setTimeout(function() {
-                    openAlert(`${field}: ${error}`, "red", delay);
-                }, delay_total);
-
-                // Incrementa el retraso para la siguiente alerta
-                delay_total += delay; 
-            });
-        }
-    }
-}
-
-
-/* ==========================================================================================
-        Function to get the value of a cookie by name, acting as our CSRF token
-========================================================================================== */
 /**
  * Retrieves the value of a specified cookie by its name, commonly used for CSRF tokens.
  * 
@@ -501,31 +478,102 @@ function getCookie(name) {
 
 
 /**
- * Formats a number by adding commas as thousand separators.
+ * Formats a number by adding dots as thousand separators.
  * 
- * @param {number} number - The number to be formatted (can be an integer or a floating-point number).
- * @returns {string} The formatted number as a string with commas added.
+ * @param {number|string} number - The number to be formatted (can be an integer, float, or string).
+ * @returns {string} The formatted number as a string with dots as thousand separators.
  */
-function formatNumberWithCommas(number) {
-    // Convert the number to a string for manipulation
-    var parts = number.toString().split(".");
-    // Add commas to the integer part of the number (thousands separator)
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // Join the integer part with the decimal part, if it exists
-    return parts.join(".");
+function formatNumberWithPoints(number) {
+    // If the value is null, undefined, or an empty string, return a blank space
+    if (number === null || number === undefined || number === "") return " ";
+
+    // Convert the string value to a number
+    const price = parseFloat(number);
+    
+    // Check if the price is 0
+    if (price === 0) return 'Gratis';
+
+    // If the number is an integer, format it with thousand separators using dots
+    if (Number.isInteger(price)) return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    // If the number has decimals, format it by separating thousands with dots and decimals with a comma
+    let [integerPart, decimalPart] = price.toString().split(".");
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    
+    return decimalPart ? `${integerPart},${decimalPart}` : integerPart;
 }
 
+
+/**
+ * Smoothly scrolls to a section with temporary visual highlight
+ * @param {HTMLElement} section - DOM element to scroll to
+ * @param {string} [color='red'] - Border highlight color (default: red)
+ * @returns {void}
+ */
+function scrollToSection(section, color = 'red') {
+    if (!section) return; // Basic null check
+    
+    // Scroll with offset managed via CSS (scroll-margin-top)
+    section.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+    
+    // Temporary highlight effect (2 seconds)
+    section.style.boxShadow = `0 0 0 2px ${color}`;
+    setTimeout(() => section.style.boxShadow = '', 2000);
+}
+
+
+/**
+ * Displays error messages from a form submission.
+ * 
+ * This function iterates over an object containing form field errors and 
+ * displays them as alerts with a red color. Each field may have multiple 
+ * error messages associated with it.
+ *
+ * @param {Object} errors - An object where each key is a field name and 
+ *                          its value is an array of error messages.
+ * @param {number} [delay=2500] - The time in milliseconds before each alert disappears.
+ */
+function showErrorAlerts(errors, delay = 2500) {
+    // Iterate over each field in the errors object
+    for (let field in errors) {
+        // Ensure the field actually belongs to the object (not from prototype)
+        if (errors.hasOwnProperty(field)) {
+            // Iterate over each error message for the given field
+            errors[field].forEach((error) => {
+                // Display an alert with the field name and its corresponding error message
+                openAlert(`${field}: ${error}`, "red", delay);
+            });
+        }
+    }
+}
 
 
 
 // ========================================================================
 //                  Whatsap button
 // ========================================================================
+// Función para limpiar el número de teléfono y devolver la URL de WhatsApp
+function formatPhoneNumber(cellphone) {
+    // Elimina todos los caracteres no numéricos (como espacios, paréntesis, guiones)
+    const formattedNumber = cellphone.replace(/[^\d]/g, '');
+    // Si el número está bien formateado (empezando con un 9, después 11 dígitos)
+    // Si el número está bien formateado (empezando con un 9, después 11 dígitos)
+    if (formattedNumber.length < 6) {
+        console.error("Número de teléfono no válido");
+        return null;
+    }
+
+    return `https://wa.me/${formattedNumber}`;
+}
+
 // Wait until the DOM is fully loaded before executing the script
 document.addEventListener('DOMContentLoaded', function() {
     // Get references to the DOM elements
-    const floatingButton = document.getElementById('floatingButton');
-    const floatingMenu = document.getElementById('floatingMenu');
+    const floatingButton = document.getElementById('floating-wsp-btn');
+    const floatingMenu = document.getElementById('floating-wsp-menu');
     const icon = floatingButton.querySelector('[data-icon]');
 
     // Initial configuration
@@ -565,6 +613,11 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleButtonState(); // Toggle the button state
     });
 
+    // Manejar clics dentro del menú flotante para que no se cierre
+    floatingMenu.addEventListener('click', function(event) {
+        event.stopPropagation(); // Evita que el clic en el menú lo cierre
+    });
+
     // Handle clicks anywhere in the document
     document.addEventListener('click', function() {
         // If menu is currently shown, close it
@@ -572,29 +625,21 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleButtonState();
         }
     });
+
+    // Assign href generic to btn-wsp
+    const productLink = document.getElementById('wsp-link');
+    const cellphone = productLink.getAttribute('data-wsp');
+    const whatsappUrl = formatPhoneNumber(cellphone);
+
+    // Crea el mensaje dinámicamente con los valores del producto
+    const message = `Buenos días, Quería consultar sobre formas de pago con tarjeta en el local?`;
+
+    // Si el número es válido, concatenamos la URL con el mensaje
+    if (whatsappUrl) {
+        const finalWhatsappUrl = `${whatsappUrl}?text=${encodeURIComponent(message)}`;
+        productLink.setAttribute('href', finalWhatsappUrl);
+    }
 });
-
-
-/**
- * Smoothly scrolls to a section with temporary visual highlight
- * @param {HTMLElement} section - DOM element to scroll to
- * @param {string} [color='red'] - Border highlight color (default: red)
- * @returns {void}
- */
-function scrollToSection(section, color = 'red') {
-    if (!section) return; // Basic null check
-    
-    // Scroll with offset managed via CSS (scroll-margin-top)
-    section.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-    });
-    
-    // Temporary highlight effect (2 seconds)
-    section.style.boxShadow = `0 0 0 2px ${color}`;
-    setTimeout(() => section.style.boxShadow = '', 2000);
-}
-
 
 
 /*

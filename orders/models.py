@@ -7,11 +7,11 @@ from django.db import models
 class StatusOrder(models.Model):
     # 1	Cancelado
     # 2	Pendiente
-    # 3 Pagado a confirmar
-    # 4	Pagado confirmado
-    # 5 Envío en camino
+    # 3	Pago a Confirmar
+    # 4	Pago Confirmado
+    # 5	Enviado
     # 6	Completado
-    # 7 Devolución
+    # 7	Devolución
     name = models.CharField(max_length=40)
     description = models.CharField(max_length=100, blank=True, null=True)  # Breve descripción
     
@@ -19,14 +19,29 @@ class StatusOrder(models.Model):
         return self.name
     
     
-class PaymentOrder(models.Model):
+class PaymentMethod(models.Model):
     # 1 - Efectivo
     # 2 - Transferencia directa
     # 3 - Pagar en cuotas con tarjeta MERCADO PAGO API
     # 4 - Criptomoneda
     name = models.CharField(max_length=40)
     description = models.CharField(max_length=100, blank=True, null=True)
+    time = models.IntegerField(default=2)
     is_active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.name
+    
+    
+class ShipmentMethod(models.Model):
+    # 1	Retiro en Local
+    # 2	Dentro de Circunvalación
+    # 3	Fuera de Circunvalación
+    # 4	Puntos de Retiro Correo
+    name = models.CharField(max_length=40)
+    description = models.CharField(max_length=100, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     
     def __str__(self):
         return self.name
@@ -50,17 +65,6 @@ class ShipmentOrder(models.Model):
         return self.method.name if self.method else "Sin método de envío"
     
 
-class ShipmentMethod(models.Model):
-    # 1 - Retiro local
-    # 2 - Retiro a domicilio etc
-    name = models.CharField(max_length=40)
-    description = models.CharField(max_length=100, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    
-    def __str__(self):
-        return self.name
-
 
 class ItemOrder(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name="items")
@@ -68,9 +72,19 @@ class ItemOrder(models.Model):
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     
+    class Meta:
+        verbose_name = "Ítem de orden"
+        verbose_name_plural = "Ítems de orden"
+        indexes = [
+            models.Index(fields=['order']),
+            models.Index(fields=['product']),
+        ]
+    
     @property
     def subtotal(self):
-        return float(self.quantity * self.price)
+        """Subtotal calculado como propiedad (no se almacena en DB)"""
+        subtotal = self.quantity * float(self.price)
+        return float(subtotal)
     
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
@@ -81,19 +95,23 @@ class Order(models.Model):
     
     # Foreign Key associated
     status = models.ForeignKey('StatusOrder', on_delete=models.SET_NULL, null=True, default=2)
-    payment = models.ForeignKey('PaymentOrder', on_delete=models.SET_NULL, null=True)
+    payment = models.ForeignKey('PaymentMethod', on_delete=models.SET_NULL, null=True)
     shipment = models.ForeignKey('ShipmentOrder', on_delete=models.SET_NULL, null=True)
     invoice = models.ForeignKey('InvoiceOrder', on_delete=models.SET_NULL, null=True)
     
     # OrderItem asociados, se accede con la relacion inversa order.items.all()
-    
     # Dates
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     expire_at = models.DateTimeField(null=True, blank=True)
     
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    dni = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    cellphone = models.CharField(max_length=15, blank=True, null=True)
     detail_order = models.CharField(max_length=150, blank=True, null=True)
-
+    
     def __str__(self):
         return f"Pedido #{self.id} - {self.user.email}"
     
@@ -104,8 +122,6 @@ class Order(models.Model):
 class InvoiceOrder(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     dni = models.CharField(max_length=30, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    cellphone = models.CharField(max_length=15, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     
@@ -124,16 +140,9 @@ class InvoiceOrder(models.Model):
     email_mp = models.EmailField(blank=True, null=True)
     payment_id_mp = models.CharField(max_length=60, blank=True, null=True)
     
-    status = models.CharField(
-        max_length=1, 
-        choices=[
-            ('P', 'Pending'),
-            ('A', 'Paid'),
-            ('C', 'Cancelled')
-        ],
-        default='A'
-    )
-    
+    # False por defecto, ya que inicia como no pagada
+    is_paid = models.BooleanField(default=False)
+
     f_type = models.CharField(
         max_length=1, 
         choices=[

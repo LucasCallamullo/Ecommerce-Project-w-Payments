@@ -15,9 +15,9 @@ def load_store_init():
     # Crear algunos datos iniciales para la tienda unica
     store, _ = Store.objects.get_or_create(
         name= "Cat Cat Games",
-        wsp_number = "351 543-7689",
+        wsp_number = "+54 9 351 543-7688",
         address = "Calle Falsa 123",
-        cellphone = "351 543-7689",
+        cellphone = "351 543-7688",
         email = "cat_cat_games@gmail.com",
     )
     

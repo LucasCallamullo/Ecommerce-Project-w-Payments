@@ -27,6 +27,7 @@
     --white-color: #fff;
     --black-color: #000;
     --red-color: #e40707;
+    --green-wsp-color: #2db742;
     --bg-images: #fff;
 
     /* Font Sizes */
@@ -187,14 +188,19 @@ b, strong {
     font-weight: bolder
 }
 
+input {
+    font-size: var(--font-small-plus) !important;
+    font-weight: bolder
+}
+
 /* Para navegadores WebKit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar-track {
-    background: var(--bg-secondary); /* Color de fondo del track (fondo del scrollbar) */
+    background: #2b2b2b;  /* Color negro/oscuro */
 }
 
 /* Para Firefox */
 html {
-    scrollbar-color: var(--text-secondary) var(--bg-secondary); /* thumb track */
+    scrollbar-color: #797979 #2b2b2b; /* thumb track */
 }
 /* ======================================================================
         GENERAL STYLES AND CLASSES
@@ -269,8 +275,8 @@ header {
 main {
     width: 100%;
     background-color: var(--bg-secondary);
-    padding-top: 10px; /* mobile edit */
-    padding-bottom: 10px;
+    padding-top: 20px; /* mobile edit */
+    padding-bottom: 20px;
     margin-top: var(--height-header);    /* mobile edit */
 }
 
@@ -291,7 +297,6 @@ footer {
 
     main {
         margin-top: 0; /* mobile edit */
-        padding-top: 0; /* mobile edit */
     }
 }
 
@@ -572,6 +577,7 @@ footer {
 .text-secondary { color: var(--text-secondary) !important; }
 
 .text-start { text-align: left !important; }
+.text-end { text-align: right !important; }
 .text-center { text-align: center !important; }
 .text-justify { text-align: justify !important; }
 

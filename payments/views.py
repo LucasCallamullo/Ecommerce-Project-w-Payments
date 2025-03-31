@@ -8,12 +8,19 @@ from django.shortcuts import render
 from datetime import timedelta
 from payments import utils
 from payments import utils_for_mp
-from orders.models import Order
+
+
+from django.db.models import Prefetch
+from django.shortcuts import render, get_object_or_404
+from orders.models import Order, ItemOrder
+
+from django.utils import timezone
+from django.template.defaultfilters import date
 
 sdk = mercadopago.SDK(settings.MERCADO_PAGO_ACCESS_TOKEN)
 
 
-def payment_view(request):
+def payment_view(request, order_id):
     """
         Esta función es principalmente para permitir el pago mediante tarjetas o transferencia de forma 
         segura para el cliente a partir de la API de mercado pago
@@ -22,71 +29,44 @@ def payment_view(request):
     if not user.is_authenticated:    # Stupids checks for problematic users
         return render(request, "payments/fail_payments.html", {"error": "Debes iniciar sesión para pagar."})
 
-    # Generar las fechas
-    expiration_date_from = utils_for_mp.generate_datetime(flag='start')
-    expiration_date_to = utils_for_mp.generate_datetime(flag='end', hours_window=1)
+    # Optimización de consultas con select_related y prefetch_related
+    order = get_object_or_404(
+        Order.objects.select_related(
+            'user',
+            'payment',
+            'shipment',
+            'shipment__method',
+            'status'
+        ).prefetch_related(
+            Prefetch('items', queryset=ItemOrder.objects.select_related('product', 'product__category'))
+        ),
+        id=order_id,
+        user=request.user
+    )
     
-    # get urls for mp payments
-    back_urls = utils_for_mp.get_urls_ngrok(settings.BASE_URL_RAILWAY)
-    
-    # Obtener lista de items que nos solicita
-    # Al usar check out pro incluiremos al costo de envio si existiera como un item
-    items, total_cart = utils_for_mp.get_items_from_cart(request)
-    discount = 0    # Aplicar descuento en caso de que exista cuando se habilite el modelo de cupones
-    if discount > 0:
-        items, total_cart = utils_for_mp.get_items_with_discount(items, discount, total_cart)
-    
-    # obtener el diccionario con info del comprador
-    payer = utils_for_mp.get_payer_info_from_form(request)
-    
-    # Create order and factura asociados a esta venta
-    order, message = utils.create_order_pending(request)
-    if order is None:    # for some reason..
-        return render(request, "payments/fail_payments.html", {"error": message})    
-    
-    # Diccionario corregido
-    preference_data = {
-        "items": items,  
-        "payer": payer,
-        "back_urls": back_urls,
-        "auto_return": "approved",    # vuelve al back_url que corresponda en 5 segundos o con el btn
-        "payment_methods": {
-            "excluded_payment_methods" : [
-                { "id" : "argencard" },
-                { "id" : "cmr" },
-                { "id" : "diners" },
-                { "id" : "tarshop" }
-            ],
-            "excluded_payment_types" : [],
-            "installments" : 3
-        },
-        "notification_url": "https://www.your-site.com/ipn",
-        "statement_descriptor": "MEUNEGOCIO",
-        "external_reference": "Reference_1234",
-        # fechas calculadas con la fucnion en payments/utils.py
-        "expires": True, 
-        "expiration_date_from": expiration_date_from,
-        "expiration_date_to": expiration_date_to,
-        # agregados
-        "binary_mode": True, # para tener dos estados pagado o fail
-        # "purpose": "wallet_purchase", # para solo permitir que paguen usuarios registrados
-        
-        # Referencia externa asociada con la orden
-        "external_reference": str(order.id),  
-    }
+    if order.user != user:
+        message = "Debes iniciar sesión con la cuenta que corresponda... para ver."
+        return render(request, "payments/fail_payments.html", {"error": message})
 
-    # Crea la preferencia en Mercado Pago
-    preference_response = sdk.preference().create(preference_data)
-    preference = preference_response["response"]
-    
-    # Obtiene el ID de la preferencia que se pasa como contexto
-    preference_id = preference["id"]
     
     # obtener info de la order
-    items = order.items.all()      # get Orderitems associeted with the order    
     shipment_method = order.shipment.method    # get method envio associeted with the order
     payment = order.payment              # get payment from order created
+    items = order.items.all()    # get items from order
     
+    discount = 1    # future discount logic
+    # id = 3 --> mercado pago API
+    if payment.id == 3:
+        preference_id, total_cart = utils_for_mp.create_preference_data(order, discount)  
+    else:
+        preference_id = None
+        total_cart = 0
+        for item in items:
+            subtotal = float(item.price * item.quantity)
+            total_cart += subtotal
+        total_cart -= float(discount)
+        total_cart += float(shipment_method.price)
+        
     # get date and hours in Argentina
     date = (order.created_at - timedelta(hours=3)).strftime("%d/%m/%Y")
     hour = (order.created_at - timedelta(hours=3)).strftime("%H:%M")
@@ -98,18 +78,22 @@ def payment_view(request):
         # order stuff
         'items': items,        
         'shipment_method': shipment_method,    
-        'discount': discount,
+        'discount': discount,    
         
         'date': date,
         'hour': hour,
+        'expire_date': order.expire_at,
+        'address': order.shipment.address,
+        'order_email': order.email,
+        'complete_name': f"{order.first_name} {order.last_name}",
+        'status': order.status,
         'payment': payment,
         
         # more data info
         'total_cart': total_cart,    # this is calculated with discount and thats stuffs
-        'payer': payer
     }
     
-    return render(request, "payments/payments.html", context)
+    return render(request, "payments/payments_page.html", context)
 
 
     # merchant_order_id = request.GET.get("merchant_order_id")
@@ -168,128 +152,35 @@ def success(request):
     return render(request, 'payments/success.html', contexto)
 
 
+from django.http import JsonResponse
+def crear_preferencia(request):
+    cuotas = int(request.GET.get("cuotas", 1))
 
+    # Definir el precio según la cantidad de cuotas
+    precios = {1: 100, 3: 150, 6: 200}
+    total_cart = precios.get(cuotas, 100)
 
-"""
-def payment_view(request):
-    ""
-        Esta función es principalmente para permitir el pago mediante tarjetas o transferencia de forma 
-        segura para el cliente a partir de la API de mercado pago
-    ""
-    user = request.user
-    
-    if not user.is_authenticated:    # Checks for some reason you know about that 
-        return render(request, "login.html", {"error": "Debes iniciar sesión para pagar."})
+    items = [
+        {
+            "title": "Producto",
+            "quantity": 1,
+            "currency_id": "ARS",
+            "unit_price": total_cart
+        }
+    ]
 
-    # Generar las fechas
-    expiration_date_from = generate_datetime(flag='start')
-    expiration_date_to = generate_datetime(flag='end')
-    
-    # get urls for mp payments
-    back_urls = get_urls_ngrok(settings.BASE_URL_RAILWAY)
-    
-    # a modo de prueba usaremos algun carrito de algun usuario
-    items, total_cart = get_items_from_cart(request)
-    
-    # Aplicar descuento en caso de que exista cuando se habilite el modelo de cupones
-    discount = 0
-    if discount > 0:
-        items, total_cart = get_items_with_discount(items, discount, total_cart)
-    
-    # obtener el diccionario con info del comprador
-    payer = get_payer_info_from_form(request)
-    
-    # Diccionario corregido
     preference_data = {
-        "coupon_amount":  10, # verificar despues como usar en el brick
-        "items": items,  
-        "payer": payer,
-        "back_urls": back_urls,
-        "auto_return": "approved",    # vuelve al back_url que corresponda en 5 segundos o con el btn
+        "items": items,
         "payment_methods": {
-            "excluded_payment_methods" : [
-                { "id" : "argencard" },
-                { "id" : "cmr" },
-                { "id" : "diners" },
-                { "id" : "tarshop" }
-            ],
-            "excluded_payment_types" : [],
-            "installments" : 1
+            "installments": cuotas
         },
-        "notification_url": "https://www.your-site.com/ipn",
-        "statement_descriptor": "MEUNEGOCIO",
-        "external_reference": "Reference_1234",
-        # fechas calculadas con la fucnion en payments/utils.py
-        "expires": True, 
-        "expiration_date_from": expiration_date_from,
-        "expiration_date_to": expiration_date_to,
-        # agregados
-        "binary_mode": True, # para tener dos estados pagado o fail
-        # "purpose": "wallet_purchase", # para solo permitir que paguen usuarios registrados
+        "auto_return": "approved"
     }
 
-    # Crea la preferencia en Mercado Pago
     preference_response = sdk.preference().create(preference_data)
-    preference = preference_response["response"]
-    
-    # Obtiene el ID de la preferencia que se pasa como contexto
-    preference_id = preference["id"]
-    
-    context = {
-        'preference_id': preference_id,
-        'public_key': settings.MERCADO_PAGO_PUBLIC_KEY,
-        'payer': payer
-    }
-    
-    return render(request, "payments/payments.html", context)
+    preference_id = preference_response["response"]["id"]
 
-
-
-def success(request):
-    # Recupera el ID del pago que Mercado Pago envió en la notificación
-    payment_id = int(request.GET.get('payment_id'))
-
-    # Recuperamos los datos del payment despues del success por mercado pago para almacenar informacion
-    payment_response = sdk.payment().get(payment_id)
-    payment = payment_response["response"]
-
-    # Verifica si los ítems están dentro de "additional_info"
-    items = payment.get("additional_info", {}).get("items", [])
-    
-    # para confirmar la orden marcarla como compra realizada
-    payer = payment.get("payer", {})
-    
-    # get the order and factura created
-    order, factura, message = confirm_order(request, payer)
-    
-    # Asignar el número de factura basado en el ID generado
-    if factura:    # stupid check
-        factura.invoice_number = f"FAC-{factura.id:06d}"
-        factura.save()
-    
-    cart = request.user.carrito
-    
-    contexto = {
-        'cart': cart,
-        'order': order,
-        
-        # this is for debug
-        'message': message,
-        
-        'items': items,
-        'payer': payer,
-        'payment': payment,
-    }
-    
-
-
-    return render(request, 'payments/success.html', contexto)
-
-"""
-
-
-
-
+    return JsonResponse({"preference_id": preference_id})
 
 
 def failure(request):

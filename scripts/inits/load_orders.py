@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings')
 django.setup()
 
-from orders.models import StatusOrder, PaymentOrder, ShipmentMethod
+from orders.models import StatusOrder, PaymentMethod, ShipmentMethod
 
 
 def load_data(model_class, data):
@@ -35,13 +35,14 @@ def load_orders_init():
         {'name': 'Pago Confirmado', 'description': 'Una vez confirmado el pago.'},
         {'name': 'Enviado', 'description': 'Espera a ser recibido.'},
         {'name': 'Completado', 'description': 'Pedido Recibido.'},
+        {'name': 'Devolución', 'description': 'Estado para pedidos devueltos.'},
     ]
 
     data_payment_methods = [
-        {'name': 'Efectivo', 'description': 'Completa el pago retirando por el local. (Solo entregas en el día)', 'is_active': True},
-        {'name': 'Transferencia', 'description': 'Precio de contado por Transferencia directa.', 'is_active': True},
-        {'name': 'Tarjeta Crédito o Debito', 'description': 'Consultar promociones con tarjeta.', 'is_active': True},
-        {'name': 'USD Theter', 'description': 'Precios especiales por pago en criptomoneda.', 'is_active': True},
+        {'name': 'Efectivo', 'description': 'Completa el pago retirando por el local. (Solo entregas en el día)', 'is_active': True, 'time': 12},
+        {'name': 'Transferencia', 'description': 'Precio de contado por Transferencia directa.', 'is_active': True, 'time': 2},
+        {'name': 'Tarjeta Crédito o Debito', 'description': 'Consultar promociones con tarjeta.', 'is_active': True, 'time': 2},
+        {'name': 'USD Theter', 'description': 'Precios especiales por pago en criptomoneda.', 'is_active': True, 'time': 2},
     ]
 
     data_envio_methods = [
@@ -53,7 +54,7 @@ def load_orders_init():
 
     # Llamadas a la función genérica
     load_data(StatusOrder, data_order_status)
-    load_data(PaymentOrder, data_payment_methods)
+    load_data(PaymentMethod, data_payment_methods)
     load_data(ShipmentMethod, data_envio_methods)
 
 

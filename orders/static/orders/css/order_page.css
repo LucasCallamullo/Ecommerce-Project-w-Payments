@@ -19,7 +19,7 @@
 
 .form-container {
 	background: var(--bg-primary);
-	padding: 8px 16px;
+	padding: 10px 16px 12px 16px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -146,7 +146,12 @@
 	font-size: var(--font-small);
 }
 
-#payment-methods-section, #extra-form, #shipping-methods-section {
+#shippin-form, #retire-form {
+	display: none;
+}
+
+#shippin-form, #retire-form,
+#payment-methods-section, #shipping-methods-section {
 	scroll-margin-top: 100px; /* Ajusta este valor según necesites */
 }
 
@@ -157,7 +162,8 @@
 		column-gap: 16px;
 	}
 
-	#extra-form .cont-form-grid {
+	#shippin-form .cont-form-grid,
+	#retire-form .cont-form-grid {
 		grid-template-columns: 1fr 1fr;
 		row-gap: 0;
 	}
@@ -236,8 +242,11 @@
 
 .cart-row {
     display: grid;
-	grid-template-columns: 0.7fr 1fr 0.5fr 1.1fr;
-	grid-row: 1.5fr 0.5fr; 
+	grid-template-columns: 0.75fr 1fr 0.25fr 1fr;
+	grid-row: 1.2fr 0.4fr 0.4fr; 
+
+	row-gap: 4px;
+	column-gap: 8px;
 
     height: 110px;
     max-height: 110px;
@@ -245,7 +254,8 @@
 
 	grid-template-areas: 
         "image name name name"
-        "image price quantity subtotal";
+        "image price price quantity"
+        "image subtotal subtotal subtotal";
 }
 
 /* Asignar áreas a los elementos */
@@ -255,23 +265,20 @@
 .cart-row div:nth-child(4) { grid-area: quantity; } /* Cantidad */
 .cart-row div:nth-child(5) { grid-area: subtotal; } /* Subtotal */
 
-/* Precio */ /* Cantidad */ 
+/* Precio */ /* Cantidad */  /* Subtotal */
+
 .cart-row div:nth-child(3), 
-.cart-row div:nth-child(4) {
+.cart-row div:nth-child(4),
+.cart-row div:nth-child(5) {
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
 }
 
-/* Subtotal */
-.cart-row div:nth-child(5) { 
-	display: flex;
-	justify-content: flex-end;
-	align-items: flex-start;
-}
 
 .cart-row div {
 	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 /* Styles for large desktops (mín. 993px to max. infinite) */
@@ -356,6 +363,14 @@
 		display: flex;
 		justify-content: flex-end;
 		align-items: flex-start;
+	}
+
+	.modal-footer .d-flex-col div:nth-child(1) {
+		justify-content: flex-start !important;
+	}
+
+	.modal-footer .d-flex-col div:nth-child(2) {
+		justify-content: flex-end !important;
 	}
 }
 

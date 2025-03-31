@@ -1,110 +1,11 @@
 
 
-from orders.models import Order, StatusOrder, ItemOrder, InvoiceOrder
-from orders.models import ShipmentMethod, ShipmentOrder, PaymentOrder
+from orders.models import StatusOrder, InvoiceOrder
 
 from cart.carrito import Carrito
-from products.models import Product
-from django.utils import timezone
-from datetime import timedelta
 
 from django.db import transaction
 
-def create_order_pending(request):
-    """
-    esta funcion nos sirve para almacenar y guardar todos los datos en la base de datos y asociarlo
-    segun corresponda con cada base de datos
-    
-    # example on order data
-    order_data = {
-        "first_name": "Lucas",
-        "last_name": "Martinez",
-        "email": "lucas.martinez@example.com",
-        "cellphone": "3515437688",
-        "dni": "41224335",
-        "detail_order": "Por favor, entregar antes de las 18:00.",
-        
-        # NOTE if id_envio_method == '1': # this is only for retire local
-        "name_retiro": "lucas",
-        "dni_retiro": "martinez",
-        
-        # NOTE if id_envio_method != '1': # Home delivery
-        "province": "Córdoba",
-        "city": "Córdoba Capital",
-        "address": "Av. Colón 1234",
-        "postal_code": "5000",
-        "detail": "Departamento 2B",
-        
-        # NOTE this is for use to complete de order
-        "envio_method_id": "2", 
-        "payment_method_id": "3"
-    }
-    """
-    # recuperamos el order data de la session en el paso anterior que se guardo
-    order_data = request.session.get("order_data", {})
-    if not order_data:    # stupid check
-        return None, "Por algun motivo.. No hay datos de orden disponibles."
-
-    try:
-        with transaction.atomic():
-            envio_method_id = int(order_data.get("envio_method_id", 0))
-            payment_id = int(order_data.get("payment_method_id", 0))
-
-            if not envio_method_id or not payment_id:    # stupid check
-                return None, "Por algun motivo.. Falta el método de envío o pago."
-
-            # Crear envío
-            shipment_method = ShipmentMethod.objects.get(id=envio_method_id)
-            shipment = ShipmentOrder.objects.create(
-                method=shipment_method,
-                name_pickup=order_data.get("name_retiro", ""),
-                dni_pickup=order_data.get("dni_retiro", ""),
-                address=order_data.get("address", ""),
-                province=order_data.get("province", ""),
-                city=order_data.get("city", ""),
-                postal_code=order_data.get("postal_code", ""),
-                detail=order_data.get("detail", ""),
-            )
-
-            # Crear orden
-            payment_method = PaymentOrder.objects.get(id=payment_id)
-            status = StatusOrder.objects.get(id=2)  # Orden en estado "Pendiente"
-            user = request.user
-            expire_at = timezone.now() + timedelta(hours=1)
-
-            new_order = Order.objects.create(
-                user=user,
-                status=status,
-                payment=payment_method,
-                shipment=shipment,
-                detail_order=order_data.get("detail_order", ""),
-                invoice=None,    # primero será null y se creara despues una vez confirmado el pago
-                expire_at=expire_at
-            )
-            
-            # Obtenemos el carrito de la session
-            carrito = Carrito(request)
-            
-            # Obtener todos los productos del carrito en una sola consulta
-            product_ids = [value["id"] for _, value in carrito.items]
-            products = {product.id: product for product in Product.objects.filter(id__in=product_ids)}
-            
-            for _, value in carrito.items:
-                
-                 # Acceder al producto ya consultado
-                product = products.get(value["id"]) 
-
-                ItemOrder.objects.create(
-                    order=new_order,
-                    product=product,
-                    quantity=value["qty"],
-                    price=product.price
-                )
-        
-            return new_order, "La nueva orden fue creada con exito!"
-        
-    except Exception as e:
-        return None, f"Error al confirmar la orden: {e}"
 
 
 def confirm_order(request, payment_mp, order):

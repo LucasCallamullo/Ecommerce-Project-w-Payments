@@ -16,7 +16,7 @@
 {% block main_content %}
 
 <!-- Primera fila -->
-<div class="d-flex mt-3 mb-3 gap-1">
+<div class="d-flex mb-3 gap-1">
 	<a class="btn btn-paralelogramo" href="{% url 'Home' %}">
 		<span class="text-normal"> Home </span>
 	</a>
@@ -41,11 +41,11 @@
 			<div class="cont-form-grid mt-2">
 				<div class="d-flex-col gap-1">
 					<label for="first_name"><b>Nombre</b></label>
-					<input type="text" name="first_name" required>
+					<input type="text" name="first_name" value="{{ user.first_name|default:'' }}" required>
 				</div>
 				<div class="d-flex-col gap-1">
 					<label for="last_name"><b>Apellido</b></label>
-					<input type="text" name="last_name" required>
+					<input type="text" name="last_name" value="{{ user.last_name|default:'' }}" required>
 				</div>
 			</div>
 
@@ -53,11 +53,11 @@
 			<div class="cont-form-grid mt-2">
 				<div class="d-flex-col gap-1">
 					<label for="telefono-cod"><b>Celular</b></label>
-					<input type="text" name="cellphone" required>
+					<input type="text" name="cellphone" value="{{ user.cellphone|default:'351' }}" required>
 				</div>
 				<div class="d-flex-col gap-1">
 					<label for="email"><b>Email</b></label>
-					<input type="email" name="email" required>
+					<input type="email" name="email" value="{{ user.email|default:'' }}" required>
 				</div>
 			</div>
 
@@ -65,7 +65,7 @@
 			<div class="cont-form-grid mt-2">
 				<div class="d-flex-col gap-1">
 					<label for="dni"><b>DNI</b></label>
-					<input type="text" name="dni" required>
+					<input type="text" name="dni" value="{{ user.dni|default:'351' }}" required>
 				</div>
 			</div>
 
@@ -77,13 +77,63 @@
 				</div>
 			</div>
 
-			<section id="extra-form">
-				<!-- { % include "orders/extra_form.html" % } -->
+			<!-- Extra form fore Retire -->
+			<section id="retire-form">
+				<h3>Datos de Retiro</h3>
+
+				<div class="cont-form-grid mt-2">
+					<div class="d-flex-col gap-1">
+						<label for="name_retiro"><b>Nombre quien retira</b></label>
+						<input type="text" name="name_retire">
+					</div>
+
+					<div class="d-flex-col gap-1">
+						<label for="dni_retiro"><b>DNI quien retira</b></label>
+						<input type="text" name="dni_retire">
+					</div>
+				</div>
 			</section>
 
-			<div class="mb-2"></div>
+			<!-- Extra form fore Shippin -->
+			<section id="shippin-form">
+				<h3>Datos de Envío</h3>
 
-			<!-- Botón oculto que será disparado desde JavaScript -->
+				<div class="cont-form-grid mt-2">
+					<div class="d-flex-col gap-1">
+						<label for="province"><b>Provincia</b></label>
+						<select name="province" id="id_province">
+							{% for key, value in provinces %}
+								<option value="{{ key }}">{{ value }}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="d-flex-col gap-1">
+						<label for="city"><b>Ciudad</b></label>
+						<input type="text" name="city" value="{{ user.city|default:'' }}">
+					</div>
+				</div>
+
+				<div class="cont-form-grid mt-2">
+					<div class="d-flex-col gap-1">
+						<label for="address"><b>Domicilio Completo</b></label>
+						<input type="text" name="address" value="{{ user.address|default:'' }}">
+					</div>
+					<div class="d-flex-col gap-1">
+						<label for="postal_code"><b>Código Postal</b></label>
+						<input type="text" name="postal_code">
+					</div>
+				</div>
+
+				<div class="cont-form-grid mt-2">
+					<div class="d-flex-col gap-1">
+						<label for="detail"><b>Detalles del Envío</b></label>
+						<textarea name="detail"></textarea>
+					</div>
+				</div>
+			</section>
+
+			<!-- Hidden button that will be fired from JavaScript -->
 			<button type="submit" id="submit-hidden" hidden></button>
 		</form>
 

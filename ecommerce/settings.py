@@ -18,8 +18,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASE_URL_RAILWAY = "https://web-production-8e84.up.railway.app"
-
 # =====================================================================================
 #             EVERYTHING RELATED TO ENVIRONMENTAL VARIABLES n DB
 # =====================================================================================
@@ -149,10 +147,13 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+# LANGUAGE_CODE = 'en-us'
+# TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'es'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'  # Cambiado a la zona horaria de Argentina
 USE_I18N = True
 USE_TZ = True
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -227,6 +228,7 @@ REST_FRAMEWORK = {
 # ====================================================================
 
 # this is for deployment
+PYME_NAME = "Cat Cat Games"
 
 ALLOWED_HOSTS = ['127.0.0.1', 'web-production-8e84.up.railway.app']
 
@@ -235,11 +237,12 @@ CSRF_TRUSTED_ORIGINS = [
     'https://web-production-8e84.up.railway.app',
 ]
 
+BASE_URL_PAGE = "https://4eb3-2803-9800-9884-be88-59b5-6256-d4ab-a9e0.ngrok-free.app"
+
 if DEBUG:
     ALLOWED_HOSTS = ['*']
+    CSRF_TRUSTED_ORIGINS.append(BASE_URL_PAGE)
     
-    BASE_URL_RAILWAY = "https://1a44-2803-9800-9884-be88-51d2-353b-2995-2c15.ngrok-free.app"
-    CSRF_TRUSTED_ORIGINS.append(BASE_URL_RAILWAY)
 
 # CSRF_COOKIE_SECURE = True  # Railway usa HTTPS
 # SESSION_COOKIE_SECURE = True

@@ -8,24 +8,48 @@
 ========================================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Recupera todos los botones y cart containers
+    // Define the pages where the functionality should NOT be activated
+    const blockedPages = [
+        "/order/",      // Blocked page: order page
+        "/payment-view/" // Blocked page: payment view page
+    ];
+
+    // Get the current path of the page
+    const currentPath = window.location.pathname;
+
+    // If the current page is in the blocked pages list, prevent functionality
+    if (blockedPages.includes(currentPath)) {
+        // Add a click event listener to each cart button that shows an alert
+        const cartButtons = document.querySelectorAll('.cart-button');
+
+        cartButtons.forEach((cartButton) => {
+            cartButton.addEventListener('click', () => {
+                openAlert('No puedes usar el Carrito durante el pedido y/o pago.', 'green', 2000);
+            });
+        });
+
+        // Exit the function early to prevent the rest of the code from executing
+        return;
+    }
+
+    // Retrieve all the cart buttons and their corresponding cart containers
     const cartButtons = document.querySelectorAll('.cart-button');
     const cartContainers = document.querySelectorAll('.cart-cont-overlay');
     const cartOverlays = document.querySelectorAll('.cart-overlay');
     const cartBtnCloses = document.querySelectorAll('.close-widget-cart');
 
-    // Verifica que haya la misma cantidad de botones y dropdowns
+    // Check if the number of buttons matches the number of cart containers
     if (cartButtons.length !== cartContainers.length) {
-        console.error('La cantidad de botones y cart containers no coinciden.');
+        console.error('The number of buttons and cart containers does not match.');
     }
 
-    // Asocia cada botón con sus elementos correspondientes
+    // Associate each button with its corresponding elements (containers, overlays, etc.)
     cartButtons.forEach((cartButton, index) => {
         const cartContainer = cartContainers[index];
         const overlay = cartOverlays[index];
         const buttonClose = cartBtnCloses[index];
 
-        // This dict configure the events add and remove automatically
+        // Setup the toggleable elements with the given configuration
         setupToggleableElement({
             toggleButton: cartButton,
             closeButton: buttonClose,
@@ -103,7 +127,6 @@ async function handleCartActions(productId, action, value=1) {
         updateCart(data, index);
 
         // show the cart widget if you dont are in the cart-page-view
-        
         if ( !cartView ) {
             const cartContainers = document.querySelectorAll('.cart-cont-overlay');
             let isOpenCart = cartContainers[index].getAttribute('data-state') === 'open';
@@ -133,7 +156,6 @@ async function handleCartActions(productId, action, value=1) {
 ========================================================================================== */
 function updateCart(data, index) {
     // Mobile: Activar el botón con index 0    // Desktop: Activar el botón con index 1
-    
     if (index === 1) {
         const badgeCantTotal = document.getElementById('badge-cart-button');
         badgeCantTotal.textContent = `${data.qty_total}`;
@@ -145,11 +167,11 @@ function updateCart(data, index) {
     const cartTotal = cartTotals[index];
     const cartContent = cartContainers[index];
 
-    var totalPrice = formatNumberWithCommas(data.total);
+    var totalPrice = formatNumberWithPoints(data.total);
     cartTotal.textContent = `$${totalPrice}`;
 
     // Reemplaza el contenido con el nuevo HTML
-    cartContent.innerHTML = data.widget_html; 
+    cartContent.innerHTML = data.widget_html;
 
     // Reasignar eventos después de actualizar el carrito
     assignButtonEvents();
@@ -182,12 +204,6 @@ function assignButtonEvents() {
             handleCartActions(productId, 'remove');
         });
     });
-}
-
-// Función para manejar la eliminación del ítem
-function handleRemove(itemId) {
-    const item = document.getElementById(itemId).closest('.cart-item');
-    item.remove();
 }
 
 // Reasignar eventos al cargar la pagina

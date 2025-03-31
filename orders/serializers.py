@@ -3,49 +3,68 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-
 class OrderFormSerializer(serializers.Serializer):
     """
-    Este es el formulario para almacenar temporalmente los datos de una orden
+    This serializer is used to temporarily store order data from a form.
+    
+    It includes customer personal details, optional shipping or pickup 
+    information, and payment method selection.
     """
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
+    
+    # Customer personal details
+    first_name = serializers.CharField() 
+    last_name = serializers.CharField()  
     email = serializers.EmailField()
-    cellphone = serializers.CharField()
+    cellphone = serializers.CharField() 
     dni = serializers.CharField()
-    detail_order = serializers.CharField(required=False, allow_blank=True)
+    detail_order = serializers.CharField(required=False, allow_blank=True)  
+    # Optional order details (e.g., additional notes)
 
-    # Campos de dirección, inicialmente no son obligatorios
+    # Shipping address fields (initially optional)
     province = serializers.CharField(required=False, allow_blank=True)
     city = serializers.CharField(required=False, allow_blank=True)
     address = serializers.CharField(required=False, allow_blank=True)
-    postal_code = serializers.CharField(required=False, allow_blank=True)
-    detail = serializers.CharField(required=False, allow_blank=True)
-    
-    # Campos de retiro en local, inicialmente no son obligatorios
-    name_retiro = serializers.CharField(required=False, allow_blank=True)
-    dni_retiro = serializers.CharField(required=False, allow_blank=True)
+    postal_code = serializers.CharField(required=False, allow_blank=True) 
+    detail = serializers.CharField(required=False, allow_blank=True)  
+    # Additional address details (e.g., apartment number)
 
-    # Método de envío y pago
-    envio_method_id = serializers.CharField(required=False)
-    payment_method_id = serializers.CharField(required=False)
+    # Local pickup details (initially optional)
+    name_retire = serializers.CharField(required=False, allow_blank=True)  
+    # Name of the person picking up the order
+    dni_retire = serializers.CharField(required=False, allow_blank=True)  
+    # ID number of the person picking up the order
+
+    # Shipping and payment method selection
+    shipping_method_id = serializers.CharField(required=False)  
+    # ID of the selected shipping method
+    payment_method_id = serializers.CharField(required=False)  
+    # ID of the selected payment method
 
     def validate(self, data):
-        # Campos dependiendo del método de envío
-        envio_fields = ['province', 'city', 'address', 'postal_code', 'detail']
-        retiro_fields = ['name_retiro', 'dni_retiro']
-        
-        envio_method = data.get("envio_method_id")  # Asegúrate de acceder correctamente al valor
-        
-        if envio_method in ["1", 1]:  # Si es retiro en local
-            # Validar campos de retiro
-            for field in retiro_fields:
+        shipping_fields = {
+            'province': "Provincia",
+            'city': "Ciudad",
+            'address': "Dirección",
+            'postal_code': "Código Postal",
+            'detail': "Detalle"
+        }
+
+        retire_fields = {
+            'name_retire': "Nombre quien retira",
+            'dni_retire': "DNI quien retira"
+        }
+
+        # Get Shipping Method
+        shipping_method = data.get("shipping_method_id")
+
+        if shipping_method in ["1", 1]:  # If is local retire
+            for field, translated_name in retire_fields.items():
                 if not data.get(field, "").strip():
-                    raise ValidationError(f"{field}: Este campo no puede estar vacío.")
-                
-        else:  # Si no es retiro, entonces deben ser los campos de dirección
-            for field in envio_fields:
+                    raise ValidationError({translated_name: "Este campo no puede estar vacío."})
+
+        else:  # Si es envío a domicilio
+            for field, translated_name in shipping_fields.items():
                 if not data.get(field, "").strip():
-                    raise ValidationError(f"{field}: Este campo no puede estar vacío.")
-        
+                    raise ValidationError({translated_name: "Este campo no puede estar vacío."})
+
         return data

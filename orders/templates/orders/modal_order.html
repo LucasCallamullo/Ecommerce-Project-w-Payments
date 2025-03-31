@@ -47,7 +47,8 @@
             </div>
 
             <!-- Subtotal -->
-            <div>
+            <div class="d-flex gap-1">
+                <b class="d-md-block text-mobile">Sub-Total:</b>  
                 <b class="text-mobile">$ {{ value.price|multiply:value.qty }}.000</b>  
             </div>
         </div>
@@ -58,17 +59,19 @@
 
 <div class="modal-footer d-flex-col gap-1">
     <div class="container-space-between d-flex-col gap-1">
-        <div class="d-flex gap-1"> 
+        <div class="container-space-between gap-1 w-100"> 
             <b class="d-lg-block text-mobile">Método de Pago:</b>
+
             <b class="d-md-block text-mobile">Pago con:</b>
             <b class="text-mobile payment-method">Ninguno</b>
         </div>
 
-        <div class="d-flex gap-1"> 
+        <div class="container-space-between gap-1 w-100"> 
             <b class="d-lg-block text-mobile">Método de Envío:</b>
-            <b class="d-md-block text-mobile">Precio de Envío:</b>
             <b class="d-lg-block text-mobile shipment-method">Ninguno</b>
             <b class="d-lg-block"><i class="ri-equal-fill"></i></b>
+
+            <b class="d-md-block text-mobile">Precio de Envío:</b>
             <b class="text-mobile" id="shipment-price">Ninguno</b>
         </div>
     </div>

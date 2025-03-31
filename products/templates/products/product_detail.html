@@ -36,7 +36,7 @@
 
     <!-- PRIMERA COLUMNA -->
     <div>
-        <figure class="prod-container mb-2" id="prod-container">
+        <figure class="prod-container cont-border mb-2" id="prod-container">
             <!-- Contenedor de imagen principal -->
             <div class="prod-main-img-container">
                 <img id=prod-main-image class="prod-image-preview prod-zoomed"
@@ -106,51 +106,55 @@
     <!-- SEGUNDA COLUMNA -->
     <div class="grid-second-col">
         <div class="d-flex-col gap-2">
-            <h3>{{ product.name }}</h3>
+            <div class="d-flex-col gap-2 cont-border cont-info-detail">
+                <h3>{{ product.name }}</h3>
 
-            <div class="d-flex gap-1">
-                {% if category %}
-                <a class="btn btn-alt btn-categories" href="{% url 'pl_category' category.slug %}">
-                    {{ category.name }}
-                </a>
-                {% endif %}
-
-                {% if subcategory %}
-                <a class="btn btn-alt btn-categories" href="{% url 'pl_subcategory' category.slug subcategory.slug %}">
-                    {{ subcategory.name }}
-                </a>
-                {% endif %}
-            </div>
-
-            <!-- Cuadros de Stock Y Marca -->
-            <div class="grid-container-3">
-                <div class="product-info">
-                    <p>Cod:</p>
-                    <span># 100{{product.id}}</span>
-                </div>
-
-                <div class="product-info">
-                    <p>Marca:</p>
-                    <a href="#" class="bold-main">
-                        {{product.brand}}
+                <div class="d-flex gap-1">
+                    {% if category %}
+                    <a class="btn btn-alt btn-categories" href="{% url 'pl_category' category.slug %}">
+                        {{ category.name }}
                     </a>
+                    {% endif %}
+
+                    {% if subcategory %}
+                    <a class="btn btn-alt btn-categories" href="{% url 'pl_subcategory' category.slug subcategory.slug %}">
+                        {{ subcategory.name }}
+                    </a>
+                    {% endif %}
                 </div>
 
-                <div class="product-info">
-                    <p>Stock:</p>
+                <!-- Cuadros de Stock Y Marca -->
+                <div class="grid-container-3">
+                    <div class="product-info cont-border">
+                        <p>Cod:</p>
+                        <span>
+                            # 25{{ product.id }}
+                        </span>
+                    </div>
 
-                    {% if product.stock > 4 %}
-                        <strong class="bold-green">Disponible</strong>
-                    {% elif product.stock == 0 %}
-                        <strong class="bold-red">No Stock</strong>
-                    {% else %}
-                        <strong class="bold-orange">Stock Bajo</strong>
-                    {% endif %}
+                    <div class="product-info cont-border">
+                        <p>Marca:</p>
+                        <a href="#" class="bold-main">
+                            {{product.brand}}
+                        </a>
+                    </div>
+
+                    <div class="product-info cont-border">
+                        <p>Stock:</p>
+
+                        {% if product.stock > 4 %}
+                            <strong class="bold-green">Disponible</strong>
+                        {% elif product.stock == 0 %}
+                            <strong class="bold-red">No Stock</strong>
+                        {% else %}
+                            <strong class="bold-orange">Stock Bajo</strong>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
             <!-- Cuadro de metodo de pago -->
-            <div class="payment-info-box d-flex-col gap-1">
+            <div class="payment-info-box d-flex-col gap-1 cont-border">
                 <div class="d-flex gap-3">
                     <div class="payment-icon">
                         <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tarjeta-de-credito-bloqueada-12012016-9801418.png"
@@ -159,7 +163,9 @@
                     
                     <div class="d-flex-col gap-1">
                         <span class="text-start">Medios de Pagos</span>
-                        <a href="#" class="text-start">Ver medios de Pago</a>
+                        <button class="btn text-start">
+                            Consultar formas de Pago en Whatsapp
+                        </button>
                     </div>
                 </div>
 
@@ -171,12 +177,38 @@
         </div>
 
         <!-- TERCERA COLUMNA -->
-        <div class="d-flex-col gap-3 cont-mobile-detail">
+        <div class="d-flex-col gap-2 cont-mobile-detail cont-border">
+            {% if product.price_list %}
+                <div class="d-flex-col">
+                    <strong class="justify-start">
+                        Precio Lista: $ {{ product.price_list|intdot }}
+                    </strong>
+                    <b class="justify-start text-lil-small" style="color: rgb(99, 99, 255)">
+                        Precio de lista para pagos en cuotas.
+                    </b>
+                </div>
+            {% endif %}
+
             <div class="d-flex-col gap-1">
-                <strong class="text-xl justify-center">
-                    $ {{ product.price|intdot }}
-                </strong>
-                <b class="text-lil-small text-center">
+                <div class="d-flex-col">
+                    {% if product.discount %}
+                    <div class="justify-end cont-discount">
+                        <b class="text-lil-small">% {{product.discount}} OFF</b>
+                    </div>
+                    <div class="text-xl justify-center gap-1">
+                        <i class="ri-fire-line bold-orange"></i>
+                        <b>$ {{ product.calc_discount|intdot }}</b> 
+                    </div>
+                    <del class="justify-center text-medium" style="color: gray;">
+                        <b>$ {{ product.price|intdot }}</b>
+                    </del>
+                    {% else %}
+                    <strong class="text-xl justify-center">
+                        $ {{ product.price|intdot }}
+                    </strong>
+                    {% endif %}
+                </div>
+                <b class="text-lil-small text-start">
                     PRECIO ESPECIAL EFECTIVO O TRANSFERENCIA
                 </b>
             </div>
@@ -209,8 +241,15 @@
                     <i class="ri-shopping-cart-2-line icon-medium"></i>
                 </button>
             </form>
-        </div>
 
+            <a href="#" id="whatsapp-link" class="btn gap-1 wsp-button" 
+                target="_blank" data-wsp="{{store.wsp_number}}" data-name="{{product.name}}" 
+                data-price="{{product.price}}">
+                <i class="ri-whatsapp-line icon-medium"></i> 
+                <span>Enviar mensaje</span>
+            </a>
+
+        </div>
     </div>
 </div>
 
@@ -270,7 +309,6 @@
 
 <!-- SCRIPTS -->
 {% block extra_scripts %}
-
 
 <script src="{% static 'products/js/product_detail.js' %}"></script>
 

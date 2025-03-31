@@ -130,6 +130,39 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+
+// ========================================================================
+//               Wsp Button Generic
+// ========================================================================
+document.addEventListener('DOMContentLoaded', function () {
+    const productLink = document.getElementById('whatsapp-link');
+
+    // Obtén el número de teléfono desde el atributo data-cellphone
+    const cellphone = productLink.getAttribute('data-wsp');
+    const productName = productLink.getAttribute('data-name');
+    
+    // Formatear el número y generar el enlace de WhatsApp
+    const whatsappUrl = formatPhoneNumber(cellphone);
+
+    // Crea el mensaje dinámicamente con los valores del producto
+    const message = `Buenos días me interesa el ${productName} 
+    1- Quería consultar sobre formas de pago con tarjeta en el local?
+    2- Consultar sobre tipos de envío o formas de retiro?`;
+
+    // Si el número es válido, concatenamos la URL con el mensaje
+    if (whatsappUrl) {
+        const finalWhatsappUrl = `${whatsappUrl}?text=${encodeURIComponent(message)}`;
+        
+        // Asigna el nuevo enlace con el mensaje al atributo href
+        productLink.setAttribute('href', finalWhatsappUrl);
+
+        // Assign href generic to the float btn-wsp
+        const productLinkBase = document.getElementById('wsp-link');
+        productLinkBase.setAttribute('href', finalWhatsappUrl);
+    }
+});
+
+
 // ========================================================================
 //               Zoom effects
 // ========================================================================

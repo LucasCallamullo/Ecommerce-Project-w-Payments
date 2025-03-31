@@ -146,8 +146,9 @@
 
 /* Styles for large desktops (mín. 993px to max. infinite) */
 @media (min-width: 993px) {
-    .profile-column-tabs .d-flex-col {
-        flex-direction: row;
+    .profile-column-tabs .cover-menu {
+        display: flex;
+        flex-direction: row !important;
     }
 
     .white-border-right-left {
