@@ -6,7 +6,7 @@ from .models import HeaderImages, BannerImages, Store
 
 @admin.register(HeaderImages)
 class HeaderImagesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'main_image', 'image', 'image_url')
+    list_display = ('id', 'main_image', 'pinterest_url', 'image_url')
     list_filter = ('main_image',)
     actions = ['set_as_main_header']
 
@@ -18,7 +18,7 @@ class HeaderImagesAdmin(admin.ModelAdmin):
 
 @admin.register(BannerImages)
 class BannerImagesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'main_image', 'image', 'image_url')
+    list_display = ('id', 'main_image', 'pinterest_url', 'image_url')
     list_filter = ('main_image',)
     actions = ['set_as_main_banner']
 

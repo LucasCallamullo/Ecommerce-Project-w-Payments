@@ -15,6 +15,7 @@ from users.models import CustomUser
 def load_users_init():
     # Crear superusuario
     user, created = CustomUser.objects.get_or_create(
+        id=1,  # Forzar ID=1
         email="admin@gmail.com",
         defaults={
             "password": make_password("1234"),
@@ -23,6 +24,7 @@ def load_users_init():
             "is_active": True,
             "is_staff": True,
             "is_superuser": True,
+            "role": 'admin',
         }
     )
     
@@ -31,6 +33,7 @@ def load_users_init():
 
     # Crear usuarios de ejemplo
     users = [
+        {"email": "buyer_anonymus@gmail.com", "first_name": "Comprador", "last_name": "Anonimo"},
         {"email": "user1@gmail.com", "first_name": "Lucas", "last_name": "Martinez"},
         {"email": "user2@gmail.com", "first_name": "Ariana", "last_name": "Romero"},
         {"email": "user3@gmail.com", "first_name": "Agos", "last_name": "Pereyra"},

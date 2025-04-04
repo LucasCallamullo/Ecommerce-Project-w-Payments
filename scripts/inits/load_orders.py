@@ -39,7 +39,7 @@ def load_orders_init():
     ]
 
     data_payment_methods = [
-        {'name': 'Efectivo', 'description': 'Completa el pago retirando por el local. (Solo entregas en el día)', 'is_active': True, 'time': 12},
+        {'name': 'Efectivo o Pago en Local', 'description': 'Completa el pago retirando por el local. (Solo entregas en el día)', 'is_active': True, 'time': 12},
         {'name': 'Transferencia', 'description': 'Precio de contado por Transferencia directa.', 'is_active': True, 'time': 2},
         {'name': 'Tarjeta Crédito o Debito', 'description': 'Consultar promociones con tarjeta.', 'is_active': True, 'time': 2},
         {'name': 'USD Theter', 'description': 'Precios especiales por pago en criptomoneda.', 'is_active': True, 'time': 2},

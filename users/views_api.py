@@ -1,23 +1,43 @@
 
 
-
-
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-
-from users.serializers import WidgetLoginSerializer, RegisterLoginSerializer
-
-
-from django.contrib.auth import authenticate, login, logout
-
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth import authenticate, login, logout
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 
+from users.serializers import *
+from users.permissions import IsAdminOrSuperUser
+from users.models import CustomUser
+
+
+
+class UserRoleEditView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminOrSuperUser]
+    
+    def post(self, request):
+        # Mejor forma de manejar el error si no existiera el objeto como tal
+        try:
+            user = get_object_or_404(CustomUser, id=request.data.get("id"))
+        except Http404:
+            return Response({"success": False, "error": "El Usuario no existe."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UserRoleSerializer(user, data=request.data, partial=True)
+        
+        # Devuelve error 400 automático si falla
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        data_response = {"success": True, "message": "Rol actualizado correctamente", "data": serializer.data}
+        return Response(data_response, status=status.HTTP_200_OK)
+            
 
 class RegisterUserView(APIView):
     
-    def post(self, request):
+    def post(self, request):    
         # When you pass `data=params`, the serializer calls the `validate` methods
         serializer = RegisterLoginSerializer(data=request.data)  
         if serializer.is_valid():  
@@ -28,7 +48,7 @@ class RegisterUserView(APIView):
             # To return the `CustomUser` object as JSON, pass it to the serializer without `data=`.
             # This tells the serializer to serialize the object instead of validating it.
             
-            # Prepare the response with data
+            # Prepare the response with data    
             response_data = {
                 "user": RegisterLoginSerializer(user).data,
                 "message": "Registration successful"

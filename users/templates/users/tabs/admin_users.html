@@ -1,0 +1,43 @@
+
+
+<form class="justify-center d-flex-col gap-2" action="">
+    <b>Filtrar por Email:</b>
+
+    <div class="cont-user-search">
+        <i class="ri-user-search-line icon-small search-icon"></i>
+        <input type="search" placeholder="Buscar usuario...">
+    </div>
+</form>
+
+<div class="grid-table-user border-bottom">
+    <b class="d-lg-block">Nombre</b>
+    <b class="d-lg-block">Apellido</b>
+    <b>Email</b>
+    <b>Rol</b>
+    <div></div>
+</div>
+
+{% for user in users %}
+    <form class="grid-table-user user-role-form" action="{% url 'user_edit_role' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ user.id }}">
+
+        <span class="d-lg-block">{{user.first_name}}</span>
+        <span class="d-lg-block">{{user.last_name}}</span>
+        <b>{{user.email}}</b>
+
+        <!-- Select para editar el rol -->
+        <select name="role" data-user-id="{{ user.id }}">
+            {% for value, label in user.ROLE_CHOICES %}
+                <option value="{{ value }}" {% if user.role == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button class="btn gap-1 btn-alt" type="submit"> 
+            <i class="ri-edit-box-line"></i>
+            <b>Editar</b>
+        </button>
+    </form>
+{% endfor %}

@@ -1,0 +1,102 @@
+
+
+
+
+
+<h3 class="mt-2">Headers Activos en Home:</h3>
+
+<div class="cont-headers">
+    {% for header in headers_active %}
+    <div class="header-image-container">
+        <img src="{{ header.image_url }}" alt="Header {{header.id}}" 
+        class="{% if header.main_image %} border-main {% endif %}">
+        
+        <div class="image-overlay" data-main="{{header.main_image}}" 
+        data-img="{{header.image_url}}" data-hidden="{{header.soft_delete}}"
+        data-object="Header" data-index="{{header.id}}">
+            <button class="btn btn-header">
+                <i class="ri-edit-2-line icon-medium" ></i>
+            </button>
+
+            <button class="btn btn-header">
+                <i class="ri-delete-bin-6-line icon-medium"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<h3 class="mt-2">Banners Activos en Home:</h3>
+
+<div class="cont-headers">
+    {% for banner in banners_active %}
+    <div class="header-image-container">
+        <img src="{{ banner.image_url }}" alt="banner {{banner.id}}" 
+        class="{% if banner.main_image %} border-main {% endif %}">
+        
+        <div class="image-overlay" data-main="{{banner.main_image}}" 
+        data-img="{{banner.image_url}}" data-hidden="{{banner.soft_delete}}"
+        data-object="Banner" data-index="{{banner.id}}">
+            <button class="btn btn-header">
+                <i class="ri-edit-2-line icon-medium" ></i>
+            </button>
+
+            <button class="btn btn-header">
+                <i class="ri-delete-bin-6-line icon-medium"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<hr>
+<hr>
+<hr>
+
+<h3 class="mt-2">Headers Inactivos/Ocultos:</h3>
+
+<div class="cont-headers">
+    {% for header in headers_inactive %}
+    <div class="header-image-container">
+        <img src="{{ header.image_url }}" alt="Header {{header.id}}" 
+        class="{% if header.main_image %} border-main {% endif %}">
+        
+        <div class="image-overlay" data-main="{{header.main_image}}" 
+        data-img="{{header.image_url}}" data-hidden="{{header.soft_delete}}"
+        data-object="Header" data-index="{{header.id}}">
+            <button class="btn btn-header">
+                <i class="ri-edit-2-line icon-medium" ></i>
+            </button>
+
+            <button class="btn btn-header">
+                <i class="ri-delete-bin-6-line icon-medium"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h3 class="mt-2">Banners Inactivos/Ocultos:</h3>
+
+<div class="cont-headers">
+    {% for banner in banners_inactive %}
+    <div class="header-image-container">
+        <img src="{{ banner.image_url }}" alt="banner {{banner.id}}" 
+        class="{% if banner.main_image %} border-main {% endif %}">
+        
+        <div class="image-overlay" data-main="{{banner.main_image}}" 
+        data-img="{{banner.image_url}}" data-hidden="{{banner.soft_delete}}"
+        data-object="Banner" data-index="{{banner.id}}">
+            <button class="btn btn-header">
+                <i class="ri-edit-2-line icon-medium" ></i>
+            </button>
+
+            <button class="btn btn-header">
+                <i class="ri-delete-bin-6-line icon-medium"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>

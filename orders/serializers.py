@@ -3,6 +3,34 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from orders.models import ShipmentMethod, PaymentMethod
+
+class PaymenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethod
+        fields = ['name', 'time', 'is_active', 'description']
+        read_only_fields = ['id']  # Lo marcamos como solo lectura
+        extra_kwargs = {
+            'name': {'required': False},
+            'time': {'required': False},
+            'is_active': {'required': False},
+            'description': {'required': False},
+        }
+        
+        
+class ShipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShipmentMethod
+        fields = ['name', 'price', 'is_active', 'description']
+        read_only_fields = ['id']  # Lo marcamos como solo lectura
+        extra_kwargs = {
+            'name': {'required': False},
+            'price': {'required': False},
+            'is_active': {'required': False},
+            'description': {'required': False},
+        }
+
+
 class OrderFormSerializer(serializers.Serializer):
     """
     This serializer is used to temporarily store order data from a form.

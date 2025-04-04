@@ -228,6 +228,7 @@ REST_FRAMEWORK = {
 # ====================================================================
 
 # this is for deployment
+IMGBB_KEY = '7923341a22d8128e89471ca8a60919a2'
 PYME_NAME = "Cat Cat Games"
 
 ALLOWED_HOSTS = ['127.0.0.1', 'web-production-8e84.up.railway.app']
@@ -237,7 +238,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://web-production-8e84.up.railway.app',
 ]
 
-BASE_URL_PAGE = "https://4eb3-2803-9800-9884-be88-59b5-6256-d4ab-a9e0.ngrok-free.app"
+BASE_URL_PAGE = "https://583c-2803-9800-9884-be88-1501-58ae-63fa-c6fc.ngrok-free.app"
 
 if DEBUG:
     ALLOWED_HOSTS = ['*']

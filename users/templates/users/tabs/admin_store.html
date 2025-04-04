@@ -1,0 +1,159 @@
+
+
+<h2 class="bold-main mt-1">Datos de la tienda:</h2>
+
+<form class="form-store-grid mt-1 text-mobile" id="form-store-grid" 
+action="{% url 'update_store_info' %}">
+    {% csrf_token %}
+
+    <!--  DATOS DE CONTACTO DIRECTO		 -->
+    <div class="d-flex-col gap-1">
+        <label for="store_name"><b>Nombre del Local:</b></label>
+        <input type="text" id="name" name="name" value="{{ store.name }}">
+    </div>
+    <div class="d-flex-col gap-1">
+        <label for="address"><b>Dirección:</b></label>
+        <input type="text" id="address" name="address" value="{{ store.address }}">
+    </div>
+    <div class="d-flex-col gap-1">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ store.email }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="cellphone">Teléfono:</label>
+        <input type="text" id="cellphone" name="cellphone" value="{{ store.cellphone }}">
+    </div>
+
+    <!--  DATOS DE REDES		 -->
+    <h2 class="bold-main mt-2">Redes de la tienda:</h2>
+    <span></span>
+
+    <div class="d-flex-col gap-1">
+        <label for="ig_url">Instagram:</label>
+        <input type="url" id="ig_url" name="ig_url" value="{{ store.ig_url }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="fb_url">Facebook:</label>
+        <input type="url" id="fb_url" name="fb_url" value="{{ store.fb_url }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="tt_url">TikTok:</label>
+        <input type="url" id="tt_url" name="tt_url" value="{{ store.tt_url }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="wsp_number">WhatsApp:</label>
+        <input type="text" id="wsp_number" name="wsp_number" value="{{ store.wsp_number }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="google_url">Google:</label>
+        <input type="url" id="google_url" name="google_url" value="{{ store.google_url }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="tw_url">Twitter/X:</label>
+        <input type="url" id="tw_url" name="tw_url" value="{{ store.tw_url }}">
+    </div>
+
+    <!-- Botón que ocupa las dos columnas -->
+    <button class="btn gap-2 btn-alt" type="submit">
+        <i class="ri-save-3-line icon-medium"></i>
+        <b>Guardar Cambios</b>
+    </button>
+</form>
+
+<hr>
+<h2 class="bold-main mt-1">Métodos de Envío:</h2>
+
+{% for shipment in shipments %}
+<form class="shipment-grid mt-2 text-mobile {% if forloop.last %} not-border-bottom {% endif %}" 
+action="{% url 'edit_shipments' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ shipment.id }}">
+
+    <div class="d-flex-col gap-1">
+        <label for="name_{{ shipment.id }}"><b>Nombre:</b></label>
+        <input type="text" id="name_{{ shipment.id }}" name="name" 
+        value="{{ shipment.name }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="price_{{ shipment.id }}"><b>Precio:</b></label>
+        <input type="text" id="price_{{ shipment.id }}" name="price" 
+        value="{{ shipment.price|floatformat:0 }}">
+    </div>
+
+    <div class="d-flex-s d-flex-col gap-1">
+        <label for="is_active_{{ shipment.id }}"><b>Activo:</b></label>
+        <input class="text-start" type="checkbox" id="is_active_{{ shipment.id }}" 
+        name="is_active" {% if shipment.is_active %} checked {% endif %}>
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="description_{{ shipment.id }}"><b>Descripción:</b></label>
+        <textarea id="description_{{ shipment.id }}" 
+        name="description">{{ shipment.description }}</textarea>
+    </div>
+
+    <div class="justify-end">
+        <button class="btn gap-1 btn-alt edit-btn" type="submit"> 
+            <i class="ri-edit-box-line"></i>
+            <b>Editar</b>
+        </button>
+    </div>
+</form>
+{% endfor %}
+
+
+<hr>
+<h2 class="bold-main mt-1">Métodos de Pago:</h2>
+
+{% for payment in payments %}
+<form class="shipment-grid mt-2 text-mobile {% if forloop.last %} not-border-bottom {% endif %}" 
+action="{% url 'edit_payments' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ payment.id }}">
+
+    <div class="d-flex-col gap-1">
+        <label for="name_{{ payment.id }}"><b>Nombre:</b></label>
+        <input type="text" id="name_{{ payment.id }}" name="name" 
+        value="{{ payment.name }}">
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="time_{{ payment.id }}"><b>Tiempo (*)</b></label>
+        <input type="text" id="time_{{ payment.id }}" name="time" 
+        value="{{ payment.time }}">
+    </div>
+
+    <div class="d-flex-s d-flex-col gap-1">
+        <label for="is_active_{{ payment.id }}"><b>Activo:</b></label>
+        <input class="text-start" type="checkbox" id="is_active_{{ payment.id }}" 
+        name="is_active" {% if payment.is_active %} checked {% endif %}>
+    </div>
+
+    <div class="d-flex-col gap-1">
+        <label for="description_{{ payment.id }}"><b>Descripción:</b></label>
+        <textarea id="description_{{ payment.id }}" 
+        name="description">{{ payment.description }}</textarea>
+    </div>
+
+    <div class="justify-end">
+        <button class="btn gap-1 btn-alt edit-btn" type="submit"> 
+            <i class="ri-edit-box-line"></i>
+            <b>Editar</b>
+        </button>
+    </div>
+</form>
+
+    {% if forloop.last %}
+    <div class="justify-start mt-2 text-lil-small">
+        <span><b>(*)</b> Cantidad de tiempo hasta cancelar la orden.</span>     
+    </div>
+    {% endif %}
+
+{% endfor %}

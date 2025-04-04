@@ -50,7 +50,8 @@
                     <i class="ri-settings-4-line icon-small"></i>
                 </button>
             
-                <a href="#" class="container-space-between profile-btn-edit p-border-bot">
+                <a class="container-space-between profile-btn-edit p-border-bot"
+                href="{% url 'close_session' %}">
                     <b>Cerrar Cesión</b>
                     <i class="ri-logout-box-r-line icon-small"></i>
                 </a>
@@ -97,24 +98,21 @@
         <!-- ITEMS BANNER -->
         <ul class="d-flex-col cover-menu">
             <li class="active">
-                <a class="justify-center gap-2 text-white" href="#" 
-                data-content="First Tab">
+                <a class="justify-center gap-2 text-white" data-content="First Tab">
                     <i class="ri-time-line icon-small"></i>
                     <b>Pedidos Pendientes</b>
                 </a>
             </li>
 
             <li class="white-border-right-left">
-                <a class="justify-center gap-2 text-white" href="#" 
-                data-content="Second Tab">
-                    <i class="fa fa-heart icon-small"></i> 
+                <a class="justify-center gap-2 text-white" data-content="Second Tab">
+                    <i class="ri-heart-line icon-small"></i> 
                     <b>Productos Favoritos</b>
                 </a>
             </li>
 
             <li>
-                <a class="justify-center gap-1 text-white" href="#" 
-                data-content="Third Tab">
+                <a class="justify-center gap-1 text-white" data-content="Third Tab">
                     <i class="ri-store-2-line icon-small"></i>
                     <b>Mis Compras</b>
                 </a>

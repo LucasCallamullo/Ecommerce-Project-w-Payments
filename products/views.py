@@ -6,6 +6,14 @@ from products.models import Product, PCategory, PSubcategory
 from django.http import Http404
 from products import utils
 
+from users.permissions import admin_or_superuser_required
+
+@admin_or_superuser_required
+def main_dashboard(request):
+    
+    products = Product.objects.filter(available=True)
+    return render(request, "products/dashboard/dashboard.html", {'products': products})
+
 
 def product_list(request, cat_slug=None, subcat_slug=None):
     """

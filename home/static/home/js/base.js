@@ -91,7 +91,6 @@ function closeOverlayOnClick(element, buttonClose=null, closeHandler=null) {
     };
 }
 
-
 /**
  * Sets up a toggleable UI element (such as a modal or mobile menu) with automatic event management.
  * 
@@ -101,6 +100,7 @@ function closeOverlayOnClick(element, buttonClose=null, closeHandler=null) {
  *     closeButton: document.getElementById('nav-close'),
  *     element: document.getElementById('nav-menu-mobile'),
  *     overlay: document.getElementById('overlay-menu-mobile'),
+ *     onOpenCallback: () => console.log('Menu opened!') // Optional callback function
  * });
  * 
  * @param {Object} options - Configuration options for the toggleable element.
@@ -109,9 +109,10 @@ function closeOverlayOnClick(element, buttonClose=null, closeHandler=null) {
  * @param {HTMLElement} options.element - The element to be shown/hidden (e.g., a modal or menu).
  * @param {HTMLElement} options.overlay - The overlay displayed behind the element.
  * @param {boolean} [options.flagStop=false] - Optional flag to stop event propagation when opening (default is false).
+ * @param {Function} [options.onOpenCallback=null] - Optional function to execute when the element is opened.
  */
 function setupToggleableElement(options) {
-    const { toggleButton, closeButton, element, overlay, flagStop = false } = options;
+    const { toggleButton, closeButton, element, overlay, flagStop = false, onOpenCallback = null } = options;
 
     // Basic validation to ensure all required elements are present
     if (!toggleButton || !closeButton || !element || !overlay) {
@@ -147,6 +148,10 @@ function setupToggleableElement(options) {
 
         toggleState(element); // Show the element
 
+        if (typeof onOpenCallback === 'function') {
+            onOpenCallback(); // Ejecuta la función pasada como parámetro si existe
+        }
+
         // Define the handler for closing, which is self-removing
         const closeHandler = () => closeElement(closeHandler);
         closeButton.addEventListener('click', closeHandler); // Listen for close button click
@@ -158,7 +163,6 @@ function setupToggleableElement(options) {
     // Attach click event to toggle button to open the element
     toggleButton.addEventListener('click', openElement);
 }
-
 
 
 /* ==========================================================================================

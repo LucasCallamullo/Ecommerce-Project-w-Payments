@@ -1,0 +1,207 @@
+
+
+{% extends "home/base.html" %}
+
+{% load static %}
+{% load custom_filters %}
+
+<!-- For More CSS Modules -->
+{% block extra_head %}
+
+    <title> Admin | {{ user.first_name }} {{ user.last_name }}</title>
+
+    <link href="{% static 'users/css/admin_profile.css' %}" rel="stylesheet">
+
+{% endblock extra_head %}
+
+
+<!-- Contenido principal de la pagina -->
+{% block main_content %}
+
+<div class="cont-page mb-3">
+
+    <!-- tarjeta del usuario e INFO CONTACTO -->
+    <aside class="w-100">
+        <!-- Columna perfil + botones edit y logout -->
+        <div class="profile-info-container cont-border">
+
+            <img src="https://i.pinimg.com/736x/80/8d/03/808d03843400c4392b7891c1a6428104.jpg" 
+            alt="User Image Profile">
+
+            <div class="justify-center d-flex-col gap-1">
+                <span> {{ user.first_name }} {{user.last_name}} </span>
+                <span> {{ user.email }} </span>
+            </div>
+
+            <a href="{% url 'main_dashboard' %}" class="btn gap-1 profile-btn-premium">
+                <i class="ri-dashboard-horizontal-line text-small"></i>
+                <b class="text-mobile">Panel de control</b>
+            </a>
+
+            <!-- BOTONES EDITAR Y LOGEARSE -->
+            <div class="d-flex-col w-100">
+                <button class="btn container-space-between profile-btn-edit p-border-top">
+                    <b>Editar Datos</b>
+                    <i class="ri-settings-4-line icon-small"></i>
+                </button>
+            
+                <a class="container-space-between profile-btn-edit p-border-bot" 
+                href="{% url 'close_session' %}">
+                    <b>Cerrar Cesión</b>
+                    <i class="ri-logout-box-r-line icon-small"></i>
+                </a>
+            </div>
+        </div>
+        
+    </aside>
+
+    <!-- CONTENIDO del perfil -->
+    <div class="profile-column-tabs">
+        <!-- BANNER -->
+        <div class="banner-profile-cover">
+            <img src="https://i.pinimg.com/736x/3b/da/58/3bda585ceabcae86a826c57305d1ff39.jpg" 
+                class="img-fluid" alt="cover">
+        </div>
+
+        <!-- ITEMS BANNER -->
+        <ul class="d-flex-col cover-menu">
+            <li class="active">
+                <a class="justify-center gap-1 text-white" data-content="first-tab">
+                    <i class="ri-time-line icon-small"></i>
+                    <b>Pedidos Pendientes</b>
+                </a>
+            </li>
+
+            <li class="white-border-right-left">
+                <a class="justify-center gap-1 text-white" data-content="second-tab">
+                    <i class="ri-user-settings-line icon-small"></i>
+                    <b>Usuarios</b>
+                </a>
+            </li>
+
+            <li>
+                <a class="justify-center gap-1 text-white" data-content="third-tab">
+                    <i class="ri-store-2-line icon-small"></i>
+                    <b>Datos Tienda</b>
+                </a>
+            </li>
+        </ul>
+
+        <!-- DASHBOARD HEADERS Y BANNERS -->
+        <div class="tab-content" id="first-tab" data-state="closed">
+            {% include "users/tabs/admin_headers.html" %}
+        </div>
+
+        <!-- DASHBOARD USERS -->
+        <div class="tab-content" id="second-tab" data-state="closed">
+            {% include "users/tabs/admin_users.html" %}
+        </div>
+
+        <!-- DASHBOARD STORE DATA -->
+        <div class="tab-content" id="third-tab" data-state="closed">
+            {% include "users/tabs/admin_store.html" %}
+        </div>
+    </div>
+
+
+    <!-- MODALES Y ETC 		 -->
+    <form class="modal" id="upload-form" data-state="null" method="POST">
+        {% csrf_token %}
+
+        <div class="container-space-between">
+            <h2>Modificar <span class="modal-object">Header</span></h2>
+            <button type="button" class="btn btn-close" id="upload-form-close">
+                <i class="ri-close-fill icon-medium"></i>
+            </button>    
+        </div>
+
+        <div class="d-flex-s gap-3 mt-2">
+            <div class="modal-image-container">
+                <img class="h-100" id="img-modal" src="" alt="">
+            </div>
+
+            <div class="d-flex-col gap-2">
+                <!--  Main checkbox 		 -->
+                <div class="d-flex gap-1">
+                    <label class="d-flex gap-1" for="header-checkbox">
+                        <i class="ri-image-line icon-small"></i>
+                        <b><span class="modal-object">Header</span> Principal (*):</b>    
+                    </label>
+                    
+                    <div class="d-flex gap-1">
+                        <input type="checkbox" id="main-img-check" name="main_image">
+                        <b id="main-img-text"> No </b>
+                    </div>
+                </div>
+
+                <!--  Soft Delete checkbox 	-->
+                <div class="d-flex gap-2">
+                    <label class="d-flex gap-1" for="header-checkbox">
+                        <i class="ri-image-edit-line icon-small"></i>
+                        <b><span class="modal-object">Header</span> Oculto (**):</b>    
+                    </label>
+                    
+                    <div class="d-flex gap-1">
+                        <input type="checkbox" id="img-hidden-check" name="soft_delete">
+                        <b id="img-hidden-text"> No </b>
+                    </div>
+                </div>
+                
+                <p class="text-lil-small">
+                    <b>(*)</b> Esto significa que será la primera imagen que se muestra 
+                    de los <span class="modal-object">Header</span>s en el Home.
+                </p>
+
+                <p class="text-lil-small">
+                    <b>(**)</b> Esto significa que no se mostrará la imagen, en el Home.
+                </p>
+            </div>
+        </div>
+        
+        <div class="d-flex-s mt-2 gap-2">
+            <div class="d-flex-col w-50">
+                <h3>Reemplazar con Nueva Imagen: </h3>
+                <div class="modal-image-container mt-2">
+                    <img class="h-100" id="img-modal-new" src="" 
+                    alt="Todavía no cargaste una nueva Imagen">
+                </div>
+            </div>
+
+            <div class="d-flex-col gap-2">
+                <input type="file" id="image-input" name="image">
+
+                <button class="btn gap-1 btn-alt" type="submit" name="action" value="update"> 
+                    <i class="ri-edit-2-line icon-small"></i>
+                    <b class="text-normal">Aplicar Cambios</b>
+                </button>
+
+                <div class="d-flex gap-1">
+                    <b>¿Desea eliminar este <span class="modal-object">Header</span>?</b>
+                    <input type="checkbox" id="check-delete" name="check_delete">
+                </div>
+            </div>
+        </div>
+
+        <section id="cont-delete-btn" data-state="closed">
+            <p><b>(***)</b>  Esta acción no se puede deshacer...</p>
+
+            <button class="btn gap-2 btn-close" type="submit" name="action" value="delete">
+                <i class="ri-delete-bin-5-line icon-medium"></i>
+                <b>Borrar Permanentemente</b>
+            </button>
+        </section>
+    </form>
+
+    <div class="overlay" id="overlay-upload-form"></div>
+
+    
+</div>
+
+{% endblock main_content %}
+
+
+{% block extra_scripts %}
+
+    <script src="{% static 'users/js/admin_profile.js' %}"></script>
+
+{% endblock extra_scripts %}

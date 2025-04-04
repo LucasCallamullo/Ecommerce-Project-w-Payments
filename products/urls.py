@@ -22,6 +22,7 @@ urlpatterns = [
    
    # url for product_detail.html
     path('product/25<int:id>-<slug:slug>/', views.product_detail, name='product_detail'),
+    path('main-dashboard/', views.main_dashboard, name='main_dashboard'),
     
 ]
 

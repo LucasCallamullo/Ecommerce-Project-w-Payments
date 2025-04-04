@@ -74,7 +74,6 @@ async function handleFormActions(form, actionType) {
                     'X-CSRFToken': getCookie('csrftoken'),
                     "Content-Type": "application/json",
                 },
-
                 body: JSON.stringify(jsonData),
             });
 

@@ -56,7 +56,7 @@ main {
     margin-left: 50%;
     transform: translateX(-50%); /* Ajusta la posición exacta del centro */
 
-    width: 80px !important;
+    width: min-content !important;
     height: 22px !important;
 
     display: flex;

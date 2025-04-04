@@ -13,5 +13,7 @@ urlpatterns = [
     
     path('register-session/', RegisterUserView.as_view(), name='register_user'),
     
+    path('user-edit-role/', UserRoleEditView.as_view(), name='user_edit_role'),
+    
 ]
 

@@ -3,10 +3,6 @@ from django.shortcuts import render
 # Create your views here.
 from orders.models import ShipmentMethod, PaymentMethod
 
-from django.http import JsonResponse
-from django.template.loader import render_to_string
-
-
 def order(request):
     """ 
         Esta vista se llama para ver el formulario (se valida con serializers), ver opciones
@@ -45,8 +41,8 @@ def order(request):
         return render(request, "users/register_user.html", context)
         
     # Obtenemos los distintos envios y metodos de pago para actualizar dinamicamente
-    envios_methods = ShipmentMethod.objects.all()
-    payment_methods = PaymentMethod.objects.all()
+    envios_methods = ShipmentMethod.objects.filter(is_active=True)
+    payment_methods = PaymentMethod.objects.filter(is_active=True)
     
     context = {
         'envios_methods': envios_methods,

@@ -23,9 +23,9 @@
     <!-- Carousel Headers -->
     <div class="swiper-container home-header-container">
         <div class="swiper-wrapper w-100 h-100">
-            {% for image in store.headers.all %}
+            {% for image in headers_active %}
                 <div class="swiper-slide">
-                    <img class="header-img" src="{{ image.image_url }}" alt="{{ image.image_url }}">
+                    <img class="header-img" src="{{ image.image_url }}" alt="header {{ image.id }}">
                 </div>
             {% endfor %}
         </div>

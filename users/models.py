@@ -80,6 +80,13 @@ class CustomUser(AbstractUser):
     province = models.CharField(max_length=50, blank=True, null=True)  # Provincia del usuario (opcional)
     address = models.CharField(max_length=255, blank=True, null=True)  # Dirección del usuario (opcional)
     
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('seller', 'Seller'),
+        ('buyer', 'Buyer'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='buyer')
+    
     """ 
     Otros campos
     first_name: Primer nombre del usuario.

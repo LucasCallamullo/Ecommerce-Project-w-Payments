@@ -1,5 +1,7 @@
 
 
+/// <reference path="../../../../home/static/home/js/base.js" />
+
 document.addEventListener('DOMContentLoaded', () => {
     // FORM HANDLER INITIALIZATION
     // ----------------------------

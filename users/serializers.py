@@ -2,15 +2,35 @@
 
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
-from rest_framework.exceptions import AuthenticationFailed, NotAcceptable
-from rest_framework.exceptions import NotAcceptable, ValidationError
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
+from django.core.validators import validate_email
+from django.contrib.auth.password_validation import validate_password
 
 CustomUser = get_user_model()
 
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-from django.contrib.auth.password_validation import validate_password
+
+class UserRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['role']
+        extra_kwargs = {
+            'role': {'required': False}
+        }
+
+    def validate_role(self, value):
+        
+        value = value.lower().strip()
+        if value not in ('admin', 'seller', 'buyer'):
+            raise serializers.ValidationError(
+                "El rol debe ser uno de: 'admin', 'seller' o 'buyer'"
+            )
+        return value
+
+
+
+
+
 
 
 

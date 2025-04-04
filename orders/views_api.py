@@ -5,9 +5,62 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from orders.serializers import OrderFormSerializer
+
+from django.http import Http404
+from django.shortcuts import get_object_or_404
+
+from orders.serializers import OrderFormSerializer, ShipmentSerializer, PaymenSerializer
+from orders.models import ShipmentMethod, PaymentMethod
+from users.permissions import IsAdminOrSuperUser
 from orders import utils
 
+class EditPaymentView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminOrSuperUser]
+    
+    def post(self, request):
+
+        # Mejor forma de manejar el error si no existiera el objeto como tal
+        try:
+            payment = get_object_or_404(PaymentMethod, id=request.data.get("id"))
+        except Http404:
+            return Response({"success": False, "error": "El método de pago no existe."}, status=status.HTTP_404_NOT_FOUND)
+
+        # mandar a validar con el serializador el json recibido desde el form
+        serializer = PaymenSerializer(payment, data=request.data, partial=True)
+
+        # si esta todo bien se guarda el objeto automaticamente
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"success": True, "message": "Método de pago actualizado."}, status=status.HTTP_200_OK)
+        
+        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        
+class EditShipmentView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        # Verificar si es admin o superadmin
+        if request.user.id != 1 and request.user.role != 'admin':
+            return Response({'detail': 'No tienes permisos para esta acción.'},  status=status.HTTP_403_FORBIDDEN)
+        
+        # Mejor forma de manejar el error si no existiera el objeto como tal
+        try:
+            shipment = get_object_or_404(ShipmentMethod, id=request.data.get("id"))
+        except Http404:
+            return Response({"success": False, "error": "El método de envío no existe."}, status=status.HTTP_404_NOT_FOUND)
+
+        # mandar a validar con el serializador el json recibido desde el form
+        serializer = ShipmentSerializer(shipment, data=request.data, partial=True)
+
+        # si esta todo bien se guarda el objeto automaticamente
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"success": True, "message": "Shipment actualizado correctamente"}, status=status.HTTP_200_OK)
+            
+        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+       
 class order_form(APIView):
     permission_classes = [IsAuthenticated]  # Solo usuarios autenticados pueden acceder
     
