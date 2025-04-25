@@ -19,4 +19,11 @@ urlpatterns = [
     # endpoints images 
     path('products-images/<int:product_id>/', ProductImagesView.as_view(), name='prod-images'),
 
+
+    # url para actualizar productos
+    path('api/product/', ProductAPIView.as_view(), name='product-update-api'),
+    
+    path('api/product/images/delete', ProductImagesView.as_view(), name='product-images-delete-api'),
+    path('api/product/images/create', ProductImagesView.as_view(), name='product-images-create-api'),
+
 ]

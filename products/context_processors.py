@@ -10,21 +10,19 @@ def get_categories_n_subcats(request):
     categories_dropmenu = cache.get('categories_dropmenu')
     
     if not categories_dropmenu:
-        # Get all categories and prefetch subcategories
-        # Prefetch related improves the performance of the query by retrieving all 
-        # associated sub-categories at once
-        categories = PCategory.objects.prefetch_related('subcategories')
-        
+        # Obtén las categorías junto con las subcategorías que necesitas (con los campos que te interesan)
+        categories = ( 
+            PCategory.objects
+            .prefetch_related('subcategories')
+            .only('id', 'name', 'slug', 'subcategories__id', 'subcategories__name', 'subcategories__slug')
+        )
+
         categories_dropmenu = {}
-        
         for category in categories:
-            # Filter valid subcategories
-            subcategories = category.subcategories.all()
+            # Obtenemos las subcategorías de cada categoría con los campos necesarios
+            valid_subcategories = [sub for sub in category.subcategories.all() if sub.name]
             
-            # Filter valid subcategories (not None, not empty, not "nan")
-            valid_subcategories = [sub for sub in subcategories if sub.name]
-            
-            # Add the category even if it has no valid subcategories
+            # Asignamos las subcategorías válidas a la categoría (si no hay, asignamos None)
             categories_dropmenu[category] = valid_subcategories if valid_subcategories else None
                 
         # Save the data in the cache for 1 hour (3600 seconds)

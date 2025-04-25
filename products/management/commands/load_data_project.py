@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
 from products.models import Product, PCategory, PSubcategory, PBrand, ProductImage
-from products import utils
+from products import filters
 
 # mys scripts folder for first update
 from scripts.inits.load_users import load_users_init
@@ -95,7 +95,7 @@ class Command(BaseCommand):
             image_url2 = clean_value(row.get("image_url2"))
             
             # Normalize the name before creating the product
-            normalized_name = utils.normalize_or_None(name)
+            normalized_name = filters.normalize_or_None(name)
             slug = slugify(name)  # get the slugified version of the name
             
             # Retrieve or create the product

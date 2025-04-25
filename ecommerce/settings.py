@@ -102,11 +102,14 @@ INSTALLED_APPS = [
     # My apps
     'home',
     'users',
+    
     'cart',
     'products',
+    'dashboard',
+    'favorites',
+    
     'orders',
     'payments',
-    'favorites',
 ]
 
 MIDDLEWARE = [

@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand
 from scripts.inits.load_store import load_store_init
 
 from products.models import Product
-from products import utils
+from products import filters
 
 
 class Command(BaseCommand):
@@ -22,6 +22,18 @@ class Command(BaseCommand):
         updates_normalized_names()
         
         
+def updates_main_image_field():
+    products = Product.objects.all()
+    
+    for product in products:
+        # product.update_main_image_url()    # ya no existe esta funcion no de la misma forma OJO
+        print(f"name: {product.name} | main image: {product.main_image}")
+        # product.save()
+        
+    # Usar bulk_update para actualizar todos los productos en una sola consulta
+    # Product.objects.bulk_update(products, ['main_image'])
+        
+        
 def updates_normalized_names():
     """
     Usar bulk_update es una forma más eficiente de actualizar varios objetos sin llamar a save() 
@@ -32,7 +44,7 @@ def updates_normalized_names():
     products = Product.objects.all()
         
     for product in products:
-        product.normalized_name = utils.normalize_or_None(product.name)
+        product.normalized_name = filters.normalize_or_None(product.name)
         print(f"name: {product.name} | normalized_name: {product.normalized_name}")
         
     # Usar bulk_update para actualizar todos los productos en una sola consulta

@@ -1,0 +1,144 @@
+
+
+{% extends "home/base.html" %}
+
+{% load static %}
+{% load custom_filters %}
+
+
+{% block extra_head %}
+    <!-- Add extra head (style.css, title, etc) content here -->
+     <title>Dashboard | Admin</title>
+     <link href="{% static 'dashboard/css/dashboard.css' %}" rel="stylesheet">
+
+    <!-- CSS CHOICES -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+
+    
+{% endblock extra_head %}
+
+
+
+{% block main_content %}
+
+<div class="cont-page">
+
+    <aside class="dashboard gap-2" id="dashboard" data-state="closed">
+        <!-- Botón para abrir/cerrar menú -->
+        <button class="btn btn-dashboard mt-1 mb-1" id="dashboard-show">
+            <i class="ri-menu-line icon-medium"></i>
+            <b class="text-mobile"> Menú </b>
+        </button>
+        
+        <!-- Botones del menú -->
+        {% if user.role == 'admin' or user.role == 'seller' %}
+        <!-- Simular Venta -->
+        <button class="btn btn-dashboard" data-section="sells">
+            <i class="ri-price-tag-3-line icon-medium"></i>
+            <b class="text-mobile"> Simular Venta </b>
+        </button>
+
+        <!-- Pedidos -->
+        <button class="btn btn-dashboard" data-section="orders">
+            <i class="ri-shopping-bag-line icon-medium"></i>
+            <b class="text-mobile"> Pedidos </b>
+        </button>
+        {% endif %}
+
+        {% if user.role == 'admin' %}
+        <!-- Productos -->
+        <button class="btn btn-dashboard" data-section="products">
+            <i class="ri-product-hunt-line icon-medium"></i>
+            <b class="text-mobile"> Productos </b>
+        </button>
+
+        <!-- Cateogrias - SubCategorias - Brands -->
+        <button class="btn btn-dashboard" data-section="categories">
+            <i class="ri-copyright-line icon-medium"></i>
+            <b class="text-mobile"> Categorías+ </b>
+        </button>
+
+        <!-- Store -->
+        <button class="btn btn-dashboard" data-section="store">
+            <i class="ri-store-2-line icon-medium"></i>
+            <b class="text-mobile"> Tienda </b>
+        </button>
+
+        <!-- Estadisticas -->
+        <button class="btn btn-dashboard" data-section="statistics">
+            <i class="ri-line-chart-line icon-medium"></i>
+            <b class="text-mobile"> Estadísticas </b>
+        </button>
+        {% endif %}
+
+        <a class="btn btn-dashboard" href="{% url 'user_profile' %}">
+            <i class="ri-shield-user-line icon-medium"></i>
+            <b class="text-mobile"> Perfil </b>
+        </a>
+    </aside>
+    
+    <!-- Secciones que se mostrarán dinámicamente -->
+    <section id="sells" class="dashboard-section">
+        <h3>Contenido de Simular Venta </h3>
+        
+        <span>Estamos trabajando en esto todavía..</span>
+    </section>
+
+    <section id="orders" class="dashboard-section">
+        <h3>Contenido de Pedidos </h3>
+        
+        <span>Estamos trabajando en esto todavía..</span>
+    </section>
+
+    {% if user.role == 'admin' %}
+    <!-- Products -->
+    <section id="products" class="dashboard-section">
+        {% include "dashboard/dash_products.html" %}
+    </section>
+    
+    <!-- Cateogrias - SubCategorias - Brands -->
+    <section id="categories" class="dashboard-section">
+        <h3>Contenido de Categorías, SubCategorías, Marcas </h3>
+        
+        <span>Estamos trabajando en esto todavía..</span>
+    </section>
+
+    <!-- Store -->
+    <section id="store" class="dashboard-section">
+        <h3>Contenido de Tienda </h3>
+        
+        <span>Estamos trabajando en esto todavía..</span>
+    </section>
+
+    <!-- Estadisticas -->
+    <section id="statistics" class="dashboard-section">
+        <h3>Contenido de Estadísticas </h3>
+        
+        <span>Estamos trabajando en esto todavía..</span>
+    </section>
+    {% endif %}
+
+</div>
+
+
+    
+{% endblock main_content %}
+
+
+
+{% block extra_scripts %}
+
+    <!-- JS CHOICES.js -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <!-- Para sanitizar correctamente html -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+
+    <!-- Add extra scripts.js here -->
+    <script src="{% static 'dashboard/js/dash_products.js' %}"></script>
+
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+
+     
+{% endblock extra_scripts %}

@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Configuraciones establecidas para el primer tab
+// MODAL CONFIG
 document.addEventListener('DOMContentLoaded', () => {
 
     // setear variables del form modal
@@ -303,5 +304,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Mostrar la primera pestaña por defecto
     // document.querySelector(".cover-menu li a").click();
-    tabs[1].click();
+    tabs[3].click();
 });

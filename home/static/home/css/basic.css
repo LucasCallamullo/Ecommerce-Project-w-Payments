@@ -623,12 +623,14 @@ footer {
 .mb-6 { margin-bottom: 2.4rem !important; }   /* 38.4px */
 
 .d-lg-block { display: none !important; }  /* Hide in mobile and tablets */
+.d-lg-flex { display: none !important; }  /* Hide in mobile and tablets */
 .d-md-block { display: block !important; }  /* Show in mobile tablets */
 
 /* Desktop (mín. 993px) */
 @media (min-width: 993px) {
     .d-md-block { display: none !important; }  /* Hide in desktop */
     .d-lg-block { display: block !important; }  /* Show in desktop */
+    .d-lg-flex { display: flex !important; }  /* Show in desktop */
     .text-mobile { font-size: var(--font-normal); }
 
     .gap-1 { gap: 0.5rem !important; }   /* 8px */

@@ -17,32 +17,25 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     
+    # Django Tradicional
     path('', include("home.urls")),
-    
-    path('', include("products.urls")),
-    
-    path('', include("cart.urls")),
-    
     path('', include("users.urls")),
     
-    path('', include("orders.urls")),
-    
-    path('', include("payments.urls")),
-    
+    path('', include("cart.urls")),
+    path('', include("products.urls")),
+    path('', include("dashboard.urls")),
     path('', include("favorites.urls")),
     
+    path('', include("orders.urls")),
+    path('', include("payments.urls")),
     
     # DRF API
-    path('', include("products.urls_api")),
-    
-    path('', include("cart.urls_api")),
-    
     path('', include("users.urls_api")),
     
+    path('', include("cart.urls_api")),
+    path('', include("products.urls_api")),
     path('', include("orders.urls_api")),
 ]

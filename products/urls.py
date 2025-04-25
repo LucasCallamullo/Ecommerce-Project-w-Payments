@@ -1,12 +1,7 @@
 
 
 from django.urls import path
-
-# from django.conf import settings
-# from django.conf.urls.static import static
-
 from products import views
-
 
 # =======================================================================
 #      Views DJANGO renderizado incial de paginas desde el servidor
@@ -20,10 +15,10 @@ urlpatterns = [
     path('category/<slug:cat_slug>/<slug:subcat_slug>/', views.product_list, name='pl_subcategory'),
     path('product/search/', views.product_top_search, name='product_top_search'),
    
-   # url for product_detail.html
+    # url for product_detail.html
     path('product/25<int:id>-<slug:slug>/', views.product_detail, name='product_detail'),
-    path('main-dashboard/', views.main_dashboard, name='main_dashboard'),
-    
 ]
 
+# from django.conf import settings
+# from django.conf.urls.static import static
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

@@ -1,8 +1,25 @@
 
 
 from django import template
+from django.utils.html import escapejs
+from django.utils.safestring import mark_safe
+import json
 
 register = template.Library()
+
+@register.filter
+def escape_data(value):
+    """Escapa para atributos data-* y Unicode."""
+    value = str(value)
+    value = escapejs(value)
+    value = (
+        value.replace('"', '&quot;')
+             .replace("'", '&#39;')
+             .replace('\u2028', '\\u2028')
+             .replace('\u2029', '\\u2029')
+    )
+    return mark_safe(value)
+
 
 @register.filter
 def intdot(value):

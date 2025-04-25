@@ -15,6 +15,7 @@ from users.permissions import IsAdminOrSuperUser
 from orders import utils
 
 class EditPaymentView(APIView):
+    # Verificar si es role == 'admin' o user.id == 1
     permission_classes = [IsAuthenticated, IsAdminOrSuperUser]
     
     def post(self, request):
@@ -37,12 +38,10 @@ class EditPaymentView(APIView):
 
         
 class EditShipmentView(APIView):
-    permission_classes = [IsAuthenticated]
+    # Verificar si es role == 'admin' o user.id == 1
+    permission_classes = [IsAuthenticated, IsAdminOrSuperUser]
     
     def post(self, request):
-        # Verificar si es admin o superadmin
-        if request.user.id != 1 and request.user.role != 'admin':
-            return Response({'detail': 'No tienes permisos para esta acción.'},  status=status.HTTP_403_FORBIDDEN)
         
         # Mejor forma de manejar el error si no existiera el objeto como tal
         try:

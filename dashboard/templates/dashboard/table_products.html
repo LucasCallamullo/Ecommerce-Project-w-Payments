@@ -1,0 +1,306 @@
+
+
+{% load custom_filters %}
+
+<!-- Se guarda como string vacío "" si no exisite -->
+<form id="form-hidden-filters" data-table="table-products" action="{% url 'dash_sort_products' %}" hidden>
+
+    {% if category %} 
+        <input type="hidden" name="category" value="{{ category.id }}">
+    {% endif %}
+
+    {% if subcategory %} 
+        <input type="hidden" name="subcategory" value="{{ subcategory.id }}">
+    {% endif %}
+
+    {% if query %}
+        <input type="hidden" name="query" value="{{ query }}">
+    {% endif %}
+
+    <input type="hidden" name="available" value="{{ available|default:2 }}">
+
+    <input type="hidden" name="sort_by" value="">
+    
+    <input type="hidden" name="sorted" value="">
+
+    <button id="btn-form-hidden" type="submit" hidden></button>
+</form>
+
+
+<div id="filters-str" hidden
+     {% if category %} data-category="{{ category.name }}" {% endif %}
+     {% if subcategory %} data-subcategory="{{ subcategory.name }}" {% endif %}
+     {% if query %} data-query="{{ query }}" {% endif %}>
+</div>
+
+{% for product in products %}
+    
+    {% if not product.description %}
+        <template id="template-{{product.id}}">
+            <p><strong>Especificaciones técnicas:</strong></p>
+            <p>● Listado 1</p>
+            <p>● Listado 2 <strong>(*)</strong></p>
+            <p>• Listado 3</p>
+            <p>&nbsp;</p>
+            <p><strong>(*)</strong> Auxiliar Listado 2</p>
+            <p>Comentario</p>
+        </template>
+    {% else %}
+        <template id="template-{{product.id}}">
+            {{ product.description|safe }}
+        </template>
+    {% endif %}
+
+    <div class="grid-products">
+        <!-- 	Name n Image	 -->
+        <div class="d-flex-s row-table" data-index="{{product.id}}"
+        data-model='{
+        {% for image in product.images_all %}
+            "image-{{image.main_image}}-{{image.id}}": "{{image.image_url|escape_data}}",
+        {% endfor %}
+            "title": "Editar Producto",
+            "id": "{{ product.id|escape_data }}",
+            "name": "{{ product.name|escape_data }}",
+            "price": "{{ product.price|intdot|escape_data }}",
+            "discount": "{{ product.discount|escape_data }}",
+            "subtotal": "{{ product.calc_discount|intdot|escape_data }}",
+            "stock": "{{ product.stock|escape_data }}",
+            "available": "{{ product.available|escape_data }}",
+            "price-list": "{{ product.price_list|intdot|escape_data }}",
+            "category": "{{ product.category.id|escape_data }}",
+            "subcategory-{{product.category.id}}": "{{ product.subcategory.id|escape_data }}",
+            "brand": "{{ product.brand.id|escape_data }}"
+        }'>
+            <img src="{{product.main_image}}" alt="{{product.name}}">
+            <span class="p-grid">{{product.name}}</span>
+        </div>
+
+        <!-- 	Category	 -->
+        <div class="d-lg-block p-grid">{{product.category.name}}</div>
+
+        <!-- 	Available	 -->
+        <div class="d-lg-block p-grid">
+            <span class="status {% if product.available %}active{% else %}disabled{% endif %}">
+                <b>{{ product.available|yesno:"Activo,Inactivo" }}</b>
+            </span>
+        </div>
+
+        <!-- 	Ventas	 -->
+        <div class="d-lg-block p-grid">{{ product.id }}</div>
+
+        <!-- 	Update Date	 -->
+        <div class="d-lg-block p-grid">{{ product.updated_at|date:"d/m/Y" }}</div>
+
+         <!-- 	Stock	 -->
+        <div class="d-lg-block p-grid">{{ product.stock }}</div>
+
+         <!-- 	Price	 -->
+        <div class="d-lg-block p-grid">$ {{ product.price|intdot }}</div>
+    </div> 
+
+{% empty %}
+
+    <h3 class="mb-3 mt-1">No hay productos con estos filtros:</h3>
+    
+    <div class="d-flex-col gap-2">
+        {% if category %}
+            <p>Categoría: {{ category.name }}</p>
+        {% endif %}
+        
+        {% if subcategory %}
+            <p>Subcategoría: {{ subcategory.name }}</p>
+        {% endif %}
+        
+        {% if available == '1' %}
+            <p>Disponibilidad: Disponible</p>
+        {% elif available == '0' %}
+            <p>Disponibilidad: No Disponible</p>
+        {% else %}
+            <p>Disponibilidad: Todos</p>
+        {% endif %}
+        
+        {% if query %}
+            <p>Buscador palabras: {{ query }}</p>
+        {% endif %}
+    </div>
+
+    
+{% endfor %}
+
+
+
+<form class="modal" id="form-modal-table" data-table="table-products" 
+action="{% url 'product-update-api' %}"
+data-delete-images="{% url 'product-images-delete-api' %}"
+data-create-images="{% url 'product-images-create-api' %}">
+    {% csrf_token %}
+
+    <div class="container-space-between">
+        <b class="text-medium bold-main" id="modal-title"></b>
+        <button type="button" class="btn btn-close" id="form-modal-close"> 
+            <i class="ri-close-fill icon-small"></i>
+        </button>   
+    </div>
+
+    <input type="hidden" id="modal-id" name="id"/>
+
+    <!--   FILA 1 FORMULARIO 		 -->
+    <div class="row-product-1">
+        <div class="d-flex-col gap-1">
+            <label for="modal-name"><b>Nombre:</b></label>
+            <input type="text" id="modal-name" name="name"/>
+        </div>
+
+        <div class="d-flex-s d-flex-col gap-1">
+            <label for="modal-available"><b>Disponible:</b></label>
+            <div class="d-flex-s">
+                <input type="checkbox" id="modal-available" name="available"/>
+            </div>
+        </div>
+
+        <div class="d-flex-col gap-1">
+            <label for="modal-price"><b>Precio:</b></label>
+            <input type="text" id="modal-price" name="price"/>
+        </div>
+
+        <div class="d-flex-col gap-1">
+            <label for="modal-discount"><b>Descuento (%):</b></label>
+            <input type="text" id="modal-discount" name="discount"/>
+        </div>
+
+        <div class="d-flex-col gap-1">
+            <label for="modal-subtotal"><b>SubTotal:</b></label>
+            <input type="text" id="modal-subtotal" name="subtotal"/>
+        </div>
+
+        <div class="d-flex-col gap-1">
+            <label for="modal-stock"><b>Stock:</b></label>
+            <input  type="text" id="modal-stock" name="stock"/>
+        </div>
+    </div>
+
+    <!--   FILA 2 FORMULARIO 		 -->
+    <div class="row-product-2">
+        <!-- Categorias select -->
+        <div class="d-flex-col gap-1">
+            <label for="modal-category">
+                <b>Categoría:</b>
+            </label>
+            <select class="category-select" id="modal-category" name="category">
+                <option value="0">Sin Categoría</option>
+                {% for category, subcategories in categories_dropmenu.items %}
+                    <option value="{{ category.id }}">
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- subcategorias select -->
+        <div class="d-flex-col gap-1">
+
+            <!-- Campo oculto que enviará la subcategoría seleccionada -->
+            <input type="hidden" name="subcategory" class="selected-subcategory" value="0">
+
+            {% for category, subcategories in categories_dropmenu.items %}
+                {% if subcategories %}
+                <div class="subcat-container gap-1 subcat-cont-{{category.id}}" data-state="closed">
+                    <label for="modal-subcategory-{{category.id}}">
+                        <b>Subcategoría:</b>
+                    </label>
+                    <select class="subcat-select" id="modal-subcategory-{{category.id}}">
+                        <option value="0">Sin Subcategoría</option>
+                        {% for subcat in subcategories %}
+                            <option value="{{subcat.id}}">
+                                {{ subcat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- BRANDS -->
+        <div class="d-flex-col gap-1">
+            <label for="modal-brand">
+                <b>Marca:</b>
+            </label>
+            <select id="modal-brand" name="brand">
+                <option value="0">Sin Marca</option>
+                {% for brand in brands %}
+                    <option value="{{ brand.id }}">
+                        {{ brand.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+            
+    <!--   FILA 3 FORMULARIO 		 -->
+    <b> Imagenes del Producto: </b>
+    <div class="row-product-img mb-1" id="modal-images-cont">
+
+    </div>
+
+    <!--   FILA 4 FORMULARIO 		 -->
+    <div class="row-product-4 text-mobile">
+        <div class="d-flex-col gap-1">
+            <b>Descripción del Producto: (*)</b>
+            <textarea id="modal-description" class="text-mobile modal-description"></textarea>
+        </div>
+
+        <div class="d-flex-col gap-1">
+            <b>Vista Previa de la Descripción:</b>
+            <div class="cont-border description-preview"></div>
+        </div>
+    </div>
+
+    <div class="row-product-5 cont-border mb-1"> 
+        <b>(*) Simbolos:</b>
+        <span>**Negrita**</span>
+        <span>-- Linea en blanco</span>
+        <span>* listado</span>
+
+        <span>*- listado</span>
+        <span>(*) auxiliar</span>
+    </div>
+    
+    <!--   FILA 5 FORMULARIO 		 -->
+    <div class="row-product-6">
+        <div class="d-flex-col gap-1">
+            <div class="d-flex gap-1">
+                <b> Nueva Imagen Preview </b>
+                <i class="ri-corner-right-down-line icon-small"></i>
+            </div>
+            <img class="border-main new-image" src="" alt="Todavía no cargaste una nueva Imagen">
+        </div>
+
+        <div class="d-flex-col gap-4">
+            <!-- Añade multiple y name como array -->
+            <input type="file" class="image-input" name="images" multiple accept="image/*">
+            <!-- 	<input type="file" id="image-input" name="image">	 -->
+            
+            <div class="container-space-between gap-1">
+                <button class="btn gap-1 btn-main text-mobile" type="submit" value="update"> 
+                    <i class="ri-edit-2-line"></i>
+                    <b>Aplicar Cambios</b>
+                </button>
+
+                <button class="btn btn-close text-mobile form-modal-cancel" type="button">
+                    <b>Cancelar</b>
+                </button>
+            </div>
+
+            <div>
+                <p><b>(*)</b> Recorda siempre mirar bien las imagenes subidas y/o eliminadas...</p>
+                <p><b>(**)</b> Si cancelas perderás los cambios realizados...</p>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<div class="overlay" id="overlay-table"> 
+    
+</div>

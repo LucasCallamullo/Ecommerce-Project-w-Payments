@@ -7,6 +7,9 @@ function forceReload() {
     window.location.href = url.toString();
 };
 
+// Stores event handlers for proper cleanup
+const eventHandlersMap = new Map();
+
 
 /**
  * `AUTH_STATUS` is defined as a boolean by evaluating `isAuthenticated`.  
@@ -34,6 +37,7 @@ function toggleState(element) {
 //                Overlay functions and events
 // ============================================================================
 let overlayClickListener = null;  // Holds the current click listener for the overlay
+let overlayKeyListener = null;
 
 /**
  * Opens the overlay and adds the event listener for click events.
@@ -52,6 +56,14 @@ function openOverlay(overlay, eventFunction) {
         const backToTopBtn = document.getElementById("backToTop");
         toggleBackToTopButton(false, backToTopBtn);
     }
+
+    // Add keydown listener for "Escape" key if not already added
+    if (!overlayKeyListener) {
+        overlayKeyListener = function (e) {
+            if (e.key === "Escape") overlay.click();
+        };
+        document.addEventListener("keydown", overlayKeyListener);
+    }
 }
 
 /**
@@ -66,6 +78,11 @@ function closeOverlay(overlay) {
         overlay.removeEventListener('click', overlayClickListener);  
         overlayClickListener = null; 
     }
+
+    if (overlayKeyListener) {
+        document.removeEventListener("keydown", overlayKeyListener);
+        overlayKeyListener = null;
+    }
 }
 
 /**
@@ -78,13 +95,13 @@ function closeOverlay(overlay) {
 function closeOverlayOnClick(element, buttonClose=null, closeHandler=null) {
     return function (e) {
         if (e.target === this) {
-            console.log('Overlay clicked');
+            // console.log('Overlay clicked');
             closeOverlay(this); 
             toggleState(element);
 
             // Elimina el event listener del botón de cerrar
             if (buttonClose && closeHandler) {
-                console.log('Se borró correctamente el evento del botón de cierre');
+                // console.log('Se borró correctamente el evento del botón de cierre');
                 buttonClose.removeEventListener('click', closeHandler);
             }
         }
@@ -102,6 +119,8 @@ function closeOverlayOnClick(element, buttonClose=null, closeHandler=null) {
  *     overlay: document.getElementById('overlay-menu-mobile'),
  *     onOpenCallback: () => console.log('Menu opened!') // Optional callback function
  * });
+ * 
+ * Complete example in users / admin_profile.js
  * 
  * @param {Object} options - Configuration options for the toggleable element.
  * @param {HTMLElement} options.toggleButton - The button that opens the element.
@@ -168,66 +187,65 @@ function setupToggleableElement(options) {
 /* ==========================================================================================
                 Generic function to close elements by clicking outside them
 ========================================================================================== */
-// Map to store close events for each trigger element
-const closeEventsMap = new Map();
-
 /**
- * Sets up a click-outside close behavior for a given trigger and target element.
- * When the trigger element is clicked, the target element toggles its visibility.
- * If the user clicks outside the target element, it will close automatically.
- *
- * @param {HTMLElement} triggerElement - The element that triggers the toggle (e.g., a button).
- * @param {HTMLElement} targetElement - The element to be shown/hidden (e.g., a dropdown menu).
- * @param {Function} [onToggle=() => {}] - Optional callback to execute when the target element toggles.
+ * Sets up click-outside close behavior for a trigger-target element pair.
+ * Toggles target visibility on trigger click, closes when clicking outside.
+ * 
+ * @param {HTMLElement} triggerElement - Element that toggles visibility (e.g., button)
+ * @param {HTMLElement} targetElement - Element to show/hide (e.g., dropdown menu)
+ * @param {Function} [onToggle=() => {}] - Optional toggle state callback
  */
 function setupClickOutsideClose(triggerElement, targetElement, onToggle = () => {}) {
-    /**
-     * Handles the common logic for toggling the target element's state and managing close events.
-     *
-     * @param {boolean} isExpanded - The current expanded state of the target element.
-     */
-    function handleElement(isExpanded) {
-        toggleState(targetElement);
-        triggerElement.setAttribute("aria-expanded", !isExpanded);
+    // 1. Prevent clicks inside dropdown from closing it
+    targetElement.addEventListener('click', (event) => {
+        event.stopPropagation(); // Stop event from bubbling to document
+    });
 
-        // Execute the optional callback with the new state
-        onToggle(!isExpanded);
-
-        if (!isExpanded) {
-            // Add the close event to the map and document
-            closeEventsMap.set(triggerElement, closeIfClickOutside);
-            document.addEventListener("click", closeIfClickOutside);
-        } else {
-            // Remove the close event from the map and document
-            document.removeEventListener("click", closeEventsMap.get(triggerElement));
-            closeEventsMap.delete(triggerElement);
-        }
-    }
-
-    /**
-     * Handles the click-outside event to close the target element if the click occurs outside.
-     *
-     * @param {MouseEvent} event - The click event object.
-     */
+    // 2. Close handler for outside clicks and Escape key
     function closeIfClickOutside(event) {
         const isExpanded = triggerElement.getAttribute("aria-expanded") === "true";
         if (!isExpanded) return;
 
-        // If the click is outside the trigger and target elements, close the target element
-        if (!triggerElement.contains(event.target) && !targetElement.contains(event.target)) {
-            handleElement(isExpanded);
+        // Close if clicked outside OR Escape pressed
+        if ((!triggerElement.contains(event.target) && 
+            !targetElement.contains(event.target)) || 
+            event.key === "Escape") {
+            toggleDropdown();
         }
     }
 
-    /**
-     * Handles the click event on the trigger element to toggle the target element's state.
-     */
-    function handleExpanded() {
+    // 3. Core toggle functionality
+    function toggleDropdown() {
         const isExpanded = triggerElement.getAttribute("aria-expanded") === "true";
-        handleElement(isExpanded);
+        
+        // Update state
+        triggerElement.setAttribute("aria-expanded", !isExpanded);
+        toggleState(targetElement);
+        onToggle(!isExpanded);
+
+        // Manage event listeners
+        if (!isExpanded) {
+            // Add listeners when opening
+            document.addEventListener("click", closeIfClickOutside);
+            document.addEventListener("keydown", closeIfClickOutside);
+        } else {
+            // Remove listeners when closing
+            document.removeEventListener("click", closeIfClickOutside);
+            document.removeEventListener("keydown", closeIfClickOutside);
+        }
     }
 
-    triggerElement.addEventListener("click", handleExpanded);
+    // 4. Trigger click handler
+    triggerElement.addEventListener("click", (event) => {
+        event.stopPropagation(); // Optional: prevent document click handler
+        toggleDropdown();
+    });
+
+    // 5. Cleanup function for manual removal (optional)
+    return () => {
+        document.removeEventListener("click", closeIfClickOutside);
+        document.removeEventListener("keydown", closeIfClickOutside);
+    };
 }
 
 
@@ -245,7 +263,7 @@ function setupClickOutsideClose(triggerElement, targetElement, onToggle = () => 
  * @param {string} [color='green'] - The color of the alert.
  * @param {number} [timeout=1000] - The duration (in ms) before the alert is automatically removed.
  */
-function openAlert(message, color = 'green', timeout = 1000) {
+function openAlert(message, color='green', timeout=1000, log=false) {
 
     const alertsContainer = document.getElementById('alerts-container');
     // Open the door! open the container
@@ -287,6 +305,8 @@ function openAlert(message, color = 'green', timeout = 1000) {
 
     alertsContainer.appendChild(alertBox);
     alertBox.classList.add('show');
+
+    if ( log ) console.log(message)    // for debug
 
     // Function to check if the alerts container is empty and close it if needed
     const checkAndCloseContainer = () => {

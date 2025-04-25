@@ -1,85 +1,154 @@
 
 
-from products.models import Product
-
-# ============================================================================ 
-#                       Filter product stuff
-# ============================================================================ 
-def get_products_filters(available=True, category=None, subcategory=None, top_query=None, empty=False):
+def valid_id_or_None(id_value):
     """
-    Filters products based on the provided parameters.
-    
-    Args:
-        available (bool, optional): 
-            Filters the initial queryset based on availability. Defaults to True.
-        category (ID PCategory, optional): 
-            Object used for optional filtering if it exists. Defaults to None.
-        subcategory (ID PSubcategory, optional): 
-            Object used for optional filtering if it exists. Defaults to None.
-        top_query (str, optional):
-            Search query that comes from the top search bar.
-        empty (bool, optional): 
-            Indicates whether an empty queryset can be returned if no filters are passed 
-            correctly as parameters.
-        
-    Return:
-        QuerySet Product: Filtered products if there are matches or an empty queryset.
-    """
-    # Filter products by availability
-    products = Product.objects.filter(available=available) if available else Product.objects.all()
-    
-    # If there's no category, subcategory, and no top_query, return an empty queryset
-    if empty and not category and not top_query and not subcategory:
-        return Product.objects.none()
-    
-    if category: 
-        products = products.filter(category=category)
-        
-    if subcategory:
-        products = products.filter(subcategory=subcategory)
-            
-    if top_query:
-        # Split the query into individual words
-        query_words = top_query.split()
-
-        # Perform a search for each word in the product name
-        for word in query_words:
-            products = products.filter(normalized_name__icontains=word)
-    
-    return products
-
-
-def get_model_or_None(object_model, id=None, slug=None):
-    """
-        Retrieves a model from the database by its ID, if the ID is valid.
-
-    Args:
-        object_model (object): 
-            The database model from which to get the object
-            
-        id (str, optional): 
-            The ID of the object to search for.
-            
-        slug (str, optional):
-            The slug of the object to search for.
-
+    Valida que un ID sea positivo y numérico.
     Returns:
-        object: The model if found, otherwise returns None.
+        - int: El ID convertido a entero si es válido
+        - None: Si el ID es inválido
+        
+    #### forma acotada para un futuro puede ahorrar milesimas..
+    return int(value_id) if value_id and value_id.isdigit() and int(value_id) > 0 else None
     """
-    if not id and not slug:
+    try:
+        id_int = int(id_value)
+        return id_int if id_int > 0 else None
+    except (TypeError, ValueError):
         return None
+
+
+import json
+import requests
+from django.conf import settings
+from requests.exceptions import RequestException
+def get_url_from_imgbb(image_file):
+    """Sube imagen a ImgBB con manejo robusto de errores"""
+    api_key = settings.IMGBB_KEY
+    
+    # 1. Generar nombre único preservando extensión
+    unique_name = generate_unique_name(image_file.name)
     
     try:
-        if id and str(id).isdigit():
-            return object_model.objects.get(id=id)
-        
-        if slug:
-            return object_model.objects.get(slug=slug)
+        # 2. Subida a ImgBB y manejo de errores
+        response = requests.post(
+            "https://api.imgbb.com/1/upload",    # endpoint de guardado siempre es el mismo
+            params={"key": api_key},    # apikey sacada de imgBB
+            files={"image": (unique_name, image_file)},    # pasameos el nuevo nombre y el archivo
+            timeout=10  # Timeout en segundos para reintentar
+        )
+        response.raise_for_status()  # Lanza error para códigos HTTP 4XX/5XX
 
-    except object_model.DoesNotExist:
-        return None
+        # 3. Procesar respuesta, manejo error o obtengo la url 
+        data = response.json()
+        
+        if not data.get("success"):
+            error_msg = data.get("error", {}).get("message", "Error desconocido en ImgBB")
+            raise ValueError(f"Error en ImgBB: {error_msg}")
+
+        return data["data"]["url"]
+
+    # 4. Respuesta distintos errores
+    except RequestException as e:
+        raise ValueError("Error de conexión con el servicio de imágenes")
+    except json.JSONDecodeError:
+        raise ValueError("Respuesta inválida del servicio")
+    except Exception as e:
+        raise ValueError("Error al procesar la imagen")
     
     
+import os
+import uuid
+def generate_unique_name(original_filename, uuid_length=13):
+    """ Genera un uuid unico de 13 caracteres ( "550e8400e29b4.jpg" )"""
+    ext = os.path.splitext(original_filename)[1].lower()
+    truncated_uuid = uuid.uuid4().hex[:uuid_length]
+    return f"{truncated_uuid}{ext}"
+
+
+def validate_image_file(img):
+    """Validaciones basicas a el archivo antes de subirlo"""
+    if not img.name:
+        raise ValueError("El archivo no tiene nombre")
+    
+    if img.size == 0:
+        raise ValueError("El archivo está vacío")
+    
+    ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'webp'}
+    extension = img.name.lower().split('.')[-1]
+    if extension not in ALLOWED_EXTENSIONS:
+        raise ValueError(f"Formato {extension} no soportado")
+
+    max_size = 32 * 1024 * 1024  # 32MB
+    if img.size > max_size:
+        raise ValueError(f"Tamaño excede {max_size/1024/1024}MB")
+    
+
+from rest_framework import serializers
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+def parse_number(value, field_name, allow_zero=True):
+    """
+    Convierte y valida un número recibido como string, float o int.
+
+    - Para campos de tipo precio (Decimal): se espera precisión de 2 decimales.
+    - Para campos enteros (stock, descuento): convierte a entero.
+    - Si el valor es negativo o inválido, lanza un ValidationError.
+
+    Parámetros:
+    - value: el valor recibido del frontend.
+    - field_name: nombre del campo para construir el mensaje de error.
+    - allow_zero: si se permite que el valor sea igual a 0.
+
+    Returns:
+        - Decimal para precios.
+        - int para stock o descuento.
+    """
+    if isinstance(value, str):
+        # Formatos como "30.000,50" => "30000.50"
+        value = value.replace(".", "").replace(",", ".")
+
+    if field_name.lower() in ('precio', 'precio de lista'):
+        try:
+            value = Decimal(value).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        except (InvalidOperation, ValueError):
+            raise serializers.ValidationError(f"El {field_name} debe ser un número válido con hasta 2 decimales.")
+    elif field_name.lower() in ('stock', 'descuento'):
+        try:
+            value = int(value)
+        except (TypeError, ValueError):
+            raise serializers.ValidationError(f"El {field_name} debe ser un número entero válido.")
+    else:
+        raise serializers.ValidationError(f"Campo '{field_name}' no reconocido para validación.")
+
+    if (allow_zero and value < 0) or (not allow_zero and value <= 0):
+        condicion = "mayor o igual a 0" if allow_zero else "mayor que 0"
+        raise serializers.ValidationError(f"El {field_name} debe ser {condicion}.")
+
+    return value
+
+
+import bleach
+def sanitize_html(value, allowed_tags=None):
+    """
+    Limpia contenido HTML, permitiendo solo las etiquetas especificadas.
+
+    Args:
+        value (str): HTML de entrada.
+        allowed_tags (list): Lista de etiquetas HTML permitidas. Por defecto, solo 'p' y 'strong'.
+
+    Returns:
+        str: HTML limpio.
+    """
+    if allowed_tags is None:
+        allowed_tags = ['p', 'strong']
+
+    return bleach.clean(
+        value,
+        tags=allowed_tags,
+        attributes={},
+        strip=True
+    )
+    
+
 import unicodedata
 import re
 def normalize_or_None(text):

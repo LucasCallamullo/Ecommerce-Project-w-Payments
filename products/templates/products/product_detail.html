@@ -14,7 +14,7 @@
 {% block main_content %}
 
 <!-- Primera fila -->
-<div class="d-flex mt-3 mb-3 gap-1">
+<div class="d-flex mb-3 gap-1">
     <a class="btn btn-paralelogramo d-lg-block" href="{% url 'product_list' %}">
         <span> Todos Nuestros Productos </span>
     </a>
@@ -40,7 +40,7 @@
             <!-- Contenedor de imagen principal -->
             <div class="prod-main-img-container">
                 <img id=prod-main-image class="prod-image-preview prod-zoomed"
-                    src="{{ main_image_url }}" alt="{{ product.name }}">
+                    src="{{ product.main_image }}" alt="{{ product.name }}">
 
                 <!-- Botón de la esquina -->
                 <button class="btn corner-box" id="zoom-button">
@@ -91,13 +91,13 @@
         <!-- Contenedor de abajo con las imagenes -->
         <div class="grid-container-4">
             <figure class="prod-small-image-container">
-                <img class="prod-small-image" src="{{ main_image_url }}" alt="{{ product.name }}">
+                <img class="prod-small-image" src="{{ product.main_image }}" alt="{{ product.name }}">
             </figure>
 
             {% for image in images_urls %}
                 <!-- El resto de imágenes -->
                 <figure class="prod-small-image-container" >
-                    <img class="prod-small-image" src="{{ image }}" alt="{{ product.name }}">
+                    <img class="prod-small-image" src="{{image}}" alt="{{product.name}}">
                 </figure>
             {% endfor %}
         </div>
@@ -219,8 +219,7 @@
                     alt="Logo de Medios de Pago" class="w-100">
             </div>
 
-            <form class="d-flex gap-1" method="POST" id="product-detail-form"
-            data-index="{{product.id}}">
+            <form class="d-flex gap-1" id="product-detail-form" data-index="{{product.id}}" method="POST" >
                 {% csrf_token %}
 
                 <!-- Contador -->
@@ -254,15 +253,14 @@
 </div>
 
 <div class="cont-detail-desc mt-5 mb-5">
-    <p>Este es un texto de ejemplo de cómo se vería una descripción de producto.</p>
-    <p>100% enfocado en el rendimiento, este producto es una opción tope de gama para los usuarios más exigentes.</p>
-    <p></p>
-    <p></p>
-    <p></p>
+
+    <div>
+        {{ product.description|safe }}
+    </div>
 
     <p> • Diseño ergonómico y moderno.</p>
-    <p> • Materiales de alta calidad para mayor durabilidad.</p>
-    <p> • Tecnología avanzada para un rendimiento óptimo.</p>
+    <p> ● Materiales de alta calidad para mayor durabilidad.</p>
+    <p> ● Tecnología avanzada para un rendimiento óptimo.</p>
     <p> • Fácil de usar y compatible con múltiples dispositivos.</p>
     <p></p>
     <p></p>
@@ -293,8 +291,8 @@
     <p></p>
     <p></p>
     <p><strong>ESPECIFICACIONES TÉCNICAS</strong></p>
-    <p> • Peso: 300 g</p>
-    <p> • Dimensiones: 150 x 80 x 30 mm</p>
+    <p> ● Peso: 300 g</p>
+    <p> ● Dimensiones: 150 x 80 x 30 mm</p>
     <p> • Material: Plástico ABS de alta resistencia</p>
     <p> • Compatibilidad: Windows, macOS, Linux</p>
     <p> • Conectividad: USB-C, Bluetooth 5.0</p>

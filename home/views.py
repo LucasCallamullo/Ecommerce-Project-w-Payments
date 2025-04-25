@@ -35,6 +35,9 @@ def home(request):
         favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
 
     for product in products:
+        if not product.category:
+            continue
+        
         category_name = product.category.name
         if category_name not in products_by_category:
             products_by_category[category_name] = []

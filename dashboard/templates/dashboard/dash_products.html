@@ -1,0 +1,362 @@
+
+
+{% load custom_filters %}
+
+
+<div>
+    <h2> Tus Productos </h2>
+    <!-- 		 
+    <i class="ri-discount-percent-line"></i> -->
+    <button class="btn gap-1 btn-main" id="add-new-product">
+        <i class="ri-function-add-line icon-small"></i>
+        <span class="text-mobile">Agregar Producto</span>
+    </button>
+</div>
+
+<div class="mb-1">
+    <form class="search-dashboard" id="search-dashboard" method="GET" 
+    action="{% url 'dash_filter_products' %}" data-table="table-products">
+        
+        <input type="text" name="query" placeholder="Buscar producto...">
+        <i class="ri-search-line"></i>
+
+        <input type="hidden" name="category" value="">
+        <input type="hidden" name="subcategory" value="">
+        <input type="hidden" name="available" value="">
+
+        <button type="submit" id="btn-search-dashboard" hidden></button>
+    </form>
+
+    <div class="d-flex gap-1">
+        <div class="btn gap-1 btn-filter" id="btn-filter"
+        aria-expanded="false">
+
+            <span class="text-mobile">Filtros</span>
+            <i class="ri-filter-2-line icon-small"></i>
+
+            <!-- Menu desplegable de filtros -->
+            <form class="cont-filters" id="form-select-filters" data-state="closed"
+            data-table="table-products" action="{% url 'dash_filter_products' %}">
+
+                <!-- Disponibilidad select -->
+                <label class="d-flex-col">
+                    <b class="text-mobile mb-1 justify-start">Disponibilidad:</b>
+    
+                    <select name="available">
+                        <option value="1">Disponible</option>
+                        <option value="0">No Disponible</option>
+                        <option value="2">Todos</option>
+                    </select>
+                </label>
+
+                <!-- Categorias y subcategorias select -->
+                <label class="d-flex-col">
+                    <b class="text-mobile mb-1 justify-start">Categoría:</b>
+                
+                    <select class="category-select" name="category">
+                        <option value="0">Seleccione una categoría</option>
+                        {% for category, subcategories in categories_dropmenu.items %}
+                            <option value="{{category.id}}">
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+            
+                <!-- Campo oculto que enviará la subcategoría seleccionada -->
+                <input type="hidden" name="subcategory" class="selected-subcategory" value="0">
+
+                {% for category, subcategories in categories_dropmenu.items %}
+                    {% if subcategories %}
+                        <div class="subcat-container subcat-cont-{{category.id}}" data-state="closed">
+
+                            <label class="d-flex-col">
+                                <b class="text-mobile mb-1 justify-start">Subcategoría:</b>
+
+                                <select class="subcat-select">
+                                    <option value="0">Seleccione una subcategoría</option>
+                                    {% for subcat in subcategories %}
+                                        <option value="{{subcat.id}}">
+                                            {{subcat.name}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button type="submit" class="btn btn-main btn-select-filters">
+                    <b>Aplicar</b>
+                </button>
+                
+            </form>
+        </div>
+
+        <div class="d-md-block">
+            <!--   Reset Filters		 -->
+            <form class="form-reset-filters" method="GET" 
+            data-table="table-products" action="{% url 'dash_filter_products' %}">
+                <input type="hidden" name="available" value="2">
+                
+                <button type="submit" class="btn btn-filter gap-1">
+                    <i class="ri-close-fill icon-small"></i>
+                    <span class="text-mobile">Filtros</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="d-lg-flex gap-1">
+            <button class="btn btn-grids active-main">
+                <i class="ri-list-check-2 icon-small"></i>
+            </button>
+    
+            <button class="btn btn-grids">
+                <i class="ri-layout-grid-fill icon-small"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="d-lg-block">
+    <div class="container-space-between mb-1">
+        <div class="d-flex gap-1">
+            <span><b class="text-lil-small"> Filtros Aplicados: </b></span>
+            <span><b class="text-lil-small" id="resume-filters"> Ninguno</b></span>
+        </div>
+
+        <!--   Reset Filters		 -->
+        <form class="form-reset-filters" method="GET" 
+        data-table="table-products" action="{% url 'dash_filter_products' %}">
+            <input type="hidden" name="available" value="2">
+            
+            <button type="submit" class="btn btn-filter gap-1">
+                <i class="ri-close-fill icon-small"></i>
+                <span class="text-mobile">Filtros</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="section-products">
+    <div class="header-products-fixed">
+        <div class="grid-products">
+            <div class="header">
+                <b>Productos </b>
+                <button class="btn btn-sorted" data-sort-by="name" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+
+            <div class="d-lg-flex header">
+                <b>Categorías </b>
+                <button class="btn btn-sorted" data-sort-by="category__name" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+
+            <div class="d-lg-flex header">
+                <b>Disponible </b>
+                <button class="btn btn-sorted" data-sort-by="available" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+
+            <div class="d-lg-flex header">
+                <b>Ventas </b>
+                <button class="btn btn-sorted" data-sort-by="sales" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+
+            <div class="d-lg-flex header">
+                <b>Fecha Act. </b>
+                <button class="btn btn-sorted" data-sort-by="updated_at" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+
+            <div class="d-lg-flex header">
+                <b>Stock </b>
+                <button class="btn btn-sorted" data-sort-by="stock" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+
+            <div class="d-lg-flex header">
+                <b>Precio </b>
+                <button class="btn btn-sorted" data-sort-by="price" data-sorted="null">
+                    <b><i class="ri-arrow-up-down-line text-mobile"></i></b>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add main content here -->
+    <section id="table-products">
+        {% include "dashboard/table_products.html" %}
+    </section>
+</div>
+
+<!-- Form to add new product  -->
+<form class="modal" id="form-new-product" data-table="table-products" 
+action="{% url 'product-update-api' %}">
+    {% csrf_token %}
+
+    <div class="container-space-between">
+        <b class="text-medium bold-main">Agregar Nuevo Producto: </b>
+
+        <button type="button" class="btn btn-close" id="form-new-product-close"> 
+            <i class="ri-close-fill icon-small"></i>
+        </button>   
+    </div>
+
+    <!--   FILA 1 FORMULARIO 		 -->
+    <div class="row-product-1">
+        <label class="d-flex-col gap-1">
+            <b>Nombre:</b>
+            <input type="text" name="name"/>
+        </label>
+            
+        <label class="d-flex-s d-flex-col gap-1">
+            <b>Disponible:</b>
+            <div class="d-flex-s">
+                <input type="checkbox" name="available"/>
+            </div>
+        </label>
+    
+        <label class="d-flex-col gap-1">
+            <b>Precio:</b>
+            <input type="text" name="price"/>
+        </label>
+    
+        <label class="d-flex-col gap-1">
+            <b>Descuento (%):</b>
+            <input type="text" name="discount"/>
+        </label>
+    
+        <label class="d-flex-col gap-1">
+            <b>SubTotal:</b>
+            <input type="text" name="subtotal"/>
+        </label>
+    
+        <label class="d-flex-col gap-1">
+            <b>Stock:</b>
+            <input type="text" name="stock"/>
+        </label>
+    </div>
+
+    <!--   FILA 2 FORMULARIO 		 -->
+    <div class="row-product-2">
+
+        <!-- Categorias select -->
+        <label class="d-flex-col gap-1">
+            <b>Categoría:</b>
+
+            <select class="category-select" name="category">
+                <option value="0">Sin Categoría</option>
+                {% for category, subcategories in categories_dropmenu.items %}
+                    <option value="{{ category.id }}">
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+           
+        
+        <!-- subcategorias select -->
+        <div class="d-flex-col gap-1">
+
+            <!-- Campo oculto que enviará la subcategoría seleccionada -->
+            <input type="hidden" name="subcategory" class="selected-subcategory" value="0">
+
+            {% for category, subcategories in categories_dropmenu.items %}
+                {% if subcategories %}
+                <label class="subcat-container gap-1 subcat-cont-{{category.id}}" data-state="closed">
+                    <b>Subcategoría:</b>
+                    <select class="subcat-select">
+                        <option value="0">Sin Subcategoría</option>
+                        {% for subcat in subcategories %}
+                            <option value="{{subcat.id}}">
+                                {{ subcat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- BRANDS -->
+        <label class="d-flex-col gap-1">
+            <b>Marca:</b>
+            
+            <select class="brand-select" name="brand">
+                <option value="0">Sin Marca</option>
+                {% for brand in brands %}
+                    <option value="{{ brand.id }}">
+                        {{ brand.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <!--   FILA 4 FORMULARIO 		 -->
+    <div class="row-product-4 text-mobile">
+        <div class="d-flex-col gap-1">
+            <b>Descripción del Producto: (*)</b>
+            <textarea class="text-mobile modal-description"></textarea>
+        </div>
+
+        <div class="d-flex-col gap-1">
+            <b>Vista Previa de la Descripción:</b>
+            <div class="cont-border description-preview"></div>
+        </div>
+    </div>
+
+    <div class="row-product-5 cont-border mb-1"> 
+        <b>(*) Simbolos:</b>
+        <span>**Negrita**</span>
+        <span>-- Linea en blanco</span>
+        <span>* listado</span>
+
+        <span>*- listado</span>
+        <span>(*) auxiliar</span>
+    </div>
+    
+    <!--   FILA 5 FORMULARIO 		 -->
+    <div class="row-product-6">
+        <div class="d-flex-col gap-1">
+            <div class="d-flex gap-1">
+                <b> Nueva Imagen Preview </b>
+                <i class="ri-corner-right-down-line icon-small"></i>
+            </div>
+            <img class="border-main new-image" src="" alt="Todavía no cargaste una nueva Imagen">
+        </div>
+
+        <div class="d-flex-col gap-4">
+            <!-- Añade multiple y name como array -->
+            <input type="file" class="image-input" name="images" multiple accept="image/*">
+            <!-- 	<input type="file" id="image-input" name="image">	 -->
+            
+            <div class="container-space-between gap-1">
+                <button class="btn gap-1 btn-main text-mobile" type="submit" value="update"> 
+                    <i class="ri-edit-2-line"></i>
+                    <b>Aplicar Cambios</b>
+                </button>
+
+                <button class="btn btn-close text-mobile form-modal-cancel" type="button">
+                    <b>Cancelar</b>
+                </button>
+            </div>
+
+            <div>
+                <p><b>(*)</b> Recorda siempre mirar bien las imagenes subidas y/o eliminadas...</p>
+                <p><b>(**)</b> Si cancelas perderás los cambios realizados...</p>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="overlay" id="overlay-new-product"></div>

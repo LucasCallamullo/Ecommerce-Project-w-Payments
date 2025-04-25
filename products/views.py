@@ -2,18 +2,13 @@
 
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
-from products.models import Product, PCategory, PSubcategory
 from django.http import Http404
-from products import utils
+
+from products.models import Product, PCategory, PSubcategory
+from products import filters, utils
+from favorites.utils import get_favs_products
 
 from users.permissions import admin_or_superuser_required
-
-@admin_or_superuser_required
-def main_dashboard(request):
-    
-    products = Product.objects.filter(available=True)
-    return render(request, "products/dashboard/dashboard.html", {'products': products})
-
 
 def product_list(request, cat_slug=None, subcat_slug=None):
     """
@@ -29,31 +24,26 @@ def product_list(request, cat_slug=None, subcat_slug=None):
         products = Product.objects.filter(available=True)
         return render(request, "products/products_list.html", {'products': products})
 
-    # The function validates the data and returns the corresponding object to filter later
-    # if it doesn't exist or the request.GET.get is None, it will return None and not affect 
-    # the filtering
-    category = utils.get_model_or_None(PCategory, slug=cat_slug)
-    subcategory = utils.get_model_or_None(PSubcategory, slug=subcat_slug)
+    # El método `.first()` devuelve el primer objeto que coincide con el filtro o None 
+    # si no encuentra ninguno.
+    category = PCategory.objects.filter(slug=cat_slug).first() if cat_slug else None
+    subcategory = PSubcategory.objects.filter(slug=subcat_slug).first() if subcat_slug else None
 
-    # We get a filtered queryset with all the filtered products
-    products = utils.get_products_filters(
-        category=category.id if category else None, 
-        subcategory=subcategory.id if subcategory else None, 
-        empty=True    # Allows us to get an empty queryset
-    )
+    products = filters.get_products_filters({
+        'category': category,
+        'subcategory': subcategory
+    })
     
-    user = request.user
-    favorite_product_ids = None
-    if user.is_authenticated:
-        # IDs de productos favoritos
-        favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
+    # obtener un set de ids para comparacion en template
+    favs_products_ids = get_favs_products(request.user)
 
     context = {
         'products': products,
         'category': category,
         'subcategory': subcategory,
-        'favorite_product_ids': favorite_product_ids
+        'favorite_product_ids': favs_products_ids
     }
+    
     return render(request, "products/products_list.html", context)
 
 
@@ -66,26 +56,24 @@ def product_top_search(request):
     """
     # We normalize the top query for comparison
     query = request.GET.get('topQuery', '')
-    top_query = utils.normalize_or_None(query) 
-    products = utils.get_products_filters(top_query=top_query, empty=True)
+    top_query = filters.normalize_or_None(query)
+
+    products = filters.get_products_filters({'query': top_query})
     
-    user = request.user
-    favorite_product_ids = None
-    if user.is_authenticated:
-        # IDs de productos favoritos
-        favorite_product_ids = set(user.favorites.values_list('product', flat=True)) 
+    # obtener un set de ids para comparacion en template
+    favs_products_ids = get_favs_products(request.user)
         
     context = {
         'products': products,
         'query': query,
-        'favorite_product_ids': favorite_product_ids
+        'favorite_product_ids': favs_products_ids
     }
+    
     return render(request, 'products/products_list.html', context)
 
 
 def product_detail(request, id=None, slug=None):
     """
-
     Args:
         id (int, optional): ID of the product to search and display its detail. Defaults to None.
         slug (str, optional): actually not used, just for the URL. Defaults to None.
@@ -93,10 +81,11 @@ def product_detail(request, id=None, slug=None):
     Raises:
         Http404: Error raised if no ID is passed.
     """
-    if not id:
+    value_id = utils.valid_id_or_None(str(id))
+    if not value_id:
         raise Http404("The product does not exist or the URL is malformed.")
     
-    product = get_object_or_404(Product, id=id)
+    product = get_object_or_404(Product.objects.select_related("category", "subcategory"), id=value_id)
     
     # We get all the necessary data from the product
     category = product.category
@@ -104,7 +93,6 @@ def product_detail(request, id=None, slug=None):
     images_urls = [image.image_url for image in product.images.filter(main_image=False)]
     context = {
         'product': product,
-        'main_image_url': product.main_image,
         'images_urls': images_urls,
         'category': category,
         'subcategory': subcategory,
@@ -114,6 +102,8 @@ def product_detail(request, id=None, slug=None):
 
 
 from django.db.models import F
+
+@admin_or_superuser_required
 def reset_stocks(request):
     """
     Reinicia los stocks sumando el stock reservado al stock general para los productos afectados.
